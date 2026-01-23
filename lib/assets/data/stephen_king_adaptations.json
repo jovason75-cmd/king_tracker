@@ -1,0 +1,583 @@
+[
+  {
+    "id": "carrie_1976",
+    "title": "Carrie",
+    "year": 1976,
+    "type": "Movie",
+    "basedOn": "carrie"
+  },
+  {
+    "id": "salems_lot_1979",
+    "title": "Salem's Lot",
+    "year": 1979,
+    "type": "Miniseries",
+    "basedOn": "salems_lot"
+  },
+  {
+    "id": "the_shining_1980",
+    "title": "The Shining",
+    "year": 1980,
+    "type": "Movie",
+    "basedOn": "the_shining"
+  },
+  {
+    "id": "creepshow_1982",
+    "title": "Creepshow",
+    "year": 1982,
+    "type": "Movie",
+    "basedOn": "skeleton_crew"
+  },
+  {
+    "id": "the_dead_zone_1983",
+    "title": "The Dead Zone",
+    "year": 1983,
+    "type": "Movie",
+    "basedOn": "the_dead_zone"
+  },
+  {
+    "id": "christine_1983",
+    "title": "Christine",
+    "year": 1983,
+    "type": "Movie",
+    "basedOn": "christine"
+  },
+  {
+    "id": "cujo_1983",
+    "title": "Cujo",
+    "year": 1983,
+    "type": "Movie",
+    "basedOn": "cujo"
+  },
+  {
+    "id": "children_of_the_corn_1984",
+    "title": "Children of the Corn",
+    "year": 1984,
+    "type": "Movie",
+    "basedOn": "night_shift"
+  },
+  {
+    "id": "firestarter_1984",
+    "title": "Firestarter",
+    "year": 1984,
+    "type": "Movie",
+    "basedOn": "firestarter"
+  },
+  {
+    "id": "cats_eye_1985",
+    "title": "Cat's Eye",
+    "year": 1985,
+    "type": "Movie",
+    "basedOn": "night_shift"
+  },
+  {
+    "id": "silver_bullet_1985",
+    "title": "Silver Bullet",
+    "year": 1985,
+    "type": "Movie",
+    "basedOn": "cycle_of_the_werewolf"
+  },
+  {
+    "id": "maximum_overdrive_1986",
+    "title": "Maximum Overdrive",
+    "year": 1986,
+    "type": "Movie",
+    "basedOn": "night_shift"
+  },
+  {
+    "id": "stand_by_me_1986",
+    "title": "Stand by Me",
+    "year": 1986,
+    "type": "Movie",
+    "basedOn": "different_seasons"
+  },
+  {
+    "id": "creepshow_2_1987",
+    "title": "Creepshow 2",
+    "year": 1987,
+    "type": "Movie",
+    "basedOn": "skeleton_crew"
+  },
+  {
+    "id": "the_running_man_1987",
+    "title": "The Running Man",
+    "year": 1987,
+    "type": "Movie",
+    "basedOn": "the_running_man"
+  },
+  {
+    "id": "pet_sematary_1989",
+    "title": "Pet Sematary",
+    "year": 1989,
+    "type": "Movie",
+    "basedOn": "pet_sematary"
+  },
+  {
+    "id": "graveyard_shift_1990",
+    "title": "Graveyard Shift",
+    "year": 1990,
+    "type": "Movie",
+    "basedOn": "night_shift"
+  },
+  {
+    "id": "misery_1990",
+    "title": "Misery",
+    "year": 1990,
+    "type": "Movie",
+    "basedOn": "misery"
+  },
+  {
+    "id": "it_1990",
+    "title": "It",
+    "year": 1990,
+    "type": "Miniseries",
+    "basedOn": "it"
+  },
+  {
+    "id": "sometimes_they_come_back_1991",
+    "title": "Sometimes They Come Back",
+    "year": 1991,
+    "type": "TV Movie",
+    "basedOn": "night_shift"
+  },
+  {
+    "id": "the_dark_half_1993",
+    "title": "The Dark Half",
+    "year": 1993,
+    "type": "Movie",
+    "basedOn": "the_dark_half"
+  },
+  {
+    "id": "needful_things_1993",
+    "title": "Needful Things",
+    "year": 1993,
+    "type": "Movie",
+    "basedOn": "needful_things"
+  },
+  {
+    "id": "the_tommyknockers_1993",
+    "title": "The Tommyknockers",
+    "year": 1993,
+    "type": "Miniseries",
+    "basedOn": "the_tommyknockers"
+  },
+  {
+    "id": "the_stand_1994",
+    "title": "The Stand",
+    "year": 1994,
+    "type": "Miniseries",
+    "basedOn": "the_stand"
+  },
+  {
+    "id": "the_shawshank_redemption_1994",
+    "title": "The Shawshank Redemption",
+    "year": 1994,
+    "type": "Movie",
+    "basedOn": "different_seasons"
+  },
+  {
+    "id": "the_mangler_1995",
+    "title": "The Mangler",
+    "year": 1995,
+    "type": "Movie",
+    "basedOn": "night_shift"
+  },
+  {
+    "id": "dolores_claiborne_1995",
+    "title": "Dolores Claiborne",
+    "year": 1995,
+    "type": "Movie",
+    "basedOn": "dolores_claiborne"
+  },
+  {
+    "id": "the_langoliers_1995",
+    "title": "The Langoliers",
+    "year": 1995,
+    "type": "Miniseries",
+    "basedOn": "four_past_midnight"
+  },
+  {
+    "id": "thinner_1996",
+    "title": "Thinner",
+    "year": 1996,
+    "type": "Movie",
+    "basedOn": "thinner"
+  },
+  {
+    "id": "the_shining_1997",
+    "title": "The Shining",
+    "year": 1997,
+    "type": "Miniseries",
+    "basedOn": "the_shining"
+  },
+  {
+    "id": "the_night_flier_1997",
+    "title": "The Night Flier",
+    "year": 1997,
+    "type": "Movie",
+    "basedOn": "nightmares_and_dreamscapes"
+  },
+  {
+    "id": "apt_pupil_1998",
+    "title": "Apt Pupil",
+    "year": 1998,
+    "type": "Movie",
+    "basedOn": "different_seasons"
+  },
+  {
+    "id": "the_green_mile_1999",
+    "title": "The Green Mile",
+    "year": 1999,
+    "type": "Movie",
+    "basedOn": "the_green_mile"
+  },
+  {
+    "id": "hearts_in_atlantis_2001",
+    "title": "Hearts in Atlantis",
+    "year": 2001,
+    "type": "Movie",
+    "basedOn": "hearts_in_atlantis"
+  },
+  {
+    "id": "carrie_2002",
+    "title": "Carrie",
+    "year": 2002,
+    "type": "TV Movie",
+    "basedOn": "carrie"
+  },
+  {
+    "id": "the_dead_zone_2002",
+    "title": "The Dead Zone",
+    "year": 2002,
+    "type": "TV Series",
+    "basedOn": "the_dead_zone"
+  },
+  {
+    "id": "dreamcatcher_2003",
+    "title": "Dreamcatcher",
+    "year": 2003,
+    "type": "Movie",
+    "basedOn": "dreamcatcher"
+  },
+  {
+    "id": "secret_window_2004",
+    "title": "Secret Window",
+    "year": 2004,
+    "type": "Movie",
+    "basedOn": "four_past_midnight"
+  },
+  {
+    "id": "salems_lot_2004",
+    "title": "Salem's Lot",
+    "year": 2004,
+    "type": "Miniseries",
+    "basedOn": "salems_lot"
+  },
+  {
+    "id": "riding_the_bullet_2004",
+    "title": "Riding the Bullet",
+    "year": 2004,
+    "type": "Movie",
+    "basedOn": "everythings_eventual"
+  },
+  {
+    "id": "nightmares_and_dreamscapes_2006",
+    "title": "Nightmares & Dreamscapes",
+    "year": 2006,
+    "type": "Miniseries",
+    "basedOn": "nightmares_and_dreamscapes"
+  },
+  {
+    "id": "desperation_2006",
+    "title": "Desperation",
+    "year": 2006,
+    "type": "TV Movie",
+    "basedOn": "desperation"
+  },
+  {
+    "id": "1408_2007",
+    "title": "1408",
+    "year": 2007,
+    "type": "Movie",
+    "basedOn": "everythings_eventual"
+  },
+  {
+    "id": "the_mist_2007",
+    "title": "The Mist",
+    "year": 2007,
+    "type": "Movie",
+    "basedOn": "skeleton_crew"
+  },
+  {
+    "id": "children_of_the_corn_2009",
+    "title": "Children of the Corn",
+    "year": 2009,
+    "type": "TV Movie",
+    "basedOn": "night_shift"
+  },
+  {
+    "id": "dolans_cadillac_2009",
+    "title": "Dolan's Cadillac",
+    "year": 2009,
+    "type": "Movie",
+    "basedOn": "nightmares_and_dreamscapes"
+  },
+  {
+    "id": "haven_2010",
+    "title": "Haven",
+    "year": 2010,
+    "type": "TV Series",
+    "basedOn": "the_colorado_kid"
+  },
+  {
+    "id": "bag_of_bones_2011",
+    "title": "Bag of Bones",
+    "year": 2011,
+    "type": "Miniseries",
+    "basedOn": "bag_of_bones"
+  },
+  {
+    "id": "carrie_2013",
+    "title": "Carrie",
+    "year": 2013,
+    "type": "Movie",
+    "basedOn": "carrie"
+  },
+  {
+    "id": "under_the_dome_2013",
+    "title": "Under the Dome",
+    "year": 2013,
+    "type": "TV Series",
+    "basedOn": "under_the_dome"
+  },
+  {
+    "id": "a_good_marriage_2014",
+    "title": "A Good Marriage",
+    "year": 2014,
+    "type": "Movie",
+    "basedOn": "full_dark_no_stars"
+  },
+  {
+    "id": "big_driver_2014",
+    "title": "Big Driver",
+    "year": 2014,
+    "type": "TV Movie",
+    "basedOn": "full_dark_no_stars"
+  },
+  {
+    "id": "mercy_2014",
+    "title": "Mercy",
+    "year": 2014,
+    "type": "Movie",
+    "basedOn": "skeleton_crew"
+  },
+  {
+    "id": "cell_2016",
+    "title": "Cell",
+    "year": 2016,
+    "type": "Movie",
+    "basedOn": "cell"
+  },
+  {
+    "id": "11_22_63_2016",
+    "title": "11.22.63",
+    "year": 2016,
+    "type": "Miniseries",
+    "basedOn": "11_22_63"
+  },
+  {
+    "id": "the_mist_2017",
+    "title": "The Mist",
+    "year": 2017,
+    "type": "TV Series",
+    "basedOn": "skeleton_crew"
+  },
+  {
+    "id": "mr_mercedes_2017",
+    "title": "Mr. Mercedes",
+    "year": 2017,
+    "type": "TV Series",
+    "basedOn": "mr_mercedes"
+  },
+  {
+    "id": "it_2017",
+    "title": "It",
+    "year": 2017,
+    "type": "Movie",
+    "basedOn": "it"
+  },
+  {
+    "id": "geralds_game_2017",
+    "title": "Gerald's Game",
+    "year": 2017,
+    "type": "Movie",
+    "basedOn": "geralds_game"
+  },
+  {
+    "id": "1922_2017",
+    "title": "1922",
+    "year": 2017,
+    "type": "Movie",
+    "basedOn": "full_dark_no_stars"
+  },
+  {
+    "id": "the_dark_tower_2017",
+    "title": "The Dark Tower",
+    "year": 2017,
+    "type": "Movie",
+    "basedOn": "the_dark_tower_1"
+  },
+  {
+    "id": "castle_rock_2018",
+    "title": "Castle Rock",
+    "year": 2018,
+    "type": "TV Series",
+    "basedOn": null
+  },
+  {
+    "id": "it_chapter_two_2019",
+    "title": "It Chapter Two",
+    "year": 2019,
+    "type": "Movie",
+    "basedOn": "it"
+  },
+  {
+    "id": "pet_sematary_2019",
+    "title": "Pet Sematary",
+    "year": 2019,
+    "type": "Movie",
+    "basedOn": "pet_sematary"
+  },
+  {
+    "id": "in_the_tall_grass_2019",
+    "title": "In the Tall Grass",
+    "year": 2019,
+    "type": "Movie",
+    "basedOn": null
+  },
+  {
+    "id": "doctor_sleep_2019",
+    "title": "Doctor Sleep",
+    "year": 2019,
+    "type": "Movie",
+    "basedOn": "doctor_sleep"
+  },
+  {
+    "id": "creepshow_2019",
+    "title": "Creepshow",
+    "year": 2019,
+    "type": "TV Series",
+    "basedOn": "skeleton_crew"
+  },
+  {
+    "id": "the_outsider_2020",
+    "title": "The Outsider",
+    "year": 2020,
+    "type": "TV Series",
+    "basedOn": "the_outsider"
+  },
+  {
+    "id": "the_stand_2020",
+    "title": "The Stand",
+    "year": 2020,
+    "type": "TV Series",
+    "basedOn": "the_stand"
+  },
+  {
+    "id": "children_of_the_corn_2020",
+    "title": "Children of the Corn",
+    "year": 2020,
+    "type": "Movie",
+    "basedOn": "night_shift"
+  },
+  {
+    "id": "chapelwaite_2021",
+    "title": "Chapelwaite",
+    "year": 2021,
+    "type": "TV Series",
+    "basedOn": "night_shift"
+  },
+  {
+    "id": "liseys_story_2021",
+    "title": "Lisey's Story",
+    "year": 2021,
+    "type": "Miniseries",
+    "basedOn": "liseys_story"
+  },
+  {
+    "id": "firestarter_2022",
+    "title": "Firestarter",
+    "year": 2022,
+    "type": "Movie",
+    "basedOn": "firestarter"
+  },
+  {
+    "id": "mr_harrigans_phone_2022",
+    "title": "Mr. Harrigan's Phone",
+    "year": 2022,
+    "type": "Movie",
+    "basedOn": "if_it_bleeds"
+  },
+  {
+    "id": "the_boogeyman_2023",
+    "title": "The Boogeyman",
+    "year": 2023,
+    "type": "Movie",
+    "basedOn": "night_shift"
+  },
+  {
+    "id": "pet_sematary_bloodlines_2023",
+    "title": "Pet Sematary: Bloodlines",
+    "year": 2023,
+    "type": "Movie",
+    "basedOn": "pet_sematary"
+  },
+  {
+    "id": "the_life_of_chuck_2024",
+    "title": "The Life of Chuck",
+    "year": 2024,
+    "type": "Movie",
+    "basedOn": "if_it_bleeds"
+  },
+  {
+    "id": "salems_lot_2024",
+    "title": "Salem's Lot",
+    "year": 2024,
+    "type": "Movie",
+    "basedOn": "salems_lot"
+  },
+  {
+    "id": "the_monkey_2025",
+    "title": "The Monkey",
+    "year": 2025,
+    "type": "Movie",
+    "basedOn": "skeleton_crew"
+  },
+  {
+    "id": "the_long_walk_2025",
+    "title": "The Long Walk",
+    "year": 2025,
+    "type": "Movie",
+    "basedOn": "the_long_walk"
+  },
+  {
+    "id": "the_running_man_2025",
+    "title": "The Running Man",
+    "year": 2025,
+    "type": "Movie",
+    "basedOn": "the_running_man"
+  },
+  {
+    "id": "the_institute_2025",
+    "title": "The Institute",
+    "year": 2025,
+    "type": "TV Series",
+    "basedOn": "the_institute"
+  },
+  {
+    "id": "it_welcome_to_derry_2025",
+    "title": "It: Welcome to Derry",
+    "year": 2025,
+    "type": "TV Series",
+    "basedOn": "it"
+  }
+]

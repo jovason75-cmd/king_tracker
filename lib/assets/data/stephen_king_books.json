@@ -1,0 +1,991 @@
+[
+  {
+    "id": "carrie",
+    "title": "Carrie",
+    "yearPublished": 1974,
+    "type": "Novel",
+    "darkTowerExtended": false,
+    "connections": [],
+    "coverUrl": "https://stephenking.com/images/books/carrie/hardcover2.jpg",
+    "synopsis": "The story of misfit high-school girl, Carrie White, who gradually discovers that she has telekinetic powers. Repressed by a domineering, ultra-religious mother and tormented by her peers at school, her efforts to fit in lead to a dramatic confrontation during the senior prom."
+  },
+  {
+    "id": "salems_lot",
+    "title": "Salem's Lot",
+    "yearPublished": 1975,
+    "type": "Novel",
+    "darkTowerExtended": true,
+    "connections": [],
+    "coverUrl": "https://stephenking.com/images/books/salems_lot/hardcover_prop_embed.jpg",
+    "synopsis": "Ben Mears has returned to Jerusalem's Lot in the hopes that living in an old mansion, long the subject of town lore, will help him cast out his own devils and provide inspiration for his new book. But when two young boys venture into the woods and only one comes out alive, Mears begins to realize that there may be something sinister at work."
+  },
+  {
+    "id": "the_shining",
+    "title": "The Shining",
+    "yearPublished": 1977,
+    "type": "Novel",
+    "darkTowerExtended": false,
+    "connections": [
+      {
+        "type": "duology",
+        "with": [
+          "doctor_sleep"
+        ]
+      }
+    ],
+    "coverUrl": "https://stephenking.com/images/books/the_shining/hardcover_prop_embed.jpg",
+    "synopsis": "Jack Torrance, his wife Wendy, and their young son Danny move into the Overlook Hotel, where Jack has been hired as the winter caretaker. Cut off from civilization for months, Jack hopes to battle alcoholism and uncontrolled rage while writing a play. Evil forces residing in the Overlook – which has a long and violent history – covet young Danny for his precognitive powers and exploit Jack's weaknesses to try to claim the boy."
+  },
+  {
+    "id": "rage",
+    "title": "Rage",
+    "yearPublished": 1976,
+    "type": "Bachman",
+    "darkTowerExtended": false,
+    "connections": [],
+    "synopsis": "A disturbed high-school student with authority problems kills one of his teachers and takes the rest of his class hostage. Over the course of one long, tense and unbearable hot afternoon, Charlie Decker explains what led him to this drastic sequence of events, while at the same time deconstructing the personalities of his classmates, forcing each one to justify his or her existence."
+  },
+  {
+    "id": "the_stand",
+    "title": "The Stand",
+    "yearPublished": 1978,
+    "type": "Novel",
+    "darkTowerExtended": true,
+    "connections": [],
+    "coverUrl": "https://stephenking.com/images/books/the_stand/hardcover_prop_embed.jpg",
+    "synopsis": "A patient escapes from a biological testing facility, unknowingly carrying a deadly weapon: a mutated strain of super-flu that will wipe out 99 percent of the world's population within a few weeks. Those who remain are scared, bewildered, and in need of a leader. Two emerge—Mother Abagail, the benevolent 108-year-old woman who urges them to build a peaceful community in Boulder, Colorado; and Randall Flagg, the nefarious Dark Man who delights in chaos and violence."
+  },
+  {
+    "id": "night_shift",
+    "title": "Night Shift",
+    "yearPublished": 1978,
+    "type": "Short Story Collection",
+    "darkTowerExtended": false,
+    "connections": [],
+    "stories": [
+      "Jerusalem's Lot",
+      "Graveyard Shift",
+      "Night Surf",
+      "I Am the Doorway",
+      "The Mangler",
+      "The Boogeyman",
+      "Gray Matter",
+      "Battleground",
+      "Trucks",
+      "Sometimes They Come Back",
+      "Strawberry Spring",
+      "The Ledge",
+      "The Lawnmower Man",
+      "Quitters, Inc.",
+      "I Know What You Need",
+      "Children of the Corn",
+      "The Last Rung on the Ladder",
+      "The Man Who Loved Flowers",
+      "One for the Road",
+      "The Woman in the Room"
+    ]
+  },
+  {
+    "id": "the_long_walk",
+    "title": "The Long Walk",
+    "yearPublished": 1979,
+    "type": "Bachman",
+    "darkTowerExtended": false,
+    "connections": [],
+    "synopsis": "In the near future, where America has become a police state, one hundred boys are selected to enter an annual contest where the winner will be awarded whatever he wants for the rest of his life. The game is simple - maintain a steady walking pace of four miles per hour without stopping. Three warnings, and you're out - permanently."
+  },
+  {
+    "id": "the_dead_zone",
+    "title": "The Dead Zone",
+    "yearPublished": 1979,
+    "type": "Novel",
+    "darkTowerExtended": false,
+    "connections": [],
+    "synopsis": "Johnny Smith awakens from a five-year coma after a car accident and discovers that he can see people's futures and pasts when he touches them. Many consider his talent a gift; Johnny feels cursed. His fiancée married another man during his coma and people clamor for him to solve their problems. When Johnny has a disturbing vision after he shakes the hand of an ambitious and amoral politician, he must decide if he should take drastic action to change the future."
+  },
+  {
+    "id": "firestarter",
+    "title": "Firestarter",
+    "yearPublished": 1980,
+    "type": "Novel",
+    "darkTowerExtended": false,
+    "connections": [],
+    "synopsis": "Andy McGee and Vicky Tomlinson were once college students looking to make some extra cash, volunteering as test subjects for an experiment orchestrated by the clandestine government organization known as The Shop. But the experiment awakens dormant psychic powers in the two and changes their lives forever. Their most precious asset? Their daughter Charlie, who has a gift more powerful than anything The Shop has ever seen."
+  },
+  {
+    "id": "cujo",
+    "title": "Cujo",
+    "yearPublished": 1981,
+    "type": "Novel",
+    "darkTowerExtended": false,
+    "connections": [],
+    "synopsis": "Cujo was once a big friendly dog, lovable and loyal to his family. But that was before he got rabies and became a vicious killer. Now Cujo is a two-hundred-pound monster, and anyone unlucky enough to cross his path is in grave danger. When Donna Trenton's car breaks down near the Camber place, she and her young son Tad become trapped inside while a relentless Cujo stalks them."
+  },
+  {
+    "id": "roadwork",
+    "title": "Roadwork",
+    "yearPublished": 1981,
+    "type": "Bachman",
+    "darkTowerExtended": false,
+    "connections": [],
+    "synopsis": "Barton Dawes' unremarkable but comfortable existence suddenly takes a turn for the worst. Highway construction puts him out of work and simultaneously forces him out of his home. Dawes isn't the sort of man who will take an insult of this magnitude lying down. His single-minded determination to fight the inevitable course of progress drives his wife and friends away while he tries to face down the uncaring bureaucracy that has destroyed his once comfortable life."
+  },
+  {
+    "id": "the_running_man",
+    "title": "The Running Man",
+    "yearPublished": 1982,
+    "type": "Bachman",
+    "darkTowerExtended": false,
+    "connections": [],
+    "synopsis": "It is 2025 and reality TV has progressed to the point where people are willing to wager their lives in exchange for a chance at enormous wealth. Ben Richards is desperate - he needs money to treat his daughter's illness. His last chance is entering a game show called The Running Man where the objective is to elude police and specially trained trackers for a month. The reward is a cool billion dollars. The catch is that everyone else on the planet is watching and willing to turn him in for a reward."
+  },
+  {
+    "id": "the_gunslinger",
+    "title": "The Dark Tower: The Gunslinger",
+    "yearPublished": 1982,
+    "type": "Dark Tower",
+    "darkTowerExtended": true,
+    "connections": [],
+    "coverUrl": "https://stephenking.com/images/books/the_gunslinger/hardcover_prop_embed.jpg"
+  },
+  {
+    "id": "different_seasons",
+    "title": "Different Seasons",
+    "yearPublished": 1982,
+    "type": "Collection",
+    "darkTowerExtended": false,
+    "connections": [],
+    "stories": [
+      "Rita Hayworth and Shawshank Redemption",
+      "Apt Pupil",
+      "The Body",
+      "The Breathing Method"
+    ]
+  },
+  {
+    "id": "christine",
+    "title": "Christine",
+    "yearPublished": 1983,
+    "type": "Novel",
+    "darkTowerExtended": false,
+    "connections": [],
+    "synopsis": "Christine, a blood-red 1958 Plymouth Fury, is twenty years old when Arnie Cunningham buys her. Arnie is an unpopular, depressed teenager. Within months, Arnie becomes a totally different person, and everyone who stands between him and Christine doesn't stand for long. Stephen King's #1 national bestseller is an unforgettable story of seduction and revenge."
+  },
+  {
+    "id": "pet_sematary",
+    "title": "Pet Sematary",
+    "yearPublished": 1983,
+    "type": "Novel",
+    "darkTowerExtended": false,
+    "connections": [],
+    "coverUrl": "https://stephenking.com/images/books/pet_sematary/hardcover_prop_embed.jpg",
+    "synopsis": "When Dr. Louis Creed takes a new job and moves his family to the idyllic rural town of Ludlow, Maine, this new beginning seems too good to be true. Despite Ludlow's tranquility, an undercurrent of danger exists here. Those trucks on the road outside the Creed's beautiful old home travel by just a little too quickly, for one thing…as is evidenced by the makeshift graveyard in the nearby woods where generations of children have buried their beloved pets. Behind the pet cemetery, there is another burial ground, one that lures people to it with seductive promises…and ungodly temptations."
+  },
+  {
+    "id": "the_talisman",
+    "title": "The Talisman",
+    "yearPublished": 1984,
+    "type": "Novel",
+    "darkTowerExtended": true,
+    "coAuthor": "Peter Straub",
+    "synopsis": "Twelve-year-old Jack Sawyer embarks on an epic quest--a walk from the seacoast of New Hampshire to the California coast--to find the talisman that will save his dying mother's life. Jack's journey takes him into the Territories, a parallel medieval universe, where most people from his own universe have analogs called \"twinners.\" The queen of the Territories, Jack's mother's twinner, is also dying.",
+    "connections": [
+      {
+        "type": "duology",
+        "with": [
+          "black_house"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "thinner",
+    "title": "Thinner",
+    "yearPublished": 1984,
+    "type": "Bachman",
+    "darkTowerExtended": false,
+    "synopsis": "Billy Halleck commits vehicular homicide when his lack of attention to driving results in the death of an old lady on the street. Overweight Halleck is a lawyer with connections, though, and gets off with a slap on the wrist. After his trial, a gypsy curses him with a single word, \"Thinner.\" Halleck begins to lose weight uncontrollably and must pursue the band of gypsies who are responsible for his dwindling condition.",
+    "connections": []
+  },
+  {
+    "id": "cycle_of_the_werewolf",
+    "title": "Cycle of the Werewolf",
+    "yearPublished": 1985,
+    "type": "Novel",
+    "darkTowerExtended": false,
+    "synopsis": "A werewolf is stalking Tarker's Mills and only young, wheelchair-bound Marty Coslaw suspects the truth. He enlists the help of his black sheep uncle to identify the shape shifter and destroy him.",
+    "connections": []
+  },
+  {
+    "id": "skeleton_crew",
+    "title": "Skeleton Crew",
+    "yearPublished": 1985,
+    "type": "Short Story Collection",
+    "darkTowerExtended": false,
+    "connections": [],
+    "stories": [
+      "The Mist",
+      "Here There Be Tygers",
+      "The Monkey",
+      "Cain Rose Up",
+      "Mrs. Todd's Shortcut",
+      "The Jaunt",
+      "The Wedding Gig",
+      "Paranoid: A Chant",
+      "The Raft",
+      "Word Processor of the Gods",
+      "The Man Who Would Not Shake Hands",
+      "Beachworld",
+      "The Reaper's Image",
+      "Nona",
+      "For Owen",
+      "Survivor Type",
+      "Uncle Otto's Truck",
+      "Morning Deliveries (Milkman #1)",
+      "Big Wheels: A Tale of the Laundry Game (Milkman #2)",
+      "Gramma",
+      "The Ballad of the Flexible Bullet",
+      "The Revelations of 'Becka Paulson",
+      "The Reach"
+    ]
+  },
+  {
+    "id": "it",
+    "title": "It",
+    "yearPublished": 1986,
+    "type": "Novel",
+    "darkTowerExtended": true,
+    "connections": [],
+    "coverUrl": "https://stephenking.com/images/books/it/paperback.jpg",
+    "synopsis": "Welcome to Derry, Maine. It's a small city, a place as hauntingly familiar as your own hometown. Only in Derry the haunting is real. They were seven teenagers when they first stumbled upon the horror. Now they are grown-up men and women who have gone out into the big world to gain success and happiness. But the promise they made twenty-eight years ago calls them reunite in the same place where, as teenagers, they battled an evil creature that preyed on the city's children. Now, children are being murdered again and their repressed memories of that terrifying summer return as they prepare to once again battle the monster lurking in Derry's sewers."
+  },
+  {
+    "id": "the_drawing_of_the_three",
+    "title": "The Dark Tower: The Drawing of the Three",
+    "yearPublished": 1987,
+    "type": "Dark Tower",
+    "darkTowerExtended": true,
+    "connections": []
+  },
+  {
+    "id": "misery",
+    "title": "Misery",
+    "yearPublished": 1987,
+    "type": "Novel",
+    "darkTowerExtended": false,
+    "connections": [],
+    "coverUrl": "https://stephenking.com/images/books/misery/hardcover_prop_embed.jpg",
+    "synopsis": "Paul Sheldon is a bestselling novelist who has finally met his number one fan, Annie Wilkes. She rescued him from a car accident and brought him to her remote home to convalesce. But Annie is no ordinary fan. She's Paul's self-proclaimed number one fan, and she won't let him leave—and she won't let him stop writing the Misery novels that made him famous. When Paul kills off Misery Chastain in his latest book, Annie forces him to bring her back to life in a new novel, and she'll make sure Paul suffers if he doesn't comply."
+  },
+  {
+    "id": "the_eyes_of_the_dragon",
+    "title": "The Eyes of the Dragon",
+    "yearPublished": 1987,
+    "type": "Novel",
+    "darkTowerExtended": true,
+    "synopsis": "Once upon a time, in the Kingdom of Delain, King Roland is murdered and his son and heir, Peter, is framed for the crime. Peter and his loyal friends must battle an evil wizard and Peter's usurper brother, Thomas, for the throne. Imprisoned in a tower, Peter conceives an escape plan that will take him years to execute before taking on Flagg, the powerful sorcerer who has masterminded this coup.",
+    "connections": []
+  },
+  {
+    "id": "the_tommyknockers",
+    "title": "The Tommyknockers",
+    "yearPublished": 1987,
+    "type": "Novel",
+    "darkTowerExtended": false,
+    "synopsis": "Writer Bobbi Anderson becomes obsessed with digging up something she's found buried in the woods near her home. With the help of her friend, Jim Gardener, she uncovers an alien spaceship. Though exposure to the Tommyknockers who piloted the alien craft has detrimental effects on residents' health, the people of Haven develop a talent for creating innovative devices under its increasingly malignant influence.",
+    "connections": []
+  },
+  {
+    "id": "the_dark_half",
+    "title": "The Dark Half",
+    "yearPublished": 1989,
+    "type": "Novel",
+    "darkTowerExtended": false,
+    "synopsis": "For years, Thad Beaumont has been writing books under the pseudonym George Stark. When a journalist threatens to expose Beaumont's pen name, the author decides to go public first, killing off his pseudonym. Stark isn't content to be dispatched that easily, though. Beaumont's alter ego comes to life and begins to stalk those responsible for his demise. The police suspect Beaumont is responsible for these violent crimes.",
+    "connections": []
+  },
+  {
+    "id": "four_past_midnight",
+    "title": "Four Past Midnight",
+    "yearPublished": 1990,
+    "type": "Collection",
+    "darkTowerExtended": false,
+    "connections": []
+  },
+  {
+    "id": "the_stand_complete",
+    "title": "The Stand: The Complete & Uncut Edition",
+    "yearPublished": 1990,
+    "type": "Novel",
+    "darkTowerExtended": true,
+    "synopsis": "One man escapes from a biological weapon facility after an accident, carrying with him the deadly virus known as Captain Tripps, a rapidly mutating flu that - in the ensuing weeks - wipes out most of the world's population. In the aftermath, survivors choose between following an elderly black woman to Boulder or the dark man, Randall Flagg, who has set up his command post in Las Vegas. The two factions prepare for a confrontation between the forces of good and evil.",
+    "connections": []
+  },
+  {
+    "id": "needful_things",
+    "title": "Needful Things",
+    "yearPublished": 1991,
+    "type": "Novel",
+    "darkTowerExtended": false,
+    "connections": [],
+    "synopsis": "Leland Gaunt opens a new shop in Castle Rock called Needful Things. Anyone who enters his store finds the object of his or her lifelong dreams and desires: a prized baseball card, a healing amulet. In addition to a token payment, Gaunt requests that each person perform a little deed, usually a seemingly innocent prank played on someone else from town. These practical jokes cascade out of control and soon the entire town is doing battle with itself. Only Sheriff Alan Pangborn suspects that Gaunt is behind the population's increasingly violent behavior."
+  },
+  {
+    "id": "the_waste_lands",
+    "title": "The Dark Tower: The Waste Lands",
+    "yearPublished": 1991,
+    "type": "Dark Tower",
+    "darkTowerExtended": true,
+    "connections": []
+  },
+  {
+    "id": "geralds_game",
+    "title": "Gerald’s Game",
+    "yearPublished": 1992,
+    "type": "Novel",
+    "darkTowerExtended": false,
+    "connections": [],
+    "synopsis": "Once again, Jessie Burlingame has been talked into submitting to her husband Gerald's kinky sex games—something that she's frankly had enough of, and they are no longer the lovers they once were. So much for a 'romantic getaway' at their secluded summer home. After Jessie is handcuffed to the bedposts and Gerald crosses a line with his wife, the day ends with deadly consequences. Now Jessie is utterly trapped in an isolated lakeside cabin and forced to come face-to-face with her deepest fears and darkest secrets."
+  },
+  {
+    "id": "dolores_claiborne",
+    "title": "Dolores Claiborne",
+    "yearPublished": 1992,
+    "type": "Novel",
+    "darkTowerExtended": false,
+    "synopsis": "Suspected of killing Vera Donovan, her wealthy employer, Dolores Claiborne tells police the story of her life, harkening back to her disintegrating marriage and the suspicious death of her violent husband, Joe St. George, thirty years earlier. Dolores also tells of Vera's physical and mental decline and of her loyalty to an employer who has become emotionally demanding in recent years.",
+    "connections": []
+  },
+  {
+    "id": "nightmares_and_dreamscapes",
+    "title": "Nightmares & Dreamscapes",
+    "yearPublished": 1993,
+    "type": "Short Story Collection",
+    "darkTowerExtended": false,
+    "connections": [],
+    "stories": [
+      "Dolan's Cadillac",
+      "The End of the Whole Mess",
+      "Suffer the Little Children",
+      "The Night Flier",
+      "Popsy",
+      "It Grows on You",
+      "Chattery Teeth",
+      "Dedication",
+      "The Moving Finger",
+      "Sneakers",
+      "You Know They Got a Hell of a Band",
+      "Home Delivery",
+      "Rainy Season",
+      "My Pretty Pony",
+      "Sorry, Right Number",
+      "The Ten O'Clock People",
+      "Crouch End",
+      "The House on Maple Street",
+      "The Fifth Quarter",
+      "The Doctor's Case",
+      "Umney's Last Case",
+      "Head Down",
+      "Brooklyn August",
+      "The Beggar and the Diamond"
+    ]
+  },
+  {
+    "id": "insomnia",
+    "title": "Insomnia",
+    "yearPublished": 1994,
+    "type": "Novel",
+    "darkTowerExtended": true,
+    "synopsis": "Since his wife died, Ralph Roberts has been having trouble sleeping. Each night he awakens a little earlier until he's barely sleeping at all. During his late night vigils and walks, he observes some strange things going on in Derry, Maine. He sees colored ribbons streaming from people's heads. He witnesses two strange little men wandering the city under cover of night. He begins to suspect that these visions are something more than hallucinations brought about by sleep deprivation. Ralph and his friend, widow Lois Chasse, become enmeshed in events of cosmic significance.",
+    "connections": []
+  },
+  {
+    "id": "rose_madder",
+    "title": "Rose Madder",
+    "yearPublished": 1995,
+    "type": "Novel",
+    "darkTowerExtended": false,
+    "synopsis": "Rosie Daniels flees from her husband, Norman after fourteen years in an abusive marriage. During one bout of violence, Norman caused Rosie to miscarry their only child. Escaping to a distant city, Rosie establishes a new life and forges new relationships. Norman Daniels, a police officer with a reputation for cruelty, uses his law-enforcement connections to track his wayward wife.",
+    "connections": []
+  },
+  {
+    "id": "the_green_mile",
+    "title": "The Green Mile",
+    "yearPublished": 1996,
+    "type": "Novel",
+    "darkTowerExtended": false,
+    "connections": [],
+    "synopsis": "At Cold Mountain Penitentiary, along the lonely stretch of cells known as the Green Mile, guards and inmates alike call John Coffey 'Big John.' A convicted murderer, Coffey has an unexpected gift, a gift that seems to have been sent from God. When head guard Paul Edgecombe realizes that Coffey is indeed innocent of the crimes he was convicted of, he must face a terrible choice: should he call for Coffey's execution as the law demands? Or should he save him and face the consequences?"
+  },
+  {
+    "id": "desperation",
+    "title": "Desperation",
+    "yearPublished": 1996,
+    "type": "Novel",
+    "darkTowerExtended": true,
+    "synopsis": "Located off a desolate stretch of Interstate 50, Desperation, Nevada has few connections with the rest of the world. It is a place, though, where the seams between worlds are thin. Miners at the China Pit have accidentally broken into another dimension and released a horrific creature known as Tak, who takes human form by hijacking some of the town's residents. The forces of good orchestrate a confrontation between this ancient evil and a group of unsuspecting travelers who are lured to the dying town. This rag-tag band of unwilling champions is led by a young boy who speaks to God.",
+    "connections": [
+      {
+        "type": "twin_novel",
+        "with": [
+          "the_regulators"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "the_regulators",
+    "title": "The Regulators",
+    "yearPublished": 1996,
+    "type": "Bachman",
+    "darkTowerExtended": true,
+    "synopsis": "The peaceful suburban life on Poplar Street in Wentworth, Ohio is shattered one fine day when four vans containing shotgun-wielding \"regulators\" terrorize the street's residents, cold-bloodedly killing anyone foolish enough to venture outdoors. Houses mysteriously transform into log cabins and the street now ends in what looks like a child's hand-drawn western landscape. Masterminding this sudden onslaught is the evil creature Tak, who has taken over the body of an autistic boy whose parents were killed in a drive-by shooting several months earlier.",
+    "connections": [
+      {
+        "type": "twin_novel",
+        "with": [
+          "desperation"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "wizard_and_glass",
+    "title": "The Dark Tower: Wizard and Glass",
+    "yearPublished": 1997,
+    "type": "Dark Tower",
+    "darkTowerExtended": true,
+    "connections": []
+  },
+  {
+    "id": "bag_of_bones",
+    "title": "Bag of Bones",
+    "yearPublished": 1998,
+    "type": "Novel",
+    "darkTowerExtended": false,
+    "connections": [],
+    "synopsis": "Four years after the sudden death of his wife, bestselling novelist Mike Noonan is unable to write and plagued by vivid nightmares. Seeking a fresh start, Mike returns to Sara Laughs, the isolated Maine summerhouse where he and his wife had spent their happiest times. But the lodge is haunted by a presence whose clutches will drive him to the edge of sanity. Soon, Mike finds himself caught in a powerful mystery involving the ghost of a turn-of-the-century singer, the wealthy family that has controlled the town for generations, and a custody battle that will determine the fate of an enchanting young girl."
+  },
+  {
+    "id": "the_girl_who_loved_tom_gordon",
+    "title": "The Girl Who Loved Tom Gordon",
+    "yearPublished": 1999,
+    "type": "Novel",
+    "darkTowerExtended": false,
+    "synopsis": "Nine-year-old Trisha McFarland strays from the path while she and her recently divorced mother and brother take a hike along a branch of the Appalachian Trail. Lost for days, wandering farther and farther astray, Trisha has only her portable radio for comfort. A huge fan of Tom Gordon, a Boston Red Sox relief pitcher, she listens to baseball games and fantasizes that her hero will save her. Nature isn't her only adversary, though - something dangerous may be tracking Trisha through the dark woods.",
+    "connections": []
+  },
+  {
+    "id": "hearts_in_atlantis",
+    "title": "Hearts in Atlantis",
+    "yearPublished": 1999,
+    "type": "Collection",
+    "darkTowerExtended": true,
+    "synopsis": "It's 1966 and the height of the Vietnam War when Pete Riley first comes to the University of Maine. Uppermost on the minds of many young men at that time is the draft. and maintaining their grade point average so that they would not be called by Selective Service. Despite this threat, a group becomes obsessed by a game called Hearts which puts them in danger of losing their deferred status as they neglect their studies. The story follows them during their first year and tells of how Pete Riley meets and falls in love with Carol Gerber who first appeared in \"Low Men in Yellow Coats.\"",
+    "connections": []
+  },
+  {
+    "id": "on_writing",
+    "title": "On Writing",
+    "yearPublished": 2000,
+    "type": "Non-fiction",
+    "darkTowerExtended": false,
+    "connections": []
+  },
+  {
+    "id": "dreamcatcher",
+    "title": "Dreamcatcher",
+    "yearPublished": 2001,
+    "type": "Novel",
+    "darkTowerExtended": false,
+    "connections": [],
+    "synopsis": "Four childhood friends—Gary, Pete, Henry, and Jonesy—are bound together by a fifth friend, a boy named Duddits, who gave them a special gift that saved them from a bully and united them in a telepathic bond. Years later, the friends' annual hunting trip in the Maine woods becomes a nightmare when they encounter a disoriented, mumbling stranger and a bizarre fungal growth. Soon the four are caught in a terrifying struggle with a creature from another world—where their only chance of survival is locked in their shared past and the memory of Duddits."
+  },
+  {
+    "id": "black_house",
+    "title": "Black House",
+    "yearPublished": 2001,
+    "type": "Novel",
+    "darkTowerExtended": true,
+    "coAuthor": "Peter Straub",
+    "synopsis": "In this sequel to The Talisman, Jack Sawyer is now in his late thirties and has taken early retirement from the LAPD, retreating to a small town in Wisconsin. He has no memory of his adventures as a twelve-year-old boy, when he traveled into a parallel universe in search of the talisman that would save his mother's life. A series of murders involving young children force him out of retirement. There is more to these cases than murder, though, and Jack must retrieve his childhood memories to rescue the latest victim, who is coveted by the killer's evil overlord, a powerful force from End-World, in Roland the gunslinger's universe.",
+    "connections": [
+      {
+        "type": "duology",
+        "with": [
+          "the_talisman"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "from_a_buick_8",
+    "title": "From a Buick 8",
+    "yearPublished": 2002,
+    "type": "Novel",
+    "darkTowerExtended": true,
+    "synopsis": "Shortly after his father, a Pennsylvania state trooper, is killed in a senseless automobile accident, Ned Wilcox discovers that the members of Troop D have a secret concealed behind their headquarters. Curtis Wilcox's friends and colleagues take turns relating the twenty-year history of the mysterious Buick Roadmaster locked in Shed B and how its discovery and unexplained behavior has captivated the tightly knit group of men for two decades. The Buick seems to be a conduit to another reality and every now and then it breathes, inhaling a little bit of this world, exhaling a little bit of whatever world it came from.",
+    "connections": []
+  },
+  {
+    "id": "everythings_eventual",
+    "title": "Everything’s Eventual",
+    "yearPublished": 2002,
+    "type": "Short Story Collection",
+    "darkTowerExtended": true,
+    "connections": [],
+    "stories": [
+      "Autopsy Room Four",
+      "The Man in the Black Suit",
+      "All That You Love Will Be Carried Away",
+      "The Death of Jack Hamilton",
+      "In the Deathroom",
+      "The Little Sisters of Eluria",
+      "Everything's Eventual",
+      "L. T.'s Theory of Pets",
+      "The Road Virus Heads North",
+      "Lunch at the Gotham Café",
+      "That Feeling, You Can Only Say What It Is in French",
+      "1408",
+      "Riding the Bullet",
+      "Luckey Quarter"
+    ]
+  },
+  {
+    "id": "wolves_of_the_calla",
+    "title": "The Dark Tower: Wolves of the Calla",
+    "yearPublished": 2003,
+    "type": "Dark Tower",
+    "darkTowerExtended": true,
+    "connections": []
+  },
+  {
+    "id": "song_of_susannah",
+    "title": "The Dark Tower: Song of Susannah",
+    "yearPublished": 2004,
+    "type": "Dark Tower",
+    "darkTowerExtended": true,
+    "connections": []
+  },
+  {
+    "id": "the_dark_tower",
+    "title": "The Dark Tower: The Dark Tower",
+    "yearPublished": 2004,
+    "type": "Dark Tower",
+    "darkTowerExtended": true,
+    "connections": []
+  },
+  {
+    "id": "faithful",
+    "title": "Faithful",
+    "yearPublished": 2005,
+    "type": "Non-fiction",
+    "darkTowerExtended": false,
+    "connections": []
+  },
+  {
+    "id": "the_colorado_kid",
+    "title": "The Colorado Kid",
+    "yearPublished": 2005,
+    "type": "Novel",
+    "darkTowerExtended": false,
+    "synopsis": "Vince Teague and Dave Bowie are the sole operators of The Weekly Islander, a small Maine newspaper.  Stephanie McCann has been working for them as an intern.   When Stephanie asks if they've ever come across a real unexplained mystery in the fifty years they'd been publishing the paper, they tell her the story of The Colorado Kid.",
+    "connections": []
+  },
+  {
+    "id": "cell",
+    "title": "Cell",
+    "yearPublished": 2006,
+    "type": "Novel",
+    "darkTowerExtended": false,
+    "synopsis": "Artist Clayton Riddell had been in Boston negotiating a successful deal to sell his comic book project. His joy at finally hitting it big is shattered by an event called The Pulse which causes all those who were using their cell phones at the time of The Pulse to become zombies attacking and killing anyone in their way. Fortunately for Clay, he does not own a cell phone. In the panic to get out of Boston and find his way home to his wife and son in Maine, he is joined by Tom McCourt, a man he meets in the meleé immediately following The Pulse and a young girl, Alice, who they rescue from being killed by one of the \"crazies.\" The story follows their terrifying journey, avoiding capture—and worse—by the \"crazies\" who are beginning to \"flock\" and are led by one they call Raggedy Man as they attempt to reach Maine and a place called Kashwak which they hope will be their salvation.",
+    "connections": []
+  },
+  {
+    "id": "liseys_story",
+    "title": "Lisey’s Story",
+    "yearPublished": 2006,
+    "type": "Novel",
+    "darkTowerExtended": false,
+    "synopsis": "Two years after her husband's death, Lisey Landon decides it's time to go through his office to clear out his papers.  Scott Landon was a bestselling novelist and Lisey has been besieged by people wanting to buy any of his unpublished work but she is determined not to let that happen.  As she begins the process of cleaning, she is contacted by an unsavory character who claims that if she does not turn over the papers, he will make her suffer the consequences.  Finding strength she did not know she had and never used during their marriage, Lisey refuses, and true to his word, \"Zack McCool\" begins to stalk her.  Lisey begins to remember strange events from her marriage that she had suppressed and finds clues that may help save her life.",
+    "connections": []
+  },
+  {
+    "id": "blaze",
+    "title": "Blaze",
+    "yearPublished": 2007,
+    "type": "Bachman",
+    "darkTowerExtended": false,
+    "synopsis": "Clayton Blaisdell, Jr., a/k/a Blaze, has had a hard life which led him to petty criminal activities. Even though his partner, George Rackley, died three months before, Blaze is still hearing his instructions for pulling off one more scheme--the kidnapping of an infant whose parents are millionaires. The story tells of the attachment Blaze forms for baby Joe as he remembers his own childhood--one that was much different than the one baby Joe will have.",
+    "connections": []
+  },
+  {
+    "id": "duma_key",
+    "title": "Duma Key",
+    "yearPublished": 2008,
+    "type": "Novel",
+    "darkTowerExtended": false,
+    "synopsis": "After a construction accident in which he loses his right arm and his divorce, Edgar Freemantle moves from Minnesota to Florida to begin what his psychiatrist described as a \"geographic cure.\"  He rediscovers his love of painting and finds that he is good at it but his paintings seem to have something \"more\" to them.  On Duma Key he also finds a new friendship with Wireman, a kindred spirit seeking refuge there as a caretaker for Elizabeth Eastlake.  Elizabeth's past also contains painful memories that have been reawakened bringing all of them together to face an evil entity named Perse.",
+    "connections": []
+  },
+  {
+    "id": "just_after_sunset",
+    "title": "Just After Sunset",
+    "yearPublished": 2008,
+    "type": "Short Story Collection",
+    "darkTowerExtended": false,
+    "connections": [],
+    "stories": [
+      "Willa",
+      "The Gingerbread Girl",
+      "Harvey's Dream",
+      "Rest Stop",
+      "Stationary Bike",
+      "The Things They Left Behind",
+      "Graduation Afternoon",
+      "N.",
+      "The Cat from Hell",
+      "The New York Times at Special Bargain Rates",
+      "Mute",
+      "Ayana",
+      "A Very Tight Place"
+    ]
+  },
+  {
+    "id": "under_the_dome",
+    "title": "Under the Dome",
+    "yearPublished": 2009,
+    "type": "Novel",
+    "darkTowerExtended": false,
+    "connections": [],
+    "synopsis": "On an entirely normal, beautiful fall day in Chester's Mill, Maine, the town is inexplicably and suddenly sealed off from the rest of the world by an invisible force field. Planes crash into it and fall from the sky in flaming wreckage, a gardener's hand is severed as the dome comes down on it, people running errands in the neighboring town are divided from their families, and cars explode on impact. No one can fathom what this barrier is, where it came from, and when—or if—it will go away. As time goes by and resources dwindle, the residents of Chester's Mill face their worst nightmares as terror, paranoia, and violence overtake the town."
+  },
+  {
+    "id": "full_dark_no_stars",
+    "title": "Full Dark, No Stars",
+    "yearPublished": 2010,
+    "type": "Collection",
+    "darkTowerExtended": false,
+    "connections": [],
+    "stories": [
+      "1922",
+      "Big Driver",
+      "Fair Extension",
+      "A Good Marriage"
+    ]
+  },
+  {
+    "id": "112263",
+    "title": "11/22/63",
+    "yearPublished": 2011,
+    "type": "Novel",
+    "darkTowerExtended": true,
+    "connections": [],
+    "isbn": "1451627289",
+    "synopsis": "Life can turn on a dime—or stumble into the extraordinary. High school English teacher Jake Epping's life is about to change when a dying friend reveals a portal to 1958 in the back of a diner. Jake has the chance to change history and prevent the assassination of John F. Kennedy. But history doesn't want to be changed, and Jake's mission will put at risk everything he has ever known. Time-travel has never been so believable. Or so terrifying."
+  },
+  {
+    "id": "the_wind_through_the_keyhole",
+    "title": "The Dark Tower: The Wind Through the Keyhole",
+    "yearPublished": 2012,
+    "type": "Dark Tower",
+    "darkTowerExtended": true,
+    "connections": []
+  },
+  {
+    "id": "joyland",
+    "title": "Joyland",
+    "yearPublished": 2013,
+    "type": "Novel",
+    "darkTowerExtended": false,
+    "synopsis": "After realizing his romantic life is not going in the direction he'd hoped, Devin Jones decides to take a summer job at an amusement park. There he makes friends with Tom Kennedy and Erin Cook, also summer hires at Joyland, which years before had been the scene of the murder of a young woman named Linda Gray whose ghost is said to be seen at the Horror House. He also befriends a young boy, named Mike Ross and his mother, Annie. Their lives all become entwined when Devin decides to investigate the mystery of Linda Gray's unsolved murder by the \"Carny Killer.\"",
+    "connections": []
+  },
+  {
+    "id": "doctor_sleep",
+    "title": "Doctor Sleep",
+    "yearPublished": 2013,
+    "type": "Novel",
+    "darkTowerExtended": false,
+    "connections": [
+      {
+        "type": "duology",
+        "with": [
+          "the_shining"
+        ]
+      }
+    ],
+    "synopsis": "Stephen King returns to the character and territory of one of his most popular novels ever, The Shining. Dan Torrance is now a middle-aged man. Once troubled by his own demons, Dan has found a kind of peace working at a hospice where he is known as 'Doctor Sleep' for his special ability to comfort the dying. Then Dan meets Abra Stone, a girl with psychic powers even more extraordinary than his own. Together they must face the True Knot, a cult of quasi-immortal beings who prey on children with 'the shining' to sustain their own lives."
+  },
+  {
+    "id": "mr_mercedes",
+    "title": "Mr. Mercedes",
+    "yearPublished": 2014,
+    "type": "Novel",
+    "darkTowerExtended": false,
+    "connections": [
+      {
+        "type": "trilogy",
+        "with": [
+          "finders_keepers",
+          "end_of_watch"
+        ]
+      }
+    ],
+    "synopsis": "A cat-and-mouse suspense thriller featuring a retired homicide detective who's haunted by the few cases he left open, and by one in particular - the pre-dawn slaughter of eight people among a crowd lined up for the opening of a jobs fair when the economy was guttering out. Without warning, a lone driver ploughed through the crowd in a stolen Mercedes. The plot is kicked into gear when Bill Hodges receives a letter in the mail, from a man claiming to be the perpetrator. He taunts Hodges with the notion that he will strike again. Hodges wakes up from his depressed and vacant retirement, hell-bent on preventing that from happening."
+  },
+  {
+    "id": "revival",
+    "title": "Revival",
+    "yearPublished": 2014,
+    "type": "Novel",
+    "darkTowerExtended": false,
+    "synopsis": "A dark and electrifying novel about addiction, fanaticism, and what might exist on the other side of life. In a small New England town, over half a century ago, a shadow falls over a small boy playing with his toy soldiers. Jamie Morton looks up to see a striking man, the new minister. Charles Jacobs, along with his beautiful wife, will transform the local church. When tragedy strikes the Jacobs family, this charismatic preacher curses God, mocks all religious belief, and is banished from the shocked town. Jamie has demons of his own, and in his mid-thirties—addicted to heroin, stranded, desperate—Jamie meets Charles Jacobs again, with profound consequences for both men. Their bond becomes a pact beyond even the Devil's devising, and Jamie discovers that revival has many meanings.",
+    "connections": []
+  },
+  {
+    "id": "finders_keepers",
+    "title": "Finders Keepers",
+    "yearPublished": 2015,
+    "type": "Novel",
+    "darkTowerExtended": false,
+    "synopsis": "A masterful, intensely suspenseful novel about a reader whose obsession with a reclusive writer goes far too far. The genius is John Rothstein, an iconic author who created a famous character, Jimmy Gold, but who hasn't published a book for decades. Morris Bellamy is livid, not just because Rothstein has stopped providing books, but because the nonconformist Jimmy Gold has sold out for a career in advertising. Morris kills Rothstein and empties his safe of cash, yes, but the real treasure is a trove of notebooks containing at least one more Gold novel. Morris hides the money and the notebooks, and then he is locked away for another crime. Decades later, a boy named Pete Saubers finds the treasure, and now it is Pete and his family that Bill Hodges, Holly Gibney, and Jerome Robinson must rescue from the ever-more deranged and vengeful Morris when he's released from prison after thirty-five years.",
+    "connections": [
+      {
+        "type": "trilogy",
+        "with": [
+          "mr_mercedes",
+          "end_of_watch"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "end_of_watch",
+    "title": "End of Watch",
+    "yearPublished": 2016,
+    "type": "Novel",
+    "darkTowerExtended": false,
+    "synopsis": "End of Watch is the spectacular finale to the New York Times bestselling trilogy that began with Mr. Mercedes (winner of the Edgar Award) and Finders Keepers—In End of Watch, the diabolical \"Mercedes Killer\" drives his enemies to suicide, and if Bill Hodges and Holly Gibney don't figure out a way to stop him, they'll be victims themselves. Brady Hartsfield, perpetrator of the Mercedes Massacre, where eight people were killed and many more were badly injured, has been in the Traumatic Brain Injury Clinic for five years, in a vegetative state. But behind the drool and stare, Brady is awake, and in possession of deadly new powers that allow him to wreak unimaginable havoc without ever leaving his hospital room.",
+    "connections": [
+      {
+        "type": "trilogy",
+        "with": [
+          "mr_mercedes",
+          "finders_keepers"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "charlie_the_choo_choo",
+    "title": "Charlie the Choo-Choo",
+    "yearPublished": 2016,
+    "type": "Children's Book",
+    "darkTowerExtended": true,
+    "connections": [],
+    "isbn": "978-1-5344-0123-5"
+  },
+  {
+    "id": "gwendys_button_box",
+    "title": "Gwendy's Button Box",
+    "yearPublished": 2017,
+    "type": "Novel",
+    "darkTowerExtended": false,
+    "coAuthor": "Richard Chizmar",
+    "connections": [
+      {
+        "type": "trilogy",
+        "with": [
+          "gwendys_magic_feather",
+          "gwendys_final_task"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "sleeping_beauties",
+    "title": "Sleeping Beauties",
+    "yearPublished": 2017,
+    "type": "Novel",
+    "darkTowerExtended": false,
+    "coAuthor": "Owen King",
+    "connections": []
+  },
+  {
+    "id": "bazaar_of_bad_dreams",
+    "title": "The Bazaar of Bad Dreams",
+    "yearPublished": 2015,
+    "type": "Collection",
+    "darkTowerExtended": false,
+    "connections": [],
+    "stories": [
+      "Mile 81",
+      "Premium Harmony",
+      "Batman and Robin Have an Altercation",
+      "The Dune",
+      "Bad Little Kid",
+      "A Death",
+      "The Bone Church",
+      "Morality",
+      "Afterlife",
+      "Ur",
+      "Herman Wouk Is Still Alive",
+      "Under the Weather",
+      "Blockade Billy",
+      "Mister Yummy",
+      "Tommy",
+      "The Little Green God of Agony",
+      "That Bus Is Another World",
+      "Obits",
+      "Drunken Fireworks",
+      "Summer Thunder"
+    ]
+  },
+  {
+    "id": "the_outsider",
+    "title": "The Outsider",
+    "yearPublished": 2018,
+    "type": "Novel",
+    "darkTowerExtended": false,
+    "connections": [],
+    "synopsis": "An eleven-year-old boy's violated corpse is discovered in a town park. Eyewitnesses and fingerprints point unmistakably to one of Flint City's most popular citizens—Terry Maitland, Little League coach, English teacher, husband, and father of two girls. Detective Ralph Anderson, whose son Maitland once coached, orders a quick and very public arrest. But Maitland has an alibi. Anderson and the DA have an impeccable case against him, but they also have unimpeachable evidence that Maitland was in another city at the time of the murder. How can he be in two places at once?"
+  },
+  {
+    "id": "elevation",
+    "title": "Elevation",
+    "yearPublished": 2018,
+    "type": "Novel",
+    "darkTowerExtended": false,
+    "synopsis": "The latest from legendary master storyteller Stephen King, a riveting, extraordinarily eerie, and moving story about a man whose mysterious affliction brings a small town together—a timely, upbeat tale about finding common ground despite deep-rooted differences. Although Scott Carey doesn't look any different, he's been steadily losing weight. There are a couple of other odd things, too. He weighs the same in his clothes and out of them, no matter how heavy they are. In the small town of Castle Rock, Scott is engaged in a low grade—but escalating—battle with the lesbians next door whose dog regularly drops his business on Scott's lawn. When Scott finally understands the prejudices they face – including his own -- he tries to help. Unlikely alliances, the annual foot race, and the mystery of Scott's affliction bring out the best in people who have indulged the worst in themselves and others.",
+    "connections": []
+  },
+  {
+    "id": "the_institute",
+    "title": "The Institute",
+    "yearPublished": 2019,
+    "type": "Novel",
+    "darkTowerExtended": false,
+    "connections": [],
+    "synopsis": "In the middle of the night, in a house on a quiet street in suburban Minneapolis, intruders silently murder Luke Ellis's parents and load him into a black SUV. The operation takes less than two minutes. Luke will wake up at The Institute, in a room that looks just like his own, except there's no window. And outside his door are other doors, behind which are other kids with special talents—telekinesis and telepathy—who got to this place the same way Luke did: Kalisha, Nick, George, Iris, and ten-year-old Avery Dixon. They are all in Front Half. Others, Luke learns, graduated to Back Half. 'Like you will', Mrs. Sigsby, the Institute's director, tells Luke."
+  },
+  {
+    "id": "gwendys_magic_feather",
+    "title": "Gwendy's Magic Feather",
+    "yearPublished": 2019,
+    "type": "Novel",
+    "darkTowerExtended": false,
+    "coAuthor": "Richard Chizmar",
+    "connections": [
+      {
+        "type": "trilogy",
+        "with": [
+          "gwendys_button_box",
+          "gwendys_final_task"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "if_it_bleeds",
+    "title": "If It Bleeds",
+    "yearPublished": 2020,
+    "type": "Collection",
+    "darkTowerExtended": false,
+    "connections": []
+  },
+  {
+    "id": "later",
+    "title": "Later",
+    "yearPublished": 2021,
+    "type": "Novel",
+    "darkTowerExtended": false,
+    "synopsis": "The son of a struggling single mother, Jamie Conklin just wants an ordinary childhood. But Jamie is no ordinary child. Born with an unnatural ability his mom urges him to keep secret, Jamie can see what no one else can see and learn what no one else can learn. But the cost of using this ability is higher than Jamie can imagine—as he discovers when an NYPD detective draws him into the pursuit of a killer who has threatened to strike from beyond the grave. LATER is Stephen King at his finest, a terrifying and touching story of innocence lost and the trials that test our sense of right and wrong.",
+    "connections": []
+  },
+  {
+    "id": "billy_summers",
+    "title": "Billy Summers",
+    "yearPublished": 2021,
+    "type": "Novel",
+    "darkTowerExtended": false,
+    "connections": [],
+    "synopsis": "Billy Summers is a man in a room with a gun. He's a killer for hire and the best in the business. But he'll do the job only if the target is a truly bad guy. Now Billy wants out. But first there is one last hit. Billy is among the best snipers in the world, a decorated Iraq war vet, a Houdini when it comes to vanishing after the job is done. So what could possibly go wrong? How about everything."
+  },
+  {
+    "id": "fairy_tale",
+    "title": "Fairy Tale",
+    "yearPublished": 2022,
+    "type": "Novel",
+    "darkTowerExtended": true,
+    "connections": [],
+    "synopsis": "Charlie Reade looks like a regular high school kid, great at baseball and football, a decent student. But he carries a heavy load. His mom was killed in a hit-and-run accident when he was seven, and grief drove his dad to drink. Charlie learned how to take care of himself—and his dad. Then, when Charlie is seventeen, he meets a dog named Radar and her aging master, Howard Bowditch, a recluse in a big house at the top of a big hill. In the backyard is a locked shed from which strange sounds emerge, and when Mr. Bowditch dies, he leaves Charlie a cassette tape telling a story no one would believe—inside the shed is a portal to another world."
+  },
+  {
+    "id": "gwendys_final_task",
+    "title": "Gwendy's Final Task",
+    "yearPublished": 2022,
+    "type": "Novel",
+    "darkTowerExtended": false,
+    "coAuthor": "Richard Chizmar",
+    "connections": [
+      {
+        "type": "trilogy",
+        "with": [
+          "gwendys_button_box",
+          "gwendys_magic_feather"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "holly",
+    "title": "Holly",
+    "yearPublished": 2023,
+    "type": "Novel",
+    "darkTowerExtended": false,
+    "synopsis": "Holly Gibney, one of Stephen King's most compelling and ingeniously resourceful characters, returns in this thrilling novel to solve the gruesome truth behind multiple disappearances in a midwestern town. When Penny Dahl calls the Finders Keepers detective agency hoping for help locating her missing daughter, Holly is reluctant to accept the case. Her partner, Pete, has Covid. Her (very complicated) mother has just died. And Holly is meant to be on leave. But something in Penny Dahl's desperate voice makes it impossible for Holly to turn her down. Mere blocks from where Bonnie Dahl disappeared live Professors Rodney and Emily Harris. They are the picture of bourgeois respectability: married octogenarians, devoted to each other, and semi-retired lifelong academics. But they are harboring an unholy secret in the basement of their well-kept, book-lined home, one that may be related to Bonnie's disappearance.",
+    "connections": []
+  },
+  {
+    "id": "you_like_it_darker",
+    "title": "You Like It Darker",
+    "yearPublished": 2024,
+    "type": "Short Story Collection",
+    "darkTowerExtended": false,
+    "connections": [],
+    "stories": [
+      "Two Talented Bastids",
+      "The Fifth Step",
+      "Willie the Weirdo",
+      "Danny Coughlin's Bad Dream",
+      "Finn",
+      "On Slide Inn Road",
+      "Red Screen",
+      "The Turbulence Expert",
+      "Laurie",
+      "Rattlesnakes",
+      "The Dreamers",
+      "The Answer Man"
+    ]
+  },
+  {
+    "id": "never_flinch",
+    "title": "Never Flinch",
+    "yearPublished": 2025,
+    "type": "Novel",
+    "darkTowerExtended": false,
+    "synopsis": "When the Buckeye City Police Department receives a disturbing letter from a person threatening to \"kill thirteen innocents and one guilty\" in \"an act of atonement for the needless death of an innocent man,\" Detective Izzy Jaynes has no idea what to think. As the investigation unfolds, Izzy realizes that the letter writer is deadly serious, and she turns to her friend Holly Gibney for help. Meanwhile, controversial and outspoken women's rights activist Kate McKay is embarking on a multi-state lecture tour, drawing packed venues of both fans and detractors. Someone who vehemently opposes Kate's message of female empowerment is targeting her and disrupting her events. At first, no one is hurt, but the stalker is growing bolder, and Holly is hired to be Kate's bodyguard. Featuring a riveting cast of characters both old and new, these twinned narratives converge in a chilling and spectacular conclusion.",
+    "connections": []
+  },
+  {
+    "id": "hansel_and_gretel",
+    "title": "Hansel and Gretel",
+    "yearPublished": 2025,
+    "type": "Children's Book",
+    "darkTowerExtended": false,
+    "connections": [],
+    "isbn": "978-0-06-264469-5",
+    "coAuthor": "Maurice Sendak Foundation"
+  }
+]
