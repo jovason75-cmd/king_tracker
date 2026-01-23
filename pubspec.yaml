@@ -2,7 +2,7 @@ name: king_tracker_2
 description: "A new Flutter project."
 publish_to: 'none'
 
-version: 1.0.0+1
+version: 1.1.0+2
 
 environment:
   sdk: ^3.10.7
@@ -26,9 +26,9 @@ flutter:
   assets:
     - lib/assets/data/stephen_king_books.json
     - lib/assets/data/stephen_king_adaptations.json
-    - lib/app_background.png
-    - lib/App_background_2.png
-    - lib/app_background 3.png
-    - lib/app_background_4.png
-    - lib/app_background_5.png
-    - lib/app_background_6.png
+    - assets/images/app_background.png
+    - assets/images/App_background_2.png
+    - assets/images/app_background_3.png
+    - assets/images/app_background_4.png
+    - assets/images/app_background_5.png
+    - assets/images/app_background_6.png

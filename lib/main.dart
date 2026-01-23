@@ -520,7 +520,7 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Container(
             decoration: const BoxDecoration(
               image: DecorationImage(
-                image: AssetImage('lib/app_background_4.png'),
+                image: AssetImage('assets/images/app_background_4.png'),
                 fit: BoxFit.cover,
               ),
             ),
@@ -595,6 +595,23 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 const Divider(),
                 ListTile(
+                  leading: const Icon(Icons.upload_file),
+                  title: const Text('Export All Data (JSON)'),
+                  onTap: () {
+                    Navigator.pop(context);
+                    _exportAllData();
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.download),
+                  title: const Text('Import Data (JSON)'),
+                  onTap: () {
+                    Navigator.pop(context);
+                    _importData();
+                  },
+                ),
+                const Divider(),
+                ListTile(
                   leading: const Icon(Icons.picture_as_pdf),
                   title: const Text('Export Wish List to PDF'),
                   onTap: () {
@@ -623,7 +640,7 @@ class _HomeScreenState extends State<HomeScreen> {
         body: Container(
           decoration: const BoxDecoration(
             image: DecorationImage(
-              image: AssetImage('lib/App_background_2.png'),
+              image: AssetImage('assets/images/App_background_2.png'),
               fit: BoxFit.cover,
             ),
           ),
@@ -1779,6 +1796,144 @@ class _HomeScreenState extends State<HomeScreen> {
 
     await Printing.layoutPdf(onLayout: (format) async => pdf.save());
   }
+
+  Future<void> _exportAllData() async {
+    // Samle all data
+    final exportData = {
+      'version': '1.1',
+      'exportDate': DateTime.now().toIso8601String(),
+      'books': books.map((book) => {
+        'id': book.id,
+        'owned': book.owned,
+        'read': book.read,
+        'wished': book.wished,
+        'rating': book.rating,
+        'notes': book.notes,
+        'storiesRead': book.storiesRead.toList(),
+      }).toList(),
+      'adaptations': adaptations.map((adaptation) => {
+        'id': adaptation.id,
+        'owned': adaptation.owned,
+        'watched': adaptation.watched,
+        'wished': adaptation.wished,
+        'rating': adaptation.rating,
+        'notes': adaptation.notes,
+      }).toList(),
+    };
+    
+    // Konverter til JSON
+    final jsonString = const JsonEncoder.withIndent('  ').convert(exportData);
+    final bytes = utf8.encode(jsonString);
+    final blob = html.Blob([bytes]);
+    final url = html.Url.createObjectUrlFromBlob(blob);
+    html.AnchorElement(href: url)
+      ..setAttribute('download', 'king_tracker_data_${DateTime.now().millisecondsSinceEpoch}.json')
+      ..click();
+    html.Url.revokeObjectUrl(url);
+    
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Data exported successfully!')),
+      );
+    }
+  }
+
+  Future<void> _importData() async {
+    final uploadInput = html.FileUploadInputElement()..accept = '.json';
+    uploadInput.click();
+    
+    uploadInput.onChange.listen((e) async {
+      final files = uploadInput.files;
+      if (files != null && files.isNotEmpty) {
+        final file = files[0];
+        final reader = html.FileReader();
+        
+        reader.onLoadEnd.listen((e) async {
+          try {
+            final jsonString = reader.result as String;
+            final data = json.decode(jsonString) as Map<String, dynamic>;
+            
+            // Valider data
+            if (data['version'] == null || data['books'] == null || data['adaptations'] == null) {
+              throw Exception('Invalid data format');
+            }
+            
+            final prefs = await SharedPreferences.getInstance();
+            
+            // Importer book data
+            for (final bookData in data['books'] as List) {
+              final bookId = bookData['id'] as String;
+              final book = books.firstWhere((b) => b.id == bookId, orElse: () => books.first);
+              
+              if (book.id == bookId) {
+                book.owned = bookData['owned'] as bool? ?? false;
+                book.read = bookData['read'] as bool? ?? false;
+                book.wished = bookData['wished'] as bool? ?? false;
+                book.rating = (bookData['rating'] as num?)?.toDouble() ?? 0.0;
+                book.notes = bookData['notes'] as String? ?? '';
+                
+                if (bookData['storiesRead'] != null) {
+                  book.storiesRead = Set<int>.from(bookData['storiesRead'] as List);
+                }
+                
+                // Lagre til SharedPreferences
+                await prefs.setBool('${book.id}_owned', book.owned);
+                await prefs.setBool('${book.id}_read', book.read);
+                await prefs.setBool('${book.id}_wished', book.wished);
+                await prefs.setDouble('${book.id}_rating', book.rating);
+                if (book.notes.isNotEmpty) {
+                  await prefs.setString('${book.id}_notes', book.notes);
+                }
+                if (book.storiesRead.isNotEmpty) {
+                  await prefs.setStringList('${book.id}_stories', 
+                    book.storiesRead.map((i) => i.toString()).toList());
+                }
+              }
+            }
+            
+            // Importer adaptation data
+            for (final adaptData in data['adaptations'] as List) {
+              final adaptId = adaptData['id'] as String;
+              final adaptation = adaptations.firstWhere((a) => a.id == adaptId, orElse: () => adaptations.first);
+              
+              if (adaptation.id == adaptId) {
+                adaptation.owned = adaptData['owned'] as bool? ?? false;
+                adaptation.watched = adaptData['watched'] as bool? ?? false;
+                adaptation.wished = adaptData['wished'] as bool? ?? false;
+                adaptation.rating = (adaptData['rating'] as num?)?.toDouble() ?? 0.0;
+                adaptation.notes = adaptData['notes'] as String? ?? '';
+                
+                // Lagre til SharedPreferences
+                await prefs.setBool('${adaptation.id}_owned', adaptation.owned);
+                await prefs.setBool('${adaptation.id}_watched', adaptation.watched);
+                await prefs.setBool('${adaptation.id}_wished', adaptation.wished);
+                await prefs.setDouble('${adaptation.id}_rating', adaptation.rating);
+                if (adaptation.notes.isNotEmpty) {
+                  await prefs.setString('${adaptation.id}_notes', adaptation.notes);
+                }
+              }
+            }
+            
+            setState(() {});
+            
+            if (mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('Data imported successfully! ${(data['books'] as List).length} books and ${(data['adaptations'] as List).length} adaptations updated.')),
+              );
+            }
+          } catch (e) {
+            if (mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('Error importing data: $e')),
+              );
+            }
+          }
+        });
+        
+        reader.readAsText(file);
+      }
+    });
+  }
 }
 
 /* ---------------- DETAIL SCREEN ---------------- */
@@ -1875,7 +2030,7 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
         height: double.infinity,
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: const AssetImage('lib/App_background_2.png'),
+            image: const AssetImage('assets/images/App_background_2.png'),
             fit: BoxFit.cover,
           ),
         ),
@@ -2157,7 +2312,7 @@ class _AdaptationDetailScreenState extends State<AdaptationDetailScreen> {
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: const AssetImage('lib/App_background_2.png'),
+            image: const AssetImage('assets/images/App_background_2.png'),
             fit: BoxFit.cover,
           ),
         ),
@@ -2432,7 +2587,7 @@ class SettingsScreen extends StatelessWidget {
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('lib/App_background_2.png'),
+            image: AssetImage('assets/images/App_background_2.png'),
             fit: BoxFit.cover,
           ),
         ),
@@ -2503,7 +2658,7 @@ class AboutScreen extends StatelessWidget {
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('lib/App_background_2.png'),
+            image: AssetImage('assets/images/App_background_2.png'),
             fit: BoxFit.cover,
           ),
         ),
@@ -2522,7 +2677,7 @@ class AboutScreen extends StatelessWidget {
                       style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 8),
-                    const Text('Version 1.0'),
+                    const Text('Version 1.1'),
                     const SizedBox(height: 16),
                     const Text(
                       'A comprehensive tracker for Stephen King\'s bibliography and adaptations.',
@@ -2579,7 +2734,7 @@ class IconologyScreen extends StatelessWidget {
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('lib/App_background_2.png'),
+            image: AssetImage('assets/images/App_background_2.png'),
             fit: BoxFit.cover,
           ),
         ),
