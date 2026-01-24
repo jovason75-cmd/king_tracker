@@ -898,27 +898,29 @@ class _HomeScreenState extends State<HomeScreen> {
                                       _saveBook(book);
                                     },
                                   ),
-                                  Checkbox(
-                                    value: book.owned,
-                                    onChanged: (v) {
+                                  IconButton(
+                                    icon: Icon(
+                                      book.owned ? Icons.collections_bookmark : Icons.collections_bookmark_outlined,
+                                      color: book.owned ? Colors.blue : Colors.grey,
+                                    ),
+                                    onPressed: () {
                                       setState(() {
-                                        book.owned = v ?? false;
+                                        book.owned = !book.owned;
                                       });
                                       _saveBook(book);
                                     },
-                                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                    visualDensity: VisualDensity.compact,
                                   ),
-                                  Checkbox(
-                                    value: book.read,
-                                    onChanged: (v) {
+                                  IconButton(
+                                    icon: Icon(
+                                      book.read ? Icons.menu_book : Icons.menu_book_outlined,
+                                      color: book.read ? Colors.green : Colors.grey,
+                                    ),
+                                    onPressed: () {
                                       setState(() {
-                                        book.read = v ?? false;
+                                        book.read = !book.read;
                                       });
                                       _saveBook(book);
                                     },
-                                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                    visualDensity: VisualDensity.compact,
                                   ),
                                 ],
                               ),
@@ -1184,27 +1186,29 @@ class _HomeScreenState extends State<HomeScreen> {
                                           _saveAdaptation(adaptation);
                                         },
                                       ),
-                                      Checkbox(
-                                        value: adaptation.owned,
-                                        onChanged: (v) {
+                                      IconButton(
+                                        icon: Icon(
+                                          adaptation.owned ? Icons.video_library : Icons.video_library_outlined,
+                                          color: adaptation.owned ? Colors.blue : Colors.grey,
+                                        ),
+                                        onPressed: () {
                                           setState(() {
-                                            adaptation.owned = v ?? false;
+                                            adaptation.owned = !adaptation.owned;
                                           });
                                           _saveAdaptation(adaptation);
                                         },
-                                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                        visualDensity: VisualDensity.compact,
                                       ),
-                                      Checkbox(
-                                        value: adaptation.watched,
-                                        onChanged: (v) {
+                                      IconButton(
+                                        icon: Icon(
+                                          adaptation.watched ? Icons.visibility : Icons.visibility_outlined,
+                                          color: adaptation.watched ? Colors.green : Colors.grey,
+                                        ),
+                                        onPressed: () {
                                           setState(() {
-                                            adaptation.watched = v ?? false;
+                                            adaptation.watched = !adaptation.watched;
                                           });
                                           _saveAdaptation(adaptation);
                                         },
-                                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                        visualDensity: VisualDensity.compact,
                                       ),
                                     ],
                                   ),
@@ -1245,56 +1249,119 @@ class _HomeScreenState extends State<HomeScreen> {
                 Expanded(
                   child: Builder(
                     builder: (context) {
-                      final wishlist = books.where((b) => b.wished).toList();
-                      final filtered = wishlist
-                          .where((b) => b.title.toLowerCase().contains(librarySearchQuery))
+                      final wishedBooks = books.where((b) => b.wished).toList();
+                      final wishedAdaptations = adaptations.where((a) => a.wished).toList();
+                      
+                      final filteredBooks = wishedBooks
+                          .where((b) => b.title.toLowerCase().contains(librarySearchQuery.toLowerCase()))
+                          .toList();
+                      final filteredAdaptations = wishedAdaptations
+                          .where((a) => a.title.toLowerCase().contains(librarySearchQuery.toLowerCase()))
                           .toList();
                       
-                      filtered.sort((a, b) => a.yearPublished.compareTo(b.yearPublished));
+                      filteredBooks.sort((a, b) => a.yearPublished.compareTo(b.yearPublished));
+                      filteredAdaptations.sort((a, b) => a.year.compareTo(b.year));
                       
-                      if (filtered.isEmpty) {
+                      if (filteredBooks.isEmpty && filteredAdaptations.isEmpty) {
                         return const Center(
-                          child: Text('No books in your wish list yet\n\nLike a book to add it'),
+                          child: Text('No items in your wish list yet\n\nLike books or adaptations to add them'),
                         );
                       }
                       
                       return ListView(
                         padding: const EdgeInsets.only(top: 8),
-                        children: filtered.map((book) {
-                          return MouseRegion(
-                            cursor: SystemMouseCursors.click,
-                            child: Card(
-                              margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                              color: Colors.grey.shade900.withValues(alpha: 0.7),
-                              elevation: 4,
-                              child: ListTile(
-                                title: Text(book.title),
-                                trailing: IconButton(
-                                  icon: const Icon(Icons.favorite, color: Colors.red),
-                                  onPressed: () {
-                                    setState(() {
-                                      book.wished = false;
-                                    });
-                                    _saveBook(book);
-                                  },
-                                ),
-                                onTap: () async {
-                              await Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) => BookDetailScreen(
-                                    book: book,
-                                    allBooks: books,
-                                    onChanged: _saveBook,
+                        children: [
+                          if (filteredBooks.isNotEmpty) ...[
+                            Padding(
+                              padding: const EdgeInsets.all(12),
+                              child: Text(
+                                'Books (${filteredBooks.length})',
+                                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                            ...filteredBooks.map((book) {
+                              return MouseRegion(
+                                cursor: SystemMouseCursors.click,
+                                child: Card(
+                                  margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                  color: Colors.grey.shade900.withValues(alpha: 0.7),
+                                  elevation: 4,
+                                  child: ListTile(
+                                    title: Text(book.title),
+                                    subtitle: Text('${book.yearPublished} • ${book.type}'),
+                                    trailing: IconButton(
+                                      icon: const Icon(Icons.favorite, color: Colors.red),
+                                      onPressed: () {
+                                        setState(() {
+                                          book.wished = false;
+                                        });
+                                        _saveBook(book);
+                                      },
+                                    ),
+                                    onTap: () async {
+                                      await Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (_) => BookDetailScreen(
+                                            book: book,
+                                            allBooks: books,
+                                            onChanged: _saveBook,
+                                          ),
+                                        ),
+                                      );
+                                      setState(() {});
+                                    },
                                   ),
                                 ),
                               );
-                              setState(() {});
-                            },
+                            }).toList(),
+                          ],
+                          if (filteredAdaptations.isNotEmpty) ...[
+                            Padding(
+                              padding: const EdgeInsets.all(12),
+                              child: Text(
+                                'Film & TV (${filteredAdaptations.length})',
+                                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                               ),
                             ),
-                          );
-                        }).toList(),
+                            ...filteredAdaptations.map((adaptation) {
+                              return MouseRegion(
+                                cursor: SystemMouseCursors.click,
+                                child: Card(
+                                  margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                  color: Colors.grey.shade900.withValues(alpha: 0.7),
+                                  elevation: 4,
+                                  child: ListTile(
+                                    title: Text(adaptation.title),
+                                    subtitle: Text('${adaptation.year} • ${adaptation.type}'),
+                                    trailing: IconButton(
+                                      icon: const Icon(Icons.favorite, color: Colors.red),
+                                      onPressed: () {
+                                        setState(() {
+                                          adaptation.wished = false;
+                                        });
+                                        _saveAdaptation(adaptation);
+                                      },
+                                    ),
+                                    onTap: () async {
+                                      await Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (_) => AdaptationDetailScreen(
+                                            adaptation: adaptation,
+                                            books: books,
+                                            onChanged: _saveAdaptation,
+                                          ),
+                                        ),
+                                      );
+                                      setState(() {});
+                                    },
+                                  ),
+                                ),
+                              );
+                            }).toList(),
+                          ],
+                        ],
                       );
                     },
                   ),
@@ -1402,27 +1469,41 @@ class _HomeScreenState extends State<HomeScreen> {
                                               ],
                                             ),
                                           ),
-                                          Checkbox(
-                                            value: book.owned,
-                                            onChanged: (v) {
+                                          IconButton(
+                                            icon: Icon(
+                                              book.wished ? Icons.favorite : Icons.favorite_border,
+                                              color: book.wished ? Colors.red : Colors.grey,
+                                            ),
+                                            onPressed: () {
                                               setState(() {
-                                                book.owned = v ?? false;
+                                                book.wished = !book.wished;
                                               });
                                               _saveBook(book);
                                             },
-                                            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                            visualDensity: VisualDensity.compact,
                                           ),
-                                          Checkbox(
-                                            value: book.read,
-                                            onChanged: (v) {
+                                          IconButton(
+                                            icon: Icon(
+                                              book.owned ? Icons.collections_bookmark : Icons.collections_bookmark_outlined,
+                                              color: book.owned ? Colors.blue : Colors.grey,
+                                            ),
+                                            onPressed: () {
                                               setState(() {
-                                                book.read = v ?? false;
+                                                book.owned = !book.owned;
                                               });
                                               _saveBook(book);
                                             },
-                                            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                            visualDensity: VisualDensity.compact,
+                                          ),
+                                          IconButton(
+                                            icon: Icon(
+                                              book.read ? Icons.menu_book : Icons.menu_book_outlined,
+                                              color: book.read ? Colors.green : Colors.grey,
+                                            ),
+                                            onPressed: () {
+                                              setState(() {
+                                                book.read = !book.read;
+                                              });
+                                              _saveBook(book);
+                                            },
                                           ),
                                         ],
                                       ),
@@ -1535,27 +1616,41 @@ class _HomeScreenState extends State<HomeScreen> {
                                       ],
                                     ),
                                   ),
-                                  Checkbox(
-                                    value: book.owned,
-                                    onChanged: (v) {
+                                  IconButton(
+                                    icon: Icon(
+                                      book.wished ? Icons.favorite : Icons.favorite_border,
+                                      color: book.wished ? Colors.red : Colors.grey,
+                                    ),
+                                    onPressed: () {
                                       setState(() {
-                                        book.owned = v ?? false;
+                                        book.wished = !book.wished;
                                       });
                                       _saveBook(book);
                                     },
-                                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                    visualDensity: VisualDensity.compact,
                                   ),
-                                  Checkbox(
-                                    value: book.read,
-                                    onChanged: (v) {
+                                  IconButton(
+                                    icon: Icon(
+                                      book.owned ? Icons.collections_bookmark : Icons.collections_bookmark_outlined,
+                                      color: book.owned ? Colors.blue : Colors.grey,
+                                    ),
+                                    onPressed: () {
                                       setState(() {
-                                        book.read = v ?? false;
+                                        book.owned = !book.owned;
                                       });
                                       _saveBook(book);
                                     },
-                                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                    visualDensity: VisualDensity.compact,
+                                  ),
+                                  IconButton(
+                                    icon: Icon(
+                                      book.read ? Icons.menu_book : Icons.menu_book_outlined,
+                                      color: book.read ? Colors.green : Colors.grey,
+                                    ),
+                                    onPressed: () {
+                                      setState(() {
+                                        book.read = !book.read;
+                                      });
+                                      _saveBook(book);
+                                    },
                                   ),
                                 ],
                               ),
@@ -1706,7 +1801,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> _exportWishlistToPdf() async {
     final pdf = pw.Document();
-    final wishlist = books.where((b) => b.wished).toList()
+    final wishedBooks = books.where((b) => b.wished).toList()
+      ..sort((a, b) => a.title.compareTo(b.title));
+    final wishedAdaptations = adaptations.where((a) => a.wished).toList()
       ..sort((a, b) => a.title.compareTo(b.title));
 
     pdf.addPage(
@@ -1719,22 +1816,46 @@ class _HomeScreenState extends State<HomeScreen> {
               style: pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.bold)),
           ),
           pw.SizedBox(height: 20),
-          pw.Text('Total items: ${wishlist.length}', 
+          pw.Text('Total items: ${wishedBooks.length + wishedAdaptations.length}', 
             style: pw.TextStyle(fontSize: 14, fontWeight: pw.FontWeight.bold)),
           pw.SizedBox(height: 20),
-          pw.Table.fromTextArray(
-            headers: ['Title', 'Year', 'Type', 'Owned', 'Read'],
-            data: wishlist.map((book) => [
-              book.title,
-              book.yearPublished.toString(),
-              book.type,
-              book.owned ? 'Yes' : 'No',
-              book.read ? 'Yes' : 'No',
-            ]).toList(),
-            cellStyle: const pw.TextStyle(fontSize: 10),
-            headerStyle: pw.TextStyle(fontSize: 10, fontWeight: pw.FontWeight.bold),
-            cellAlignment: pw.Alignment.centerLeft,
-          ),
+          if (wishedBooks.isNotEmpty) ...[
+            pw.Text('Books (${wishedBooks.length})', 
+              style: pw.TextStyle(fontSize: 16, fontWeight: pw.FontWeight.bold)),
+            pw.SizedBox(height: 10),
+            pw.Table.fromTextArray(
+              headers: ['Title', 'Year', 'Type', 'Owned', 'Read'],
+              data: wishedBooks.map((book) => [
+                book.title,
+                book.yearPublished.toString(),
+                book.type,
+                book.owned ? 'Yes' : 'No',
+                book.read ? 'Yes' : 'No',
+              ]).toList(),
+              cellStyle: const pw.TextStyle(fontSize: 10),
+              headerStyle: pw.TextStyle(fontSize: 10, fontWeight: pw.FontWeight.bold),
+              cellAlignment: pw.Alignment.centerLeft,
+            ),
+            pw.SizedBox(height: 20),
+          ],
+          if (wishedAdaptations.isNotEmpty) ...[
+            pw.Text('Film & TV (${wishedAdaptations.length})', 
+              style: pw.TextStyle(fontSize: 16, fontWeight: pw.FontWeight.bold)),
+            pw.SizedBox(height: 10),
+            pw.Table.fromTextArray(
+              headers: ['Title', 'Year', 'Type', 'Owned', 'Watched'],
+              data: wishedAdaptations.map((adaptation) => [
+                adaptation.title,
+                adaptation.year.toString(),
+                adaptation.type,
+                adaptation.owned ? 'Yes' : 'No',
+                adaptation.watched ? 'Yes' : 'No',
+              ]).toList(),
+              cellStyle: const pw.TextStyle(fontSize: 10),
+              headerStyle: pw.TextStyle(fontSize: 10, fontWeight: pw.FontWeight.bold),
+              cellAlignment: pw.Alignment.centerLeft,
+            ),
+          ],
         ],
       ),
     );
@@ -2677,7 +2798,7 @@ class AboutScreen extends StatelessWidget {
                       style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 8),
-                    const Text('Version 1.1'),
+                    const Text('Version 1.1.1'),
                     const SizedBox(height: 16),
                     const Text(
                       'A comprehensive tracker for Stephen King\'s bibliography and adaptations.',
@@ -2706,6 +2827,15 @@ class AboutScreen extends StatelessWidget {
                       'Stephen King (born 1947) is an American author known as the "King of Horror". '
                       'He has published over 60 novels and 200 short stories, many of which have been '
                       'adapted into films, TV series, and miniseries.',
+                    ),
+                    const SizedBox(height: 24),
+                    const Divider(),
+                    const SizedBox(height: 8),
+                    const Center(
+                      child: Text(
+                        '© 2026 SongvollPodcastStudio',
+                        style: TextStyle(fontSize: 12, color: Colors.grey),
+                      ),
                     ),
                   ],
                 ),
@@ -2795,8 +2925,13 @@ class IconologyScreen extends StatelessWidget {
                 _IconExplanation(Icons.favorite, 'Wishlist', 'Book/adaptation on your wishlist', color: Colors.red),
                 _IconExplanation(Icons.favorite_border, 'Not Wished', 'Add to wishlist', color: Colors.grey),
                 _IconExplanation(Icons.star, 'Rating', 'Your rating (0-5 stars)', color: Colors.amber),
-                _IconExplanation(Icons.check_box, 'Owned/Watched', 'You own this book or watched this adaptation'),
-                _IconExplanation(Icons.check_box_outline_blank, 'Not Owned/Watched', 'You don\'t own/haven\'t watched this'),
+                _IconExplanation(Icons.collections_bookmark, 'Owned (Books)', 'You own this book', color: Colors.blue),
+                _IconExplanation(Icons.collections_bookmark_outlined, 'Not Owned', 'You don\'t own this book', color: Colors.grey),
+                _IconExplanation(Icons.menu_book, 'Read', 'You have read this book', color: Colors.green),
+                _IconExplanation(Icons.menu_book_outlined, 'Not Read', 'You haven\'t read this book', color: Colors.grey),
+                _IconExplanation(Icons.video_library, 'Owned (Film/TV)', 'You own this adaptation', color: Colors.blue),
+                _IconExplanation(Icons.visibility, 'Watched', 'You have watched this adaptation', color: Colors.green),
+                _IconExplanation(Icons.visibility_outlined, 'Not Watched', 'You haven\'t watched this adaptation', color: Colors.grey),
               ],
             ),
             const SizedBox(height: 16),
