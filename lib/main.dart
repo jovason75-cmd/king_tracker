@@ -213,6 +213,7 @@ String formatBookType(String type, {String? coAuthor}) {
 
 String? darkTowerOrder(String id) {
   const orders = {
+    // Main Series (for card 1)
     'the_gunslinger': 'TDT 1',
     'the_drawing_of_the_three': 'TDT 2',
     'the_waste_lands': 'TDT 3',
@@ -221,6 +222,33 @@ String? darkTowerOrder(String id) {
     'wolves_of_the_calla': 'TDT 5',
     'song_of_susannah': 'TDT 6',
     'the_dark_tower': 'TDT 7',
+  };
+  return orders[id];
+}
+
+String? darkTowerExtendedOrder(String id) {
+  const orders = {
+    // Extended Reading Order (for card 3)
+    'salems_lot': 'TDTex 1',
+    'the_stand': 'TDTex 2',
+    'the_gunslinger': 'TDTex 3',
+    'the_talisman': 'TDTex 4',
+    'it': 'TDTex 5',
+    'the_eyes_of_the_dragon': 'TDTex 6',
+    'the_drawing_of_the_three': 'TDTex 7',
+    'the_waste_lands': 'TDTex 8',
+    'insomnia': 'TDTex 9',
+    'rose_madder': 'TDTex 10',
+    'desperation': 'TDTex 11',
+    'the_regulators': 'TDTex 12',
+    'wizard_and_glass': 'TDTex 13',
+    'bag_of_bones': 'TDTex 14',
+    'black_house': 'TDTex 15',
+    'from_a_buick_8': 'TDTex 16',
+    'the_wind_through_the_keyhole': 'TDTex 17',
+    'wolves_of_the_calla': 'TDTex 18',
+    'song_of_susannah': 'TDTex 19',
+    'the_dark_tower': 'TDTex 20',
   };
   return orders[id];
 }
@@ -1378,13 +1406,25 @@ class _HomeScreenState extends State<HomeScreen> {
                 
                 // Separate main Dark Tower books from extended reading list
                 final mainTowerBooks = tdtexBooks.where((book) => darkTowerOrder(book.id) != null).toList();
-                final extendedBooks = tdtexBooks.where((book) => darkTowerOrder(book.id) == null).toList();
+                final extendedBooks = books.where((book) => darkTowerExtendedOrder(book.id) != null).toList();
                 
                 // Sort main tower books by order
                 mainTowerBooks.sort((a, b) {
                   final orderA = darkTowerOrder(a.id) ?? '';
                   final orderB = darkTowerOrder(b.id) ?? '';
                   return orderA.compareTo(orderB);
+                });
+                
+                // Sort extended books by extended order (numeric sort)
+                extendedBooks.sort((a, b) {
+                  final orderA = darkTowerExtendedOrder(a.id) ?? '';
+                  final orderB = darkTowerExtendedOrder(b.id) ?? '';
+                  
+                  // Extract numbers for proper sorting (TDTex 1, TDTex 2, ..., TDTex 20)
+                  final numA = int.tryParse(orderA.replaceAll(RegExp(r'[^0-9.]'), '').split('.').first) ?? 999;
+                  final numB = int.tryParse(orderB.replaceAll(RegExp(r'[^0-9.]'), '').split('.').first) ?? 999;
+                  
+                  return numA.compareTo(numB);
                 });
                 
                 return ListView(
@@ -1549,7 +1589,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                             const SizedBox(height: 12),
                             Text(
-                              'The list below is a suggested readinglist for the extended experience to The Dark Tower Universe.',
+                              'The list below is a suggested reading list for the extended experience to The Dark Tower Universe, found in The Wind Through the Keyhole.',
                               style: TextStyle(
                                 fontSize: 14,
                                 color: Colors.grey.shade300,
@@ -1593,7 +1633,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                               child: Row(
                                 children: [
-                                  buildDarkTowerBadge('TDTex'),
+                                  buildDarkTowerBadge(darkTowerExtendedOrder(book.id) ?? 'TDTex'),
                                   const SizedBox(width: 12),
                                   Expanded(
                                     child: Column(
@@ -2183,35 +2223,64 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SwitchListTile(
-                      title: const Text('Read'),
-                      value: book.read,
-                      onChanged: (value) {
-                        setState(() {
-                          book.read = value;
-                          widget.onChanged(book);
-                        });
-                      },
-                    ),
-                    SwitchListTile(
-                      title: const Text('Owned'),
-                      value: book.owned,
-                      onChanged: (value) {
-                        setState(() {
-                          book.owned = value;
-                          widget.onChanged(book);
-                        });
-                      },
-                    ),
-                    SwitchListTile(
-                      title: const Text('Wish List'),
-                      value: book.wished,
-                      onChanged: (value) {
-                        setState(() {
-                          book.wished = value;
-                          widget.onChanged(book);
-                        });
-                      },
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Column(
+                          children: [
+                            IconButton(
+                              icon: Icon(
+                                book.wished ? Icons.favorite : Icons.favorite_border,
+                                color: book.wished ? Colors.red : Colors.grey,
+                                size: 32,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  book.wished = !book.wished;
+                                  widget.onChanged(book);
+                                });
+                              },
+                            ),
+                            const Text('Wishlist', style: TextStyle(fontSize: 12)),
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            IconButton(
+                              icon: Icon(
+                                book.owned ? Icons.collections_bookmark : Icons.collections_bookmark_outlined,
+                                color: book.owned ? Colors.blue : Colors.grey,
+                                size: 32,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  book.owned = !book.owned;
+                                  widget.onChanged(book);
+                                });
+                              },
+                            ),
+                            const Text('Owned', style: TextStyle(fontSize: 12)),
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            IconButton(
+                              icon: Icon(
+                                book.read ? Icons.menu_book : Icons.menu_book_outlined,
+                                color: book.read ? Colors.green : Colors.grey,
+                                size: 32,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  book.read = !book.read;
+                                  widget.onChanged(book);
+                                });
+                              },
+                            ),
+                            const Text('Read', style: TextStyle(fontSize: 12)),
+                          ],
+                        ),
+                      ],
                     ),
                     const Divider(),
                     const Text('Rating:', style: TextStyle(fontSize: 16)),
@@ -2491,25 +2560,64 @@ class _AdaptationDetailScreenState extends State<AdaptationDetailScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SwitchListTile(
-                      title: const Text('Watched'),
-                      value: adaptation.watched,
-                      onChanged: (value) {
-                        setState(() {
-                          adaptation.watched = value;
-                          widget.onChanged(adaptation);
-                        });
-                      },
-                    ),
-                    SwitchListTile(
-                      title: const Text('Owned'),
-                      value: adaptation.owned,
-                      onChanged: (value) {
-                        setState(() {
-                          adaptation.owned = value;
-                          widget.onChanged(adaptation);
-                        });
-                      },
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Column(
+                          children: [
+                            IconButton(
+                              icon: Icon(
+                                adaptation.wished ? Icons.favorite : Icons.favorite_border,
+                                color: adaptation.wished ? Colors.red : Colors.grey,
+                                size: 32,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  adaptation.wished = !adaptation.wished;
+                                  widget.onChanged(adaptation);
+                                });
+                              },
+                            ),
+                            const Text('Wishlist', style: TextStyle(fontSize: 12)),
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            IconButton(
+                              icon: Icon(
+                                adaptation.owned ? Icons.video_library : Icons.video_library_outlined,
+                                color: adaptation.owned ? Colors.blue : Colors.grey,
+                                size: 32,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  adaptation.owned = !adaptation.owned;
+                                  widget.onChanged(adaptation);
+                                });
+                              },
+                            ),
+                            const Text('Owned', style: TextStyle(fontSize: 12)),
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            IconButton(
+                              icon: Icon(
+                                adaptation.watched ? Icons.visibility : Icons.visibility_outlined,
+                                color: adaptation.watched ? Colors.green : Colors.grey,
+                                size: 32,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  adaptation.watched = !adaptation.watched;
+                                  widget.onChanged(adaptation);
+                                });
+                              },
+                            ),
+                            const Text('Watched', style: TextStyle(fontSize: 12)),
+                          ],
+                        ),
+                      ],
                     ),
                     const Divider(),
                     const Text('Rating:', style: TextStyle(fontSize: 16)),
@@ -2798,7 +2906,7 @@ class AboutScreen extends StatelessWidget {
                       style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 8),
-                    const Text('Version 1.1.1'),
+                    const Text('Version 1.2.0'),
                     const SizedBox(height: 16),
                     const Text(
                       'A comprehensive tracker for Stephen King\'s bibliography and adaptations.',
