@@ -61,6 +61,7 @@ class Book {
   final bool darkTowerExtended;
   final List<Connection> connections;
   final List<String>? stories;
+  final Map<int, String>? storySynopses;
   final String? coAuthor;
   final String? synopsis;
 
@@ -80,6 +81,7 @@ class Book {
     required this.darkTowerExtended,
     required this.connections,
     this.stories,
+    this.storySynopses,
     this.coAuthor,
     this.synopsis,
     this.owned = false,
@@ -101,6 +103,13 @@ class Book {
           .toList(),
       stories: json['stories'] != null
           ? List<String>.from(json['stories'])
+          : null,
+      storySynopses: json['storySynopses'] != null
+          ? Map<int, String>.from(
+              (json['storySynopses'] as Map).map(
+                (key, value) => MapEntry(int.parse(key.toString()), value.toString()),
+              ),
+            )
           : null,
       coAuthor: json['coAuthor'],
       synopsis: json['synopsis'],
@@ -461,6 +470,54 @@ class _HomeScreenState extends State<HomeScreen> {
     prefs.setBool('${adaptation.id}_wished', adaptation.wished);
     prefs.setDouble('${adaptation.id}_rating', adaptation.rating);
     prefs.setString('${adaptation.id}_notes', adaptation.notes);
+  }
+
+  Widget _buildSeriesButton(BuildContext context, String seriesName, String firstBookId, IconData icon) {
+    final firstBook = books.firstWhere((book) => book.id == firstBookId);
+    return InkWell(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => BookDetailScreen(
+              book: firstBook,
+              allBooks: books,
+              onChanged: (book) {
+                setState(() {});
+              },
+            ),
+          ),
+        );
+      },
+      child: Container(
+        margin: const EdgeInsets.symmetric(vertical: 6),
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: Colors.teal.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(6),
+          border: Border.all(
+            color: Colors.teal.withValues(alpha: 0.3),
+            width: 1,
+          ),
+        ),
+        child: Row(
+          children: [
+            Icon(icon, color: Colors.teal.shade300, size: 20),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                seriesName,
+                style: const TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+            Icon(Icons.chevron_right, color: Colors.grey.shade400, size: 20),
+          ],
+        ),
+      ),
+    );
   }
 
   List<Book> get sortedBooks {
@@ -1699,6 +1756,58 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       );
                     }).toList(),
+                    
+                    // Other Connected Works Card
+                    Card(
+                      color: Colors.grey.shade900.withValues(alpha: 0.4),
+                      margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                      elevation: 4,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        side: BorderSide(
+                          color: Colors.teal.withValues(alpha: 0.5),
+                          width: 1,
+                        ),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Icon(Icons.book_outlined, color: Colors.teal.shade200, size: 24),
+                                const SizedBox(width: 12),
+                                const Text(
+                                  'Other Connected Works',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 12),
+                            Text(
+                              'Duologies, trilogies, and series connected to the Dark Tower universe.',
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.grey.shade300,
+                                height: 1.4,
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                            _buildSeriesButton(context, 'The Shining Duology', 'the_shining', Icons.hotel),
+                            _buildSeriesButton(context, 'The Jack Sawyer Duology', 'the_talisman', Icons.explore),
+                            _buildSeriesButton(context, 'The Tak Duology', 'desperation', Icons.warning_amber),
+                            _buildSeriesButton(context, 'The Eclipse Duology', 'geralds_game', Icons.nightlight),
+                            _buildSeriesButton(context, 'The Bill Hodges Trilogy', 'mr_mercedes', Icons.local_police),
+                            _buildSeriesButton(context, 'The Holly Chronicles', 'mr_mercedes', Icons.person),
+                            _buildSeriesButton(context, 'The Gwendy Trilogy', 'gwendys_button_box', Icons.widgets),
+                          ],
+                        ),
+                      ),
+                    ),
                   ],
                 );
               },
@@ -2273,6 +2382,18 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                               onPressed: () {
                                 setState(() {
                                   book.read = !book.read;
+                                  // If book has stories, mark all as read/unread
+                                  if (book.stories != null && book.stories!.isNotEmpty) {
+                                    if (book.read) {
+                                      // Mark all stories as read
+                                      book.storiesRead = Set<int>.from(
+                                        List.generate(book.stories!.length, (index) => index)
+                                      );
+                                    } else {
+                                      // Mark all stories as unread
+                                      book.storiesRead.clear();
+                                    }
+                                  }
                                   widget.onChanged(book);
                                 });
                               },
@@ -2383,34 +2504,94 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
               ),
               const SizedBox(height: 8),
               ...List.generate(book.stories!.length, (index) {
-                return CheckboxListTile(
-                  title: Row(
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 4),
+                  child: Row(
                     children: [
-                      Text(
-                        '${index + 1}. ',
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w500,
-                          color: Colors.grey,
+                      // Read/Unread icon outside the card
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            if (book.storiesRead.contains(index)) {
+                              book.storiesRead.remove(index);
+                            } else {
+                              book.storiesRead.add(index);
+                            }
+                          });
+                          widget.onChanged(book);
+                        },
+                        child: Icon(
+                          book.storiesRead.contains(index)
+                              ? Icons.menu_book
+                              : Icons.menu_book_outlined,
+                          color: book.storiesRead.contains(index)
+                              ? Colors.green
+                              : Colors.grey,
+                          size: 24,
                         ),
                       ),
+                      const SizedBox(width: 12),
+                      // Clickable card for story details
                       Expanded(
-                        child: Text(book.stories![index]),
+                        child: Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            borderRadius: BorderRadius.circular(6),
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => StoryDetailScreen(
+                                    storyTitle: book.stories![index],
+                                    storyIndex: index,
+                                    synopsis: book.storySynopses?[index],
+                                    collectionTitle: book.title,
+                                    isRead: book.storiesRead.contains(index),
+                                    onReadChanged: (isRead) {
+                                      setState(() {
+                                        if (isRead) {
+                                          book.storiesRead.add(index);
+                                        } else {
+                                          book.storiesRead.remove(index);
+                                        }
+                                      });
+                                      widget.onChanged(book);
+                                    },
+                                  ),
+                                ),
+                              );
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                              decoration: BoxDecoration(
+                                color: Colors.grey.withValues(alpha: 0.1),
+                                borderRadius: BorderRadius.circular(6),
+                                border: Border.all(
+                                  color: Colors.grey.withValues(alpha: 0.3),
+                                  width: 1,
+                                ),
+                              ),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    '${index + 1}. ',
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Text(book.stories![index]),
+                                  ),
+                                  Icon(Icons.chevron_right, color: Colors.grey.shade400, size: 20),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
                     ],
                   ),
-                  value: book.storiesRead.contains(index),
-                  onChanged: (v) {
-                    setState(() {
-                      if (v == true) {
-                        book.storiesRead.add(index);
-                      } else {
-                        book.storiesRead.remove(index);
-                      }
-                    });
-                    widget.onChanged(book);
-                  },
-                  controlAffinity: ListTileControlAffinity.leading,
-                  contentPadding: EdgeInsets.zero,
                 );
               }),
             ],
@@ -2906,7 +3087,7 @@ class AboutScreen extends StatelessWidget {
                       style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 8),
-                    const Text('Version 1.2.0'),
+                    const Text('Version 1.3.0'),
                     const SizedBox(height: 16),
                     const Text(
                       'A comprehensive tracker for Stephen King\'s bibliography and adaptations.',
@@ -3112,4 +3293,126 @@ class _IconExplanation {
   final Widget? badge;
 
   _IconExplanation(this.icon, this.title, this.description, {this.color, this.badge});
+}
+
+class StoryDetailScreen extends StatefulWidget {
+  final String storyTitle;
+  final int storyIndex;
+  final String? synopsis;
+  final String collectionTitle;
+  final bool isRead;
+  final Function(bool) onReadChanged;
+
+  const StoryDetailScreen({
+    super.key,
+    required this.storyTitle,
+    required this.storyIndex,
+    this.synopsis,
+    required this.collectionTitle,
+    required this.isRead,
+    required this.onReadChanged,
+  });
+
+  @override
+  State<StoryDetailScreen> createState() => _StoryDetailScreenState();
+}
+
+class _StoryDetailScreenState extends State<StoryDetailScreen> {
+  late bool isRead;
+
+  @override
+  void initState() {
+    super.initState();
+    isRead = widget.isRead;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.storyTitle),
+        backgroundColor: Colors.purple.shade900,
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              widget.storyTitle,
+              style: const TextStyle(
+                fontSize: 28,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'from ${widget.collectionTitle}',
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.grey.shade400,
+                fontStyle: FontStyle.italic,
+              ),
+            ),
+            const SizedBox(height: 24),
+            
+            // Read Status
+            Row(
+              children: [
+                IconButton(
+                  icon: Icon(
+                    isRead ? Icons.menu_book : Icons.menu_book_outlined,
+                    color: isRead ? Colors.green : Colors.grey,
+                  ),
+                  iconSize: 32,
+                  onPressed: () {
+                    setState(() {
+                      isRead = !isRead;
+                    });
+                    widget.onReadChanged(isRead);
+                  },
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  isRead ? 'Read' : 'Not Read',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: isRead ? Colors.green : Colors.grey,
+                  ),
+                ),
+              ],
+            ),
+            
+            const SizedBox(height: 32),
+            
+            // Synopsis Section
+            const Text(
+              'Synopsis',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 12),
+            
+            if (widget.synopsis != null && widget.synopsis!.isNotEmpty)
+              Text(
+                widget.synopsis!,
+                style: TextStyle(
+                  fontSize: 16,
+                  height: 1.5,
+                  color: Colors.grey.shade300,
+                ),
+              )
+            else
+              Text(
+                'No synopsis available for this story yet.',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontStyle: FontStyle.italic,
+                  color: Colors.grey.shade500,
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
 }
