@@ -19,17 +19,94 @@ enum SortMode {
   alphabetic,
 }
 
+enum AppThemeMode {
+  light,
+  dark,
+  system,
+}
+
 /* ---------------- APP ---------------- */
 
-class KingTrackerApp extends StatelessWidget {
+class KingTrackerApp extends StatefulWidget {
   const KingTrackerApp({super.key});
+
+  @override
+  State<KingTrackerApp> createState() => _KingTrackerAppState();
+}
+
+class _KingTrackerAppState extends State<KingTrackerApp> {
+  AppThemeMode _themeMode = AppThemeMode.system;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadThemeMode();
+  }
+
+  Future<void> _loadThemeMode() async {
+    final prefs = await SharedPreferences.getInstance();
+    final themeString = prefs.getString('theme_mode') ?? 'system';
+    setState(() {
+      _themeMode = AppThemeMode.values.firstWhere(
+        (e) => e.name == themeString,
+        orElse: () => AppThemeMode.system,
+      );
+    });
+  }
+
+  Future<void> _setThemeMode(AppThemeMode mode) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('theme_mode', mode.name);
+    setState(() {
+      _themeMode = mode;
+    });
+  }
+
+  ThemeMode _getThemeMode() {
+    switch (_themeMode) {
+      case AppThemeMode.light:
+        return ThemeMode.light;
+      case AppThemeMode.dark:
+        return ThemeMode.dark;
+      case AppThemeMode.system:
+        return ThemeMode.system;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'King Tracker',
-      theme: ThemeData.dark(),
-      home: const HomeScreen(),
+      theme: ThemeData(
+        brightness: Brightness.light,
+        colorScheme: ColorScheme.light(
+          primary: Colors.purple.shade700,
+          secondary: Colors.teal.shade600,
+          surface: Colors.grey.shade100,
+        ),
+        scaffoldBackgroundColor: Colors.grey.shade50,
+        cardColor: Colors.white,
+        appBarTheme: AppBarTheme(
+          backgroundColor: Colors.purple.shade700,
+          foregroundColor: Colors.white,
+        ),
+      ),
+      darkTheme: ThemeData(
+        brightness: Brightness.dark,
+        colorScheme: ColorScheme.dark(
+          primary: Colors.purple.shade300,
+          secondary: Colors.teal.shade300,
+          surface: Colors.grey.shade900,
+        ),
+        scaffoldBackgroundColor: Colors.black,
+        cardColor: Colors.grey.shade900,
+        appBarTheme: AppBarTheme(
+          backgroundColor: Colors.purple.shade900,
+          foregroundColor: Colors.white,
+        ),
+      ),
+      themeMode: _getThemeMode(),
+      home: HomeScreen(onThemeChanged: _setThemeMode, currentThemeMode: _themeMode),
     );
   }
 }
@@ -368,7 +445,14 @@ Future<String?> fetchSynopsisFromOpenLibrary(String title, int year) async {
 /* ---------------- HOME SCREEN ---------------- */
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  final Function(AppThemeMode) onThemeChanged;
+  final AppThemeMode currentThemeMode;
+  
+  const HomeScreen({
+    super.key,
+    required this.onThemeChanged,
+    required this.currentThemeMode,
+  });
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -655,7 +739,12 @@ class _HomeScreenState extends State<HomeScreen> {
                     Navigator.pop(context);
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (_) => const AboutScreen()),
+                      MaterialPageRoute(
+                        builder: (_) => AboutScreen(
+                          onThemeChanged: widget.onThemeChanged,
+                          currentThemeMode: widget.currentThemeMode,
+                        ),
+                      ),
                     );
                   },
                 ),
@@ -3052,9 +3141,21 @@ class SettingsScreen extends StatelessWidget {
    ABOUT SCREEN
    ============================================ */
 
-class AboutScreen extends StatelessWidget {
-  const AboutScreen({super.key});
+class AboutScreen extends StatefulWidget {
+  final Function(AppThemeMode) onThemeChanged;
+  final AppThemeMode currentThemeMode;
   
+  const AboutScreen({
+    super.key,
+    required this.onThemeChanged,
+    required this.currentThemeMode,
+  });
+
+  @override
+  State<AboutScreen> createState() => _AboutScreenState();
+}
+
+class _AboutScreenState extends State<AboutScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -3087,7 +3188,7 @@ class AboutScreen extends StatelessWidget {
                       style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 8),
-                    const Text('Version 1.3.1'),
+                    const Text('Version 1.4.0'),
                     const SizedBox(height: 16),
                     const Text(
                       'A comprehensive tracker for Stephen King\'s bibliography and adaptations.',
@@ -3106,6 +3207,35 @@ class AboutScreen extends StatelessWidget {
                     const Text('• Statistics and analytics'),
                     const Text('• Wish list and favorites'),
                     const Text('• Data export and import'),
+                    const SizedBox(height: 16),
+                    const Text(
+                      'Theme:',
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 12),
+                    SegmentedButton<AppThemeMode>(
+                      segments: const [
+                        ButtonSegment(
+                          value: AppThemeMode.light,
+                          label: Text('Light'),
+                          icon: Icon(Icons.light_mode),
+                        ),
+                        ButtonSegment(
+                          value: AppThemeMode.dark,
+                          label: Text('Dark'),
+                          icon: Icon(Icons.dark_mode),
+                        ),
+                        ButtonSegment(
+                          value: AppThemeMode.system,
+                          label: Text('Auto'),
+                          icon: Icon(Icons.brightness_auto),
+                        ),
+                      ],
+                      selected: {widget.currentThemeMode},
+                      onSelectionChanged: (Set<AppThemeMode> newSelection) {
+                        widget.onThemeChanged(newSelection.first);
+                      },
+                    ),
                     const SizedBox(height: 16),
                     const Text(
                       'About Stephen King:',
