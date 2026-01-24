@@ -3087,7 +3087,7 @@ class AboutScreen extends StatelessWidget {
                       style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 8),
-                    const Text('Version 1.3.0'),
+                    const Text('Version 1.3.1'),
                     const SizedBox(height: 16),
                     const Text(
                       'A comprehensive tracker for Stephen King\'s bibliography and adaptations.',

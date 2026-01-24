@@ -21,11 +21,25 @@
     "basedOn": "the_shining"
   },
   {
+    "id": "knightriders_1981",
+    "title": "Knightriders",
+    "year": 1981,
+    "type": "Movie",
+    "basedOn": null
+  },
+  {
     "id": "creepshow_1982",
     "title": "Creepshow",
     "year": 1982,
     "type": "Movie",
     "basedOn": "skeleton_crew"
+  },
+  {
+    "id": "cujo_1983",
+    "title": "Cujo",
+    "year": 1983,
+    "type": "Movie",
+    "basedOn": "cujo"
   },
   {
     "id": "the_dead_zone_1983",
@@ -42,11 +56,11 @@
     "basedOn": "christine"
   },
   {
-    "id": "cujo_1983",
-    "title": "Cujo",
+    "id": "tales_from_the_darkside_1983",
+    "title": "Tales from the Darkside",
     "year": 1983,
-    "type": "Movie",
-    "basedOn": "cujo"
+    "type": "TV Series",
+    "basedOn": null
   },
   {
     "id": "children_of_the_corn_1984",
@@ -61,6 +75,13 @@
     "year": 1984,
     "type": "Movie",
     "basedOn": "firestarter"
+  },
+  {
+    "id": "the_woman_in_the_room_1984",
+    "title": "The Woman in the Room",
+    "year": 1984,
+    "type": "Short",
+    "basedOn": "night_shift"
   },
   {
     "id": "cats_eye_1985",
@@ -91,6 +112,13 @@
     "basedOn": "different_seasons"
   },
   {
+    "id": "a_return_to_salems_lot_1987",
+    "title": "A Return to Salem's Lot",
+    "year": 1987,
+    "type": "Movie",
+    "basedOn": "salems_lot"
+  },
+  {
     "id": "creepshow_2_1987",
     "title": "Creepshow 2",
     "year": 1987,
@@ -103,6 +131,13 @@
     "year": 1987,
     "type": "Movie",
     "basedOn": "the_running_man"
+  },
+  {
+    "id": "the_lawnmower_man_short_1987",
+    "title": "The Lawnmower Man",
+    "year": 1987,
+    "type": "Short",
+    "basedOn": "night_shift"
   },
   {
     "id": "pet_sematary_1989",
@@ -126,8 +161,15 @@
     "basedOn": "misery"
   },
   {
+    "id": "tales_from_the_darkside_movie_1990",
+    "title": "Tales from the Darkside: The Movie",
+    "year": 1990,
+    "type": "Movie",
+    "basedOn": null
+  },
+  {
     "id": "it_1990",
-    "title": "It",
+    "title": "IT",
     "year": 1990,
     "type": "Miniseries",
     "basedOn": "it"
@@ -140,11 +182,39 @@
     "basedOn": "night_shift"
   },
   {
-    "id": "the_dark_half_1993",
-    "title": "The Dark Half",
-    "year": 1993,
+    "id": "golden_years_1991",
+    "title": "Golden Years",
+    "year": 1991,
+    "type": "TV Series",
+    "basedOn": null
+  },
+  {
+    "id": "the_lawnmower_man_1992",
+    "title": "The Lawnmower Man",
+    "year": 1992,
     "type": "Movie",
-    "basedOn": "the_dark_half"
+    "basedOn": "night_shift"
+  },
+  {
+    "id": "sleepwalkers_1992",
+    "title": "Sleepwalkers",
+    "year": 1992,
+    "type": "Movie",
+    "basedOn": null
+  },
+  {
+    "id": "children_of_the_corn_ii_1992",
+    "title": "Children of the Corn II: The Final Sacrifice",
+    "year": 1992,
+    "type": "Movie",
+    "basedOn": "night_shift"
+  },
+  {
+    "id": "pet_sematary_ii_1992",
+    "title": "Pet Sematary II",
+    "year": 1992,
+    "type": "Movie",
+    "basedOn": "pet_sematary"
   },
   {
     "id": "needful_things_1993",
@@ -152,6 +222,13 @@
     "year": 1993,
     "type": "Movie",
     "basedOn": "needful_things"
+  },
+  {
+    "id": "the_dark_half_1993",
+    "title": "The Dark Half",
+    "year": 1993,
+    "type": "Movie",
+    "basedOn": "the_dark_half"
   },
   {
     "id": "the_tommyknockers_1993",
@@ -189,11 +266,25 @@
     "basedOn": "dolores_claiborne"
   },
   {
+    "id": "children_of_the_corn_iii_1995",
+    "title": "Children of the Corn III: Urban Harvest",
+    "year": 1995,
+    "type": "Movie",
+    "basedOn": "night_shift"
+  },
+  {
     "id": "the_langoliers_1995",
     "title": "The Langoliers",
     "year": 1995,
     "type": "Miniseries",
     "basedOn": "four_past_midnight"
+  },
+  {
+    "id": "lawnmower_man_2_1995",
+    "title": "Lawnmower Man 2: Beyond Cyberspace",
+    "year": 1995,
+    "type": "Movie",
+    "basedOn": "night_shift"
   },
   {
     "id": "thinner_1996",
@@ -203,11 +294,18 @@
     "basedOn": "thinner"
   },
   {
-    "id": "the_shining_1997",
-    "title": "The Shining",
-    "year": 1997,
-    "type": "Miniseries",
-    "basedOn": "the_shining"
+    "id": "sometimes_they_come_back_again_1996",
+    "title": "Sometimes They Come Back... Again",
+    "year": 1996,
+    "type": "Movie",
+    "basedOn": "night_shift"
+  },
+  {
+    "id": "children_of_the_corn_iv_1996",
+    "title": "Children of the Corn IV: The Gathering",
+    "year": 1996,
+    "type": "Movie",
+    "basedOn": "night_shift"
   },
   {
     "id": "the_night_flier_1997",
@@ -217,11 +315,46 @@
     "basedOn": "nightmares_and_dreamscapes"
   },
   {
+    "id": "the_shining_1997",
+    "title": "The Shining",
+    "year": 1997,
+    "type": "Miniseries",
+    "basedOn": "the_shining"
+  },
+  {
+    "id": "trucks_1997",
+    "title": "Trucks",
+    "year": 1997,
+    "type": "TV Movie",
+    "basedOn": "night_shift"
+  },
+  {
+    "id": "quicksilver_highway_1997",
+    "title": "Quicksilver Highway",
+    "year": 1997,
+    "type": "TV Movie",
+    "basedOn": null
+  },
+  {
     "id": "apt_pupil_1998",
     "title": "Apt Pupil",
     "year": 1998,
     "type": "Movie",
     "basedOn": "different_seasons"
+  },
+  {
+    "id": "children_of_the_corn_v_1998",
+    "title": "Children of the Corn V: Fields of Terror",
+    "year": 1998,
+    "type": "Movie",
+    "basedOn": "night_shift"
+  },
+  {
+    "id": "the_rage_carrie_2_1999",
+    "title": "The Rage: Carrie 2",
+    "year": 1999,
+    "type": "Movie",
+    "basedOn": "carrie"
   },
   {
     "id": "the_green_mile_1999",
@@ -231,11 +364,46 @@
     "basedOn": "the_green_mile"
   },
   {
+    "id": "children_of_the_corn_666_1999",
+    "title": "Children of the Corn 666: Isaac's Return",
+    "year": 1999,
+    "type": "Movie",
+    "basedOn": "night_shift"
+  },
+  {
+    "id": "storm_of_the_century_1999",
+    "title": "Storm of the Century",
+    "year": 1999,
+    "type": "Miniseries",
+    "basedOn": null
+  },
+  {
     "id": "hearts_in_atlantis_2001",
     "title": "Hearts in Atlantis",
     "year": 2001,
     "type": "Movie",
     "basedOn": "hearts_in_atlantis"
+  },
+  {
+    "id": "children_of_the_corn_revelation_2001",
+    "title": "Children of the Corn: Revelation",
+    "year": 2001,
+    "type": "Movie",
+    "basedOn": "night_shift"
+  },
+  {
+    "id": "firestarter_rekindled_2002",
+    "title": "Firestarter: Rekindled",
+    "year": 2002,
+    "type": "Miniseries",
+    "basedOn": "firestarter"
+  },
+  {
+    "id": "the_mangler_2_2002",
+    "title": "The Mangler 2",
+    "year": 2002,
+    "type": "Movie",
+    "basedOn": "night_shift"
   },
   {
     "id": "carrie_2002",
@@ -245,11 +413,25 @@
     "basedOn": "carrie"
   },
   {
+    "id": "rose_red_2002",
+    "title": "Rose Red",
+    "year": 2002,
+    "type": "Miniseries",
+    "basedOn": null
+  },
+  {
     "id": "the_dead_zone_2002",
     "title": "The Dead Zone",
     "year": 2002,
     "type": "TV Series",
     "basedOn": "the_dead_zone"
+  },
+  {
+    "id": "unlocking_rose_red_2002",
+    "title": "Unlocking Rose Red: The Diary of Ellen Rimbauer",
+    "year": 2002,
+    "type": "TV Movie",
+    "basedOn": null
   },
   {
     "id": "dreamcatcher_2003",
@@ -259,18 +441,18 @@
     "basedOn": "dreamcatcher"
   },
   {
+    "id": "the_diary_of_ellen_rimbauer_2003",
+    "title": "The Diary of Ellen Rimbauer",
+    "year": 2003,
+    "type": "TV Movie",
+    "basedOn": null
+  },
+  {
     "id": "secret_window_2004",
     "title": "Secret Window",
     "year": 2004,
     "type": "Movie",
     "basedOn": "four_past_midnight"
-  },
-  {
-    "id": "salems_lot_2004",
-    "title": "Salem's Lot",
-    "year": 2004,
-    "type": "Miniseries",
-    "basedOn": "salems_lot"
   },
   {
     "id": "riding_the_bullet_2004",
@@ -280,11 +462,39 @@
     "basedOn": "everythings_eventual"
   },
   {
-    "id": "nightmares_and_dreamscapes_2006",
-    "title": "Nightmares & Dreamscapes",
-    "year": 2006,
+    "id": "kingdom_hospital_2004",
+    "title": "Kingdom Hospital",
+    "year": 2004,
+    "type": "TV Series",
+    "basedOn": null
+  },
+  {
+    "id": "salems_lot_2004",
+    "title": "Salem's Lot",
+    "year": 2004,
     "type": "Miniseries",
-    "basedOn": "nightmares_and_dreamscapes"
+    "basedOn": "salems_lot"
+  },
+  {
+    "id": "the_man_in_the_black_suit_2004",
+    "title": "The Man in the Black Suit",
+    "year": 2004,
+    "type": "Short",
+    "basedOn": "everythings_eventual"
+  },
+  {
+    "id": "the_mangler_reborn_2005",
+    "title": "The Mangler Reborn",
+    "year": 2005,
+    "type": "Movie",
+    "basedOn": "night_shift"
+  },
+  {
+    "id": "gotham_cafe_2005",
+    "title": "Gotham Cafe",
+    "year": 2005,
+    "type": "Short",
+    "basedOn": "everythings_eventual"
   },
   {
     "id": "desperation_2006",
@@ -292,6 +502,20 @@
     "year": 2006,
     "type": "TV Movie",
     "basedOn": "desperation"
+  },
+  {
+    "id": "nightmares_and_dreamscapes_2006",
+    "title": "Nightmares & Dreamscapes: From the Stories of Stephen King",
+    "year": 2006,
+    "type": "Miniseries",
+    "basedOn": "nightmares_and_dreamscapes"
+  },
+  {
+    "id": "creepshow_3_2006",
+    "title": "Creepshow 3",
+    "year": 2006,
+    "type": "Movie",
+    "basedOn": null
   },
   {
     "id": "1408_2007",
@@ -308,11 +532,18 @@
     "basedOn": "skeleton_crew"
   },
   {
-    "id": "children_of_the_corn_2009",
-    "title": "Children of the Corn",
-    "year": 2009,
-    "type": "TV Movie",
-    "basedOn": "night_shift"
+    "id": "no_smoking_2007",
+    "title": "No Smoking",
+    "year": 2007,
+    "type": "Movie",
+    "basedOn": null
+  },
+  {
+    "id": "the_talisman_2008",
+    "title": "The Talisman",
+    "year": 2008,
+    "type": "Short",
+    "basedOn": "the_talisman"
   },
   {
     "id": "dolans_cadillac_2009",
@@ -322,6 +553,27 @@
     "basedOn": "nightmares_and_dreamscapes"
   },
   {
+    "id": "children_of_the_corn_2009",
+    "title": "Children of the Corn",
+    "year": 2009,
+    "type": "TV Movie",
+    "basedOn": "night_shift"
+  },
+  {
+    "id": "creepshow_raw_insomnia_2009",
+    "title": "Creepshow Raw: Insomnia",
+    "year": 2009,
+    "type": "Short",
+    "basedOn": null
+  },
+  {
+    "id": "everythings_eventual_2009",
+    "title": "Everything's Eventual",
+    "year": 2009,
+    "type": "Movie",
+    "basedOn": "everythings_eventual"
+  },
+  {
     "id": "haven_2010",
     "title": "Haven",
     "year": 2010,
@@ -329,11 +581,32 @@
     "basedOn": "the_colorado_kid"
   },
   {
+    "id": "children_of_the_corn_genesis_2011",
+    "title": "Children of the Corn: Genesis",
+    "year": 2011,
+    "type": "Movie",
+    "basedOn": "night_shift"
+  },
+  {
     "id": "bag_of_bones_2011",
     "title": "Bag of Bones",
     "year": 2011,
     "type": "Miniseries",
     "basedOn": "bag_of_bones"
+  },
+  {
+    "id": "room_237_2012",
+    "title": "Room 237",
+    "year": 2012,
+    "type": "Movie",
+    "basedOn": null
+  },
+  {
+    "id": "willa_2012",
+    "title": "Willa",
+    "year": 2012,
+    "type": "Movie",
+    "basedOn": null
   },
   {
     "id": "carrie_2013",
@@ -357,6 +630,13 @@
     "basedOn": "full_dark_no_stars"
   },
   {
+    "id": "mercy_2014",
+    "title": "Mercy",
+    "year": 2014,
+    "type": "Movie",
+    "basedOn": "skeleton_crew"
+  },
+  {
     "id": "big_driver_2014",
     "title": "Big Driver",
     "year": 2014,
@@ -364,11 +644,11 @@
     "basedOn": "full_dark_no_stars"
   },
   {
-    "id": "mercy_2014",
-    "title": "Mercy",
+    "id": "the_man_in_the_black_suit_2014",
+    "title": "The Man in the Black Suit",
     "year": 2014,
-    "type": "Movie",
-    "basedOn": "skeleton_crew"
+    "type": "Short",
+    "basedOn": "everythings_eventual"
   },
   {
     "id": "cell_2016",
@@ -385,18 +665,18 @@
     "basedOn": "11_22_63"
   },
   {
-    "id": "the_mist_2017",
-    "title": "The Mist",
+    "id": "the_milkman_2017",
+    "title": "The Milkman",
     "year": 2017,
-    "type": "TV Series",
-    "basedOn": "skeleton_crew"
+    "type": "Movie",
+    "basedOn": null
   },
   {
-    "id": "mr_mercedes_2017",
-    "title": "Mr. Mercedes",
+    "id": "the_dark_tower_2017",
+    "title": "The Dark Tower",
     "year": 2017,
-    "type": "TV Series",
-    "basedOn": "mr_mercedes"
+    "type": "Movie",
+    "basedOn": "the_dark_tower_1"
   },
   {
     "id": "it_2017",
@@ -404,6 +684,13 @@
     "year": 2017,
     "type": "Movie",
     "basedOn": "it"
+  },
+  {
+    "id": "mr_mercedes_2017",
+    "title": "Mr. Mercedes",
+    "year": 2017,
+    "type": "TV Series",
+    "basedOn": "mr_mercedes"
   },
   {
     "id": "geralds_game_2017",
@@ -420,11 +707,11 @@
     "basedOn": "full_dark_no_stars"
   },
   {
-    "id": "the_dark_tower_2017",
-    "title": "The Dark Tower",
-    "year": 2017,
+    "id": "children_of_the_corn_runaway_2018",
+    "title": "Children of the Corn: Runaway",
+    "year": 2018,
     "type": "Movie",
-    "basedOn": "the_dark_tower_1"
+    "basedOn": "night_shift"
   },
   {
     "id": "castle_rock_2018",
@@ -434,8 +721,15 @@
     "basedOn": null
   },
   {
+    "id": "the_doctors_case_2018",
+    "title": "The Doctor's Case",
+    "year": 2018,
+    "type": "Movie",
+    "basedOn": null
+  },
+  {
     "id": "it_chapter_two_2019",
-    "title": "It Chapter Two",
+    "title": "It: Chapter Two",
     "year": 2019,
     "type": "Movie",
     "basedOn": "it"
@@ -455,11 +749,11 @@
     "basedOn": null
   },
   {
-    "id": "doctor_sleep_2019",
-    "title": "Doctor Sleep",
+    "id": "nos4a2_2019",
+    "title": "NOS4A2",
     "year": 2019,
-    "type": "Movie",
-    "basedOn": "doctor_sleep"
+    "type": "TV Series",
+    "basedOn": null
   },
   {
     "id": "creepshow_2019",
@@ -469,17 +763,80 @@
     "basedOn": "skeleton_crew"
   },
   {
+    "id": "doctor_sleep_2019",
+    "title": "Doctor Sleep",
+    "year": 2019,
+    "type": "Movie",
+    "basedOn": "doctor_sleep"
+  },
+  {
+    "id": "jac_kesslers_popsy_2019",
+    "title": "Jac Kessler's Popsy",
+    "year": 2019,
+    "type": "Short",
+    "basedOn": "nightmares_and_dreamscapes"
+  },
+  {
+    "id": "vintons_lot_2019",
+    "title": "Vinton's Lot",
+    "year": 2019,
+    "type": "Short",
+    "basedOn": null
+  },
+  {
+    "id": "rest_stop_2019",
+    "title": "Rest Stop",
+    "year": 2019,
+    "type": "Short",
+    "basedOn": null
+  },
+  {
+    "id": "willa_2019",
+    "title": "Willa",
+    "year": 2019,
+    "type": "Short",
+    "basedOn": null
+  },
+  {
+    "id": "trapped_2019",
+    "title": "Trapped",
+    "year": 2019,
+    "type": "Short",
+    "basedOn": null
+  },
+  {
+    "id": "morning_deliveries_part_one_2019",
+    "title": "Morning Deliveries: Part One",
+    "year": 2019,
+    "type": "Short",
+    "basedOn": null
+  },
+  {
+    "id": "it_the_animated_series_2019",
+    "title": "It: The Animated Series",
+    "year": 2019,
+    "type": "Miniseries",
+    "basedOn": "it"
+  },
+  {
+    "id": "the_doctors_case_2019",
+    "title": "The Doctor's Case",
+    "year": 2019,
+    "type": "Movie",
+    "basedOn": null
+  },
+  {
     "id": "the_outsider_2020",
     "title": "The Outsider",
     "year": 2020,
-    "type": "TV Series",
+    "type": "Miniseries",
     "basedOn": "the_outsider"
   },
   {
     "id": "the_stand_2020",
     "title": "The Stand",
     "year": 2020,
-    "type": "TV Series",
+    "type": "Miniseries",
     "basedOn": "the_stand"
   },
   {
@@ -487,6 +844,34 @@
     "title": "Children of the Corn",
     "year": 2020,
     "type": "Movie",
+    "basedOn": "night_shift"
+  },
+  {
+    "id": "stephen_king_le_mal_necessaire_2020",
+    "title": "Stephen King: Le mal nécessaire",
+    "year": 2020,
+    "type": "TV Movie",
+    "basedOn": null
+  },
+  {
+    "id": "one_for_the_road_2020",
+    "title": "One for the Road",
+    "year": 2020,
+    "type": "Short",
+    "basedOn": "night_shift"
+  },
+  {
+    "id": "in_the_deathroom_2020",
+    "title": "In the Deathroom",
+    "year": 2020,
+    "type": "Short",
+    "basedOn": "everythings_eventual"
+  },
+  {
+    "id": "gray_matter_2020",
+    "title": "Gray Matter",
+    "year": 2020,
+    "type": "Short",
     "basedOn": "night_shift"
   },
   {
@@ -504,6 +889,27 @@
     "basedOn": "liseys_story"
   },
   {
+    "id": "graduation_afternoon_2021",
+    "title": "Graduation Afternoon",
+    "year": 2021,
+    "type": "Short",
+    "basedOn": null
+  },
+  {
+    "id": "the_timekeepers_of_eternity_2021",
+    "title": "The Timekeepers of Eternity",
+    "year": 2021,
+    "type": "Movie",
+    "basedOn": "four_past_midnight"
+  },
+  {
+    "id": "the_stephen_kingdom_2021",
+    "title": "The Stephen Kingdom",
+    "year": 2021,
+    "type": "TV Series",
+    "basedOn": null
+  },
+  {
     "id": "firestarter_2022",
     "title": "Firestarter",
     "year": 2022,
@@ -516,6 +922,20 @@
     "year": 2022,
     "type": "Movie",
     "basedOn": "if_it_bleeds"
+  },
+  {
+    "id": "king_on_screen_2022",
+    "title": "King on Screen",
+    "year": 2022,
+    "type": "Movie",
+    "basedOn": null
+  },
+  {
+    "id": "the_man_who_would_not_shake_hands_2022",
+    "title": "The Man Who Would Not Shake Hands",
+    "year": 2022,
+    "type": "Short",
+    "basedOn": "skeleton_crew"
   },
   {
     "id": "the_boogeyman_2023",
@@ -546,11 +966,25 @@
     "basedOn": "salems_lot"
   },
   {
+    "id": "the_running_man_2025",
+    "title": "The Running Man",
+    "year": 2025,
+    "type": "Movie",
+    "basedOn": "the_running_man"
+  },
+  {
     "id": "the_monkey_2025",
     "title": "The Monkey",
     "year": 2025,
     "type": "Movie",
     "basedOn": "skeleton_crew"
+  },
+  {
+    "id": "it_welcome_to_derry_2025",
+    "title": "IT: Welcome to Derry",
+    "year": 2025,
+    "type": "TV Series",
+    "basedOn": "it"
   },
   {
     "id": "the_long_walk_2025",
@@ -560,24 +994,10 @@
     "basedOn": "the_long_walk"
   },
   {
-    "id": "the_running_man_2025",
-    "title": "The Running Man",
-    "year": 2025,
-    "type": "Movie",
-    "basedOn": "the_running_man"
-  },
-  {
     "id": "the_institute_2025",
     "title": "The Institute",
     "year": 2025,
     "type": "TV Series",
     "basedOn": "the_institute"
-  },
-  {
-    "id": "it_welcome_to_derry_2025",
-    "title": "It: Welcome to Derry",
-    "year": 2025,
-    "type": "TV Series",
-    "basedOn": "it"
   }
 ]
