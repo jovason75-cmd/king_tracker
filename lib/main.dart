@@ -1,3 +1,4 @@
+// ignore_for_file: deprecated_member_use, avoid_web_libraries_in_flutter
 import 'dart:convert';
 import 'dart:html' as html;
 import 'package:flutter/material.dart';
@@ -14,16 +15,9 @@ void main() {
 
 /* ---------------- ENUM ---------------- */
 
-enum SortMode {
-  yearPublished,
-  alphabetic,
-}
+enum SortMode { yearPublished, alphabetic }
 
-enum AppThemeMode {
-  light,
-  dark,
-  system,
-}
+enum AppThemeMode { light, dark, system }
 
 /* ---------------- APP ---------------- */
 
@@ -62,111 +56,100 @@ class _KingTrackerAppState extends State<KingTrackerApp> {
     });
   }
 
-  ThemeMode _getThemeMode() {
-    switch (_themeMode) {
-      case AppThemeMode.light:
-        return ThemeMode.light;
-      case AppThemeMode.dark:
-        return ThemeMode.dark;
-      case AppThemeMode.system:
-        return ThemeMode.system;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'King Tracker',
+      themeMode: _themeMode == AppThemeMode.light
+          ? ThemeMode.light
+          : _themeMode == AppThemeMode.dark
+          ? ThemeMode.dark
+          : ThemeMode.system,
       theme: ThemeData(
+        useMaterial3: true,
         brightness: Brightness.light,
-        colorScheme: ColorScheme.light(
-          primary: Colors.purple.shade700,
-          secondary: Colors.teal.shade600,
-          surface: Colors.grey.shade100,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.deepPurple,
+          brightness: Brightness.light,
         ),
-        scaffoldBackgroundColor: Colors.grey.shade50,
-        cardColor: Colors.white,
-        appBarTheme: AppBarTheme(
-          backgroundColor: Colors.purple.shade700,
-          foregroundColor: Colors.white,
+        textTheme: ThemeData.light().textTheme.apply(
+              bodyColor: const Color(0xFF333333),
+              displayColor: const Color(0xFF333333),
+            ),
+        appBarTheme: const AppBarTheme(
+          foregroundColor: Color(0xFF333333),
+        ),
+        tabBarTheme: const TabBarThemeData(
+          labelColor: Color(0xFF333333),
+          unselectedLabelColor: Color(0xFF666666),
         ),
       ),
       darkTheme: ThemeData(
+        useMaterial3: true,
         brightness: Brightness.dark,
-        colorScheme: ColorScheme.dark(
-          primary: Colors.purple.shade300,
-          secondary: Colors.teal.shade300,
-          surface: Colors.grey.shade900,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.deepPurple,
+          brightness: Brightness.dark,
         ),
-        scaffoldBackgroundColor: Colors.black,
-        cardColor: Colors.grey.shade900,
-        appBarTheme: AppBarTheme(
-          backgroundColor: Colors.purple.shade900,
+        appBarTheme: const AppBarTheme(
           foregroundColor: Colors.white,
         ),
+        tabBarTheme: const TabBarThemeData(
+          labelColor: Colors.white,
+          unselectedLabelColor: Colors.white70,
+        ),
       ),
-      themeMode: _getThemeMode(),
-      home: HomeScreen(onThemeChanged: _setThemeMode, currentThemeMode: _themeMode),
+      home: HomeScreen(
+        onThemeChanged: _setThemeMode,
+        currentThemeMode: _themeMode,
+      ),
     );
   }
 }
 
-/* ---------------- MODEL ---------------- */
-
-class Connection {
-  final String type;
-  final List<String> withIds;
-
-  Connection({
-    required this.type,
-    required this.withIds,
-  });
-
-  factory Connection.fromJson(Map<String, dynamic> json) {
-    return Connection(
-      type: json['type'],
-      withIds: List<String>.from(json['with']),
-    );
-  }
-}
+/* ---------------- MODEL CLASSES ---------------- */
 
 class Book {
   final String id;
   final String title;
   final int yearPublished;
   final String type;
-  final bool darkTowerExtended;
+  final String? coAuthor;
   final List<Connection> connections;
   final List<String>? stories;
-  final Map<int, String>? storySynopses;
-  final String? coAuthor;
+  final List<String>? storySynopses;
   final String? synopsis;
+  final bool darkTowerExtended;
 
   bool owned;
   bool read;
-  bool wished = false;
+  bool wished;
   double rating;
   String notes;
-  Set<int> storiesRead = {};
-  bool synopsisFetched = false;
+  String? ownedFormat;
+  Set<int> storiesRead;
+  bool synopsisFetched;
 
   Book({
     required this.id,
     required this.title,
     required this.yearPublished,
     required this.type,
-    required this.darkTowerExtended,
-    required this.connections,
+    this.coAuthor,
+    this.connections = const [],
     this.stories,
     this.storySynopses,
-    this.coAuthor,
     this.synopsis,
+    this.darkTowerExtended = false,
     this.owned = false,
     this.read = false,
     this.wished = false,
     this.rating = 0,
     this.notes = '',
-  });
+    this.ownedFormat,
+    Set<int>? storiesRead,
+    this.synopsisFetched = false,
+  }) : storiesRead = storiesRead ?? {};
 
   factory Book.fromJson(Map<String, dynamic> json) {
     return Book(
@@ -174,22 +157,35 @@ class Book {
       title: json['title'],
       yearPublished: json['yearPublished'],
       type: json['type'],
-      darkTowerExtended: json['darkTowerExtended'] ?? false,
-      connections: (json['connections'] as List<dynamic>? ?? [])
-          .map((e) => Connection.fromJson(e))
-          .toList(),
-      stories: json['stories'] != null
-          ? List<String>.from(json['stories'])
-          : null,
-      storySynopses: json['storySynopses'] != null
-          ? Map<int, String>.from(
-              (json['storySynopses'] as Map).map(
-                (key, value) => MapEntry(int.parse(key.toString()), value.toString()),
-              ),
-            )
-          : null,
       coAuthor: json['coAuthor'],
+      connections:
+          (json['connections'] as List<dynamic>?)
+              ?.map((e) => Connection.fromJson(e))
+              .toList() ??
+          [],
+      stories: (json['stories'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
+      storySynopses: (json['storySynopses'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
       synopsis: json['synopsis'],
+      darkTowerExtended: json['darkTowerExtended'] ?? false,
+    );
+  }
+
+}
+
+class Connection {
+  final String type;
+  final List<String> withIds;
+
+  Connection({required this.type, required this.withIds});
+
+  factory Connection.fromJson(Map<String, dynamic> json) {
+    return Connection(
+      type: json['type'],
+      withIds: (json['with'] as List<dynamic>).map((e) => e as String).toList(),
     );
   }
 }
@@ -206,6 +202,7 @@ class Adaptation {
   bool wished;
   double rating;
   String notes;
+  String? ownedFormat;
 
   Adaptation({
     required this.id,
@@ -218,6 +215,7 @@ class Adaptation {
     this.wished = false,
     this.rating = 0,
     this.notes = '',
+    this.ownedFormat,
   });
 
   factory Adaptation.fromJson(Map<String, dynamic> json) {
@@ -340,13 +338,39 @@ String? darkTowerExtendedOrder(String id) {
 }
 
 String normalizeTitle(String title) {
-  return title
-      .toLowerCase()
-      .replaceAll(RegExp(r"[^a-z0-9]"), '');
+  return title.toLowerCase().replaceAll(RegExp(r"[^a-z0-9]"), '');
+}
+
+Color ownedColorForBook(Book book) {
+  if (!book.owned) return Colors.grey;
+  switch (book.ownedFormat) {
+    case 'Hardback':
+      return Colors.blue;
+    case 'Pocket':
+      return Colors.teal;
+    default:
+      return Colors.blue;
+  }
+}
+
+Color ownedColorForAdaptation(Adaptation adaptation) {
+  if (!adaptation.owned) return Colors.grey;
+  switch (adaptation.ownedFormat) {
+    case 'DVD':
+      return Colors.deepPurple;
+    case 'Blu-ray':
+      return Colors.blue;
+    case '4K':
+      return Colors.amber;
+    default:
+      return Colors.blue;
+  }
 }
 
 Widget buildDarkTowerBadge(String label) {
   return Container(
+    constraints: const BoxConstraints(minWidth: 70),
+    alignment: Alignment.center,
     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
     decoration: BoxDecoration(
       color: Colors.deepPurple.shade700,
@@ -370,11 +394,7 @@ Widget buildConnectionIcon(Connection conn) {
     return Stack(
       clipBehavior: Clip.none,
       children: [
-        const Icon(
-          Icons.castle,
-          size: 18,
-          color: Colors.amber,
-        ),
+        const Icon(Icons.castle, size: 18, color: Colors.amber),
         Positioned(
           right: -4,
           top: -4,
@@ -385,31 +405,25 @@ Widget buildConnectionIcon(Connection conn) {
               border: Border.all(color: Colors.amber, width: 1),
             ),
             padding: const EdgeInsets.all(2),
-            child: const Icon(
-              Icons.star,
-              size: 8,
-              color: Colors.amber,
-            ),
+            child: const Icon(Icons.star, size: 8, color: Colors.amber),
           ),
         ),
       ],
     );
   }
-  
-  return Icon(
-    iconForConnectionType(conn.type),
-    size: 18,
-    color: Colors.amber,
-  );
+
+  return Icon(iconForConnectionType(conn.type), size: 18, color: Colors.amber);
 }
 
 Future<String?> fetchSynopsisFromOpenLibrary(String title, int year) async {
   try {
     // Try exact title search first
-    final query = '${title.replaceAll(' ', '+')}';
-    final url = Uri.parse('https://openlibrary.org/search.json?title=$query&author=stephen+king&limit=10');
+    final query = title.replaceAll(' ', '+');
+    final url = Uri.parse(
+      'https://openlibrary.org/search.json?title=$query&author=stephen+king&limit=10',
+    );
     final response = await http.get(url).timeout(const Duration(seconds: 10));
-    
+
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
       if (data['docs'] != null && (data['docs'] as List).isNotEmpty) {
@@ -418,15 +432,18 @@ Future<String?> fetchSynopsisFromOpenLibrary(String title, int year) async {
           if (publishYear != null && ((publishYear as int) - year).abs() <= 2) {
             final key = doc['key'];
             final workUrl = Uri.parse('https://openlibrary.org$key.json');
-            final workResponse = await http.get(workUrl).timeout(const Duration(seconds: 10));
-            
+            final workResponse = await http
+                .get(workUrl)
+                .timeout(const Duration(seconds: 10));
+
             if (workResponse.statusCode == 200) {
               final workData = json.decode(workResponse.body);
               final description = workData['description'];
-              
+
               if (description != null) {
                 if (description is Map) {
-                  return description['value']?.toString() ?? description.toString();
+                  return description['value']?.toString() ??
+                      description.toString();
                 } else if (description is String && description.isNotEmpty) {
                   return description;
                 }
@@ -447,7 +464,7 @@ Future<String?> fetchSynopsisFromOpenLibrary(String title, int year) async {
 class HomeScreen extends StatefulWidget {
   final Function(AppThemeMode) onThemeChanged;
   final AppThemeMode currentThemeMode;
-  
+
   const HomeScreen({
     super.key,
     required this.onThemeChanged,
@@ -467,18 +484,18 @@ class _HomeScreenState extends State<HomeScreen> {
   String librarySearchQuery = '';
   String adaptationSearchQuery = '';
   String tdtexSearchQuery = '';
-  
+
   // Filter state
   Set<String> selectedTypes = {};
   bool? filterRead;
   bool? filterOwned;
-  
+
   // Adaptation filter state
   Set<String> selectedAdaptationTypes = {};
   bool? filterWatched;
   bool? filterAdaptationOwned;
   SortMode adaptationSortMode = SortMode.yearPublished;
-  
+
   // Search state
   bool showSearch = false;
   final TextEditingController searchController = TextEditingController();
@@ -496,8 +513,9 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _loadBooks() async {
-    final jsonString =
-        await rootBundle.loadString('lib/assets/data/stephen_king_books.json');
+    final jsonString = await rootBundle.loadString(
+      'assets/data/stephen_king_books.json',
+    );
     final List data = json.decode(jsonString);
 
     final loadedBooks = data.map((e) => Book.fromJson(e)).toList();
@@ -508,8 +526,13 @@ class _HomeScreenState extends State<HomeScreen> {
       book.wished = prefs.getBool('${book.id}_wished') ?? false;
       book.rating = prefs.getDouble('${book.id}_rating') ?? 0;
       book.notes = prefs.getString('${book.id}_notes') ?? '';
-      final storiesReadList = prefs.getStringList('${book.id}_stories_read') ?? [];
+      book.ownedFormat = prefs.getString('${book.id}_owned_format');
+      final storiesReadList =
+          prefs.getStringList('${book.id}_stories_read') ?? [];
       book.storiesRead = storiesReadList.map((e) => int.parse(e)).toSet();
+      if (!book.owned) {
+        book.ownedFormat = null;
+      }
     }
 
     setState(() {
@@ -520,7 +543,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> _loadAdaptations() async {
     final jsonString = await rootBundle.loadString(
-        'lib/assets/data/stephen_king_adaptations.json');
+      'assets/data/stephen_king_adaptations.json',
+    );
     final List data = json.decode(jsonString);
 
     final loadedAdaptations = data.map((e) => Adaptation.fromJson(e)).toList();
@@ -531,6 +555,12 @@ class _HomeScreenState extends State<HomeScreen> {
       adaptation.wished = prefs.getBool('${adaptation.id}_wished') ?? false;
       adaptation.rating = prefs.getDouble('${adaptation.id}_rating') ?? 0;
       adaptation.notes = prefs.getString('${adaptation.id}_notes') ?? '';
+      adaptation.ownedFormat = prefs.getString(
+        '${adaptation.id}_owned_format',
+      );
+      if (!adaptation.owned) {
+        adaptation.ownedFormat = null;
+      }
     }
 
     setState(() {
@@ -544,8 +574,18 @@ class _HomeScreenState extends State<HomeScreen> {
     prefs.setBool('${book.id}_wished', book.wished);
     prefs.setDouble('${book.id}_rating', book.rating);
     prefs.setString('${book.id}_notes', book.notes);
-    prefs.setStringList('${book.id}_stories_read', 
-        book.storiesRead.map((e) => e.toString()).toList());
+    if (!book.owned) {
+      book.ownedFormat = null;
+    }
+    if (book.owned && book.ownedFormat != null) {
+      prefs.setString('${book.id}_owned_format', book.ownedFormat!);
+    } else {
+      prefs.remove('${book.id}_owned_format');
+    }
+    prefs.setStringList(
+      '${book.id}_stories_read',
+      book.storiesRead.map((e) => e.toString()).toList(),
+    );
   }
 
   void _saveAdaptation(Adaptation adaptation) {
@@ -554,9 +594,133 @@ class _HomeScreenState extends State<HomeScreen> {
     prefs.setBool('${adaptation.id}_wished', adaptation.wished);
     prefs.setDouble('${adaptation.id}_rating', adaptation.rating);
     prefs.setString('${adaptation.id}_notes', adaptation.notes);
+    if (!adaptation.owned) {
+      adaptation.ownedFormat = null;
+    }
+    if (adaptation.owned && adaptation.ownedFormat != null) {
+      prefs.setString(
+        '${adaptation.id}_owned_format',
+        adaptation.ownedFormat!,
+      );
+    } else {
+      prefs.remove('${adaptation.id}_owned_format');
+    }
   }
 
-  Widget _buildSeriesButton(BuildContext context, String seriesName, String firstBookId, IconData icon) {
+  Future<void> _showOwnedFormatMenuForBook(
+    Book book,
+    Offset position,
+  ) async {
+    final selected = await showMenu<String>(
+      context: context,
+      position: RelativeRect.fromLTRB(
+        position.dx,
+        position.dy,
+        position.dx,
+        position.dy,
+      ),
+      items: const [
+        PopupMenuItem(value: 'Hardback', child: Text('Hardback')),
+        PopupMenuItem(value: 'Pocket', child: Text('Pocket')),
+      ],
+    );
+
+    if (selected == null) return;
+
+    setState(() {
+      book.owned = true;
+      book.ownedFormat = selected;
+    });
+    _saveBook(book);
+  }
+
+  Future<void> _showOwnedFormatMenuForAdaptation(
+    Adaptation adaptation,
+    Offset position,
+  ) async {
+    final selected = await showMenu<String>(
+      context: context,
+      position: RelativeRect.fromLTRB(
+        position.dx,
+        position.dy,
+        position.dx,
+        position.dy,
+      ),
+      items: const [
+        PopupMenuItem(value: 'DVD', child: Text('DVD')),
+        PopupMenuItem(value: 'Blu-ray', child: Text('Blu-ray')),
+        PopupMenuItem(value: '4K', child: Text('4K')),
+      ],
+    );
+
+    if (selected == null) return;
+
+    setState(() {
+      adaptation.owned = true;
+      adaptation.ownedFormat = selected;
+    });
+    _saveAdaptation(adaptation);
+  }
+
+  Widget _buildOwnedIconButtonForBook(Book book) {
+    return GestureDetector(
+      onLongPressStart: (details) {
+        _showOwnedFormatMenuForBook(book, details.globalPosition);
+      },
+      child: IconButton(
+        icon: Icon(
+          book.owned
+              ? Icons.collections_bookmark
+              : Icons.collections_bookmark_outlined,
+          color: ownedColorForBook(book),
+        ),
+        onPressed: () {
+          setState(() {
+            book.owned = !book.owned;
+            if (!book.owned) {
+              book.ownedFormat = null;
+            }
+          });
+          _saveBook(book);
+        },
+      ),
+    );
+  }
+
+  Widget _buildOwnedIconButtonForAdaptation(Adaptation adaptation) {
+    return GestureDetector(
+      onLongPressStart: (details) {
+        _showOwnedFormatMenuForAdaptation(
+          adaptation,
+          details.globalPosition,
+        );
+      },
+      child: IconButton(
+        icon: Icon(
+          adaptation.owned
+              ? Icons.video_library
+              : Icons.video_library_outlined,
+          color: ownedColorForAdaptation(adaptation),
+        ),
+        onPressed: () {
+          setState(() {
+            adaptation.owned = !adaptation.owned;
+            if (!adaptation.owned) {
+              adaptation.ownedFormat = null;
+            }
+          });
+          _saveAdaptation(adaptation);
+        },
+      ),
+    );
+  }
+
+  Widget _buildSeriesButton(
+    BuildContext context,
+    String seriesName,
+    String firstBookId,
+    IconData icon,
+  ) {
     final firstBook = books.firstWhere((book) => book.id == firstBookId);
     return InkWell(
       onTap: () {
@@ -574,6 +738,7 @@ class _HomeScreenState extends State<HomeScreen> {
         );
       },
       child: Container(
+        width: double.infinity,
         margin: const EdgeInsets.symmetric(vertical: 6),
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
@@ -597,7 +762,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
-            Icon(Icons.chevron_right, color: Colors.grey.shade400, size: 20),
+            Icon(
+              Icons.chevron_right,
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? Colors.grey.shade400
+                  : Colors.grey.shade700,
+              size: 20,
+            ),
           ],
         ),
       ),
@@ -621,9 +792,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     if (loading) {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      );
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
     const tdtexOrderRaw = [
@@ -645,20 +814,22 @@ class _HomeScreenState extends State<HomeScreen> {
       'The Dark Tower: The Dark Tower',
     ];
 
-    final tdtexOrderNorm = tdtexOrderRaw
-        .map(normalizeTitle)
-        .toList();
+    final tdtexOrderNorm = tdtexOrderRaw.map(normalizeTitle).toList();
 
     final orderIndex = <String, int>{};
     for (var i = 0; i < tdtexOrderNorm.length; i++) {
       orderIndex[tdtexOrderNorm[i]] = i;
     }
 
-    final tdtexBooks = books
-        .where((b) => orderIndex.containsKey(normalizeTitle(b.title)))
-        .toList()
-      ..sort((a, b) => orderIndex[normalizeTitle(a.title)]!
-          .compareTo(orderIndex[normalizeTitle(b.title)]!));
+    final tdtexBooks =
+        books
+            .where((b) => orderIndex.containsKey(normalizeTitle(b.title)))
+            .toList()
+          ..sort(
+            (a, b) => orderIndex[normalizeTitle(a.title)]!.compareTo(
+              orderIndex[normalizeTitle(b.title)]!,
+            ),
+          );
 
     return DefaultTabController(
       length: 5,
@@ -666,944 +837,1567 @@ class _HomeScreenState extends State<HomeScreen> {
         builder: (BuildContext context) {
           final TabController tabController = DefaultTabController.of(context);
           return Scaffold(
-        backgroundColor: Colors.transparent,
-        appBar: AppBar(
-          leading: Builder(
-            builder: (context) => IconButton(
-              icon: const Icon(Icons.menu),
-              onPressed: () => Scaffold.of(context).openDrawer(),
-            ),
-          ),
-          title: const Text('King Tracker'),
-          bottom: const TabBar(
-            tabs: [
-              Tab(text: 'Books'),
-              Tab(text: 'Film & TV'),
-              Tab(text: 'Wish List'),
-              Tab(text: 'TDT'),
-              Tab(text: 'Statistics'),
-            ],
-          ),
-        ),
-        drawer: Drawer(
-          child: Container(
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('assets/images/app_background_4.png'),
-                fit: BoxFit.cover,
+            extendBodyBehindAppBar: true,
+            backgroundColor: Colors.transparent,
+            appBar: AppBar(
+              backgroundColor: Colors.blue.withValues(alpha: 0.3),
+              elevation: 0,
+              leading: Builder(
+                builder: (context) => IconButton(
+                  icon: const Icon(Icons.menu),
+                  onPressed: () => Scaffold.of(context).openDrawer(),
+                ),
+              ),
+              title: const Text('King Tracker'),
+              bottom: const TabBar(
+                tabs: [
+                  Tab(text: 'Books'),
+                  Tab(text: 'Film & TV'),
+                  Tab(text: 'Wish List'),
+                  Tab(text: 'TDT'),
+                  Tab(text: 'Statistics'),
+                ],
               ),
             ),
-            child: ListView(
-              padding: EdgeInsets.zero,
-              children: [
-                DrawerHeader(
-                  decoration: BoxDecoration(
-                    color: Colors.blue.withValues(alpha: 0.3),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      const Text(
-                        'King Tracker',
-                        style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        '${books.length} books • ${adaptations.length} adaptations',
-                        style: const TextStyle(fontSize: 14),
-                      ),
-                    ],
+            drawer: Drawer(
+              child: Container(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage(
+                      Theme.of(context).brightness == Brightness.dark
+                          ? 'assets/images/app_background_7.png'
+                          : 'assets/images/app_background_light_7.png',
+                    ),
+                    fit: BoxFit.cover,
                   ),
                 ),
-                ListTile(
-                  leading: const Icon(Icons.settings),
-                  title: const Text('Settings'),
-                  onTap: () {
-                    Navigator.pop(context);
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => SettingsScreen(
-                          books: books,
-                          adaptations: adaptations,
-                        ),
+                child: ListView(
+                  padding: EdgeInsets.zero,
+                  children: [
+                    DrawerHeader(
+                      decoration: BoxDecoration(
+                        color: Colors.blue.withValues(alpha: 0.3),
                       ),
-                    );
-                  },
-                ),
-                ListTile(
-                  leading: const Icon(Icons.info),
-                  title: const Text('About'),
-                  onTap: () {
-                    Navigator.pop(context);
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => AboutScreen(
-                          onThemeChanged: widget.onThemeChanged,
-                          currentThemeMode: widget.currentThemeMode,
-                        ),
-                      ),
-                    );
-                  },
-                ),
-                ListTile(
-                  leading: const Icon(Icons.help_outline),
-                  title: const Text('Iconology Explained'),
-                  onTap: () {
-                    Navigator.pop(context);
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (_) => const IconologyScreen()),
-                    );
-                  },
-                ),
-                ListTile(
-                  leading: const Icon(Icons.link),
-                  title: const Text('More on King'),
-                  onTap: () {
-                    Navigator.pop(context);
-                    html.window.open('https://stephenking.com/', '_blank');
-                  },
-                ),
-                const Divider(),
-                ListTile(
-                  leading: const Icon(Icons.upload_file),
-                  title: const Text('Export All Data (JSON)'),
-                  onTap: () {
-                    Navigator.pop(context);
-                    _exportAllData();
-                  },
-                ),
-                ListTile(
-                  leading: const Icon(Icons.download),
-                  title: const Text('Import Data (JSON)'),
-                  onTap: () {
-                    Navigator.pop(context);
-                    _importData();
-                  },
-                ),
-                const Divider(),
-                ListTile(
-                  leading: const Icon(Icons.picture_as_pdf),
-                  title: const Text('Export Wish List to PDF'),
-                  onTap: () {
-                    Navigator.pop(context);
-                    _exportWishlistToPdf();
-                  },
-                ),
-                ListTile(
-                  leading: const Icon(Icons.picture_as_pdf),
-                  title: const Text('Export Statistics to PDF'),
-                  onTap: () {
-                    Navigator.pop(context);
-                    _exportStatisticsToPdf();
-                  },
-                ),
-                const Divider(),
-                ListTile(
-                  leading: const Icon(Icons.close),
-                  title: const Text('Close'),
-                  onTap: () => Navigator.pop(context),
-                ),
-              ],
-            ),
-          ),
-        ),
-        body: Container(
-          decoration: const BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('assets/images/App_background_2.png'),
-              fit: BoxFit.cover,
-            ),
-          ),
-          child: TabBarView(
-            children: [
-              /* ---------------- BOOKS TAB ---------------- */
-              Column(
-                children: [
-                  if (showSearch)
-                    Padding(
-                      padding: const EdgeInsets.only(left: 12, right: 12, top: 8),
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          TextField(
-                            controller: searchController,
-                            decoration: InputDecoration(
-                              labelText: 'Search books...',
-                              prefixIcon: const Icon(Icons.search),
-                              border: const OutlineInputBorder(),
-                              fillColor: Colors.grey.shade900.withValues(alpha: 0.7),
-                              filled: true,
+                          const Text(
+                            'King Tracker',
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
                             ),
-                            onChanged: (value) {
-                              setState(() {
-                                librarySearchQuery = value;
-                              });
-                            },
                           ),
                           const SizedBox(height: 8),
-                          Container(
-                            color: Colors.grey.shade900.withValues(alpha: 0.7),
-                            child: DropdownButtonFormField<SortMode>(
-                              value: sortMode,
-                              decoration: const InputDecoration(
-                                labelText: 'Sort order',
-                                border: OutlineInputBorder(),
-                              ),
-                              items: const [
-                                DropdownMenuItem(
-                                  value: SortMode.yearPublished,
-                                  child: Text('Year Published'),
+                          Text(
+                            '${books.length} books • ${adaptations.length} adaptations',
+                            style: const TextStyle(fontSize: 14),
+                          ),
+                        ],
+                      ),
+                    ),
+                    ListTile(
+                      leading: const Icon(Icons.settings),
+                      title: const Text('Settings'),
+                      onTap: () {
+                        Navigator.pop(context);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => SettingsScreen(
+                              books: books,
+                              adaptations: adaptations,
+                              onThemeChanged: widget.onThemeChanged,
+                              currentThemeMode: widget.currentThemeMode,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                    ListTile(
+                      leading: const Icon(Icons.info),
+                      title: const Text('About'),
+                      onTap: () {
+                        Navigator.pop(context);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => AboutScreen(
+                              onThemeChanged: widget.onThemeChanged,
+                              currentThemeMode: widget.currentThemeMode,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                    ListTile(
+                      leading: const Icon(Icons.help_outline),
+                      title: const Text('Iconology Explained'),
+                      onTap: () {
+                        Navigator.pop(context);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const IconologyScreen(),
+                          ),
+                        );
+                      },
+                    ),
+                    ListTile(
+                      leading: const Icon(Icons.link),
+                      title: const Text('More on King'),
+                      onTap: () {
+                        Navigator.pop(context);
+                        html.window.open('https://stephenking.com/', '_blank');
+                      },
+                    ),
+                    const Divider(),
+                    ListTile(
+                      leading: const Icon(Icons.picture_as_pdf),
+                      title: const Text('Export Wish List to PDF'),
+                      onTap: () {
+                        Navigator.pop(context);
+                        _exportWishlistToPdf();
+                      },
+                    ),
+                    ListTile(
+                      leading: const Icon(Icons.picture_as_pdf),
+                      title: const Text('Export Statistics to PDF'),
+                      onTap: () {
+                        Navigator.pop(context);
+                        _exportStatisticsToPdf();
+                      },
+                    ),
+                    const Divider(),
+                    ListTile(
+                      leading: const Icon(Icons.close),
+                      title: const Text('Close'),
+                      onTap: () => Navigator.pop(context),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            body: Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage(
+                    Theme.of(context).brightness == Brightness.dark
+                        ? 'assets/images/App_background_2.png'
+                        : 'assets/images/app_background_light_4.png',
+                  ),
+                  fit: BoxFit.cover,
+                ),
+              ),
+              child: SafeArea(
+                child: TabBarView(
+                  children: [
+                    /* ---------------- BOOKS TAB ---------------- */
+                    Column(
+                      children: [
+                        if (showSearch)
+                          Padding(
+                            padding: const EdgeInsets.only(
+                              left: 12,
+                              right: 12,
+                              top: 8,
+                            ),
+                            child: Column(
+                              children: [
+                                TextField(
+                                  controller: searchController,
+                                  decoration: InputDecoration(
+                                    labelText: 'Search books...',
+                                    prefixIcon: const Icon(Icons.search),
+                                    border: const OutlineInputBorder(),
+                                    fillColor:
+                                        Theme.of(context).brightness ==
+                                            Brightness.dark
+                                        ? Colors.grey.shade900.withValues(
+                                            alpha: 0.4,
+                                          )
+                                        : Colors.white.withValues(alpha: 0.4),
+                                    filled: true,
+                                  ),
+                                  onChanged: (value) {
+                                    setState(() {
+                                      librarySearchQuery = value;
+                                    });
+                                  },
                                 ),
-                                DropdownMenuItem(
-                                  value: SortMode.alphabetic,
-                                  child: Text('Alphabetic'),
+                                const SizedBox(height: 8),
+                                Container(
+                                  color:
+                                      Theme.of(context).brightness ==
+                                          Brightness.dark
+                                      ? Colors.grey.shade900.withValues(
+                                          alpha: 0.4,
+                                        )
+                                      : Colors.white.withValues(alpha: 0.4),
+                                  child: DropdownButtonFormField<SortMode>(
+                                    value: sortMode,
+                                    decoration: const InputDecoration(
+                                      labelText: 'Sort order',
+                                      border: OutlineInputBorder(),
+                                    ),
+                                    items: const [
+                                      DropdownMenuItem(
+                                        value: SortMode.yearPublished,
+                                        child: Text('Year Published'),
+                                      ),
+                                      DropdownMenuItem(
+                                        value: SortMode.alphabetic,
+                                        child: Text('Alphabetic'),
+                                      ),
+                                    ],
+                                    onChanged: (v) {
+                                      setState(() {
+                                        sortMode = v!;
+                                      });
+                                    },
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: Container(
+                                        color:
+                                            Theme.of(context).brightness ==
+                                                Brightness.dark
+                                            ? Colors.grey.shade900.withValues(
+                                                alpha: 0.4,
+                                              )
+                                            : Colors.white.withValues(
+                                                alpha: 0.4,
+                                              ),
+                                        child: DropdownButtonFormField<String>(
+                                          value: selectedTypes.isEmpty
+                                              ? null
+                                              : selectedTypes.first,
+                                          decoration: const InputDecoration(
+                                            labelText: 'Type',
+                                            border: OutlineInputBorder(),
+                                          ),
+                                          items: const [
+                                            DropdownMenuItem(
+                                              value: null,
+                                              child: Text('All'),
+                                            ),
+                                            DropdownMenuItem(
+                                              value: 'Novel',
+                                              child: Text('Novels'),
+                                            ),
+                                            DropdownMenuItem(
+                                              value: 'Short Story Collection',
+                                              child: Text('Short Stories'),
+                                            ),
+                                          ],
+                                          onChanged: (v) {
+                                            setState(() {
+                                              selectedTypes.clear();
+                                              if (v != null) {
+                                                selectedTypes.add(v);
+                                              }
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Expanded(
+                                      child: Container(
+                                        color:
+                                            Theme.of(context).brightness ==
+                                                Brightness.dark
+                                            ? Colors.grey.shade900.withValues(
+                                                alpha: 0.4,
+                                              )
+                                            : Colors.white.withValues(
+                                                alpha: 0.4,
+                                              ),
+                                        child: DropdownButtonFormField<bool?>(
+                                          value: filterRead,
+                                          decoration: const InputDecoration(
+                                            labelText: 'Read',
+                                            border: OutlineInputBorder(),
+                                          ),
+                                          items: const [
+                                            DropdownMenuItem(
+                                              value: null,
+                                              child: Text('All'),
+                                            ),
+                                            DropdownMenuItem(
+                                              value: true,
+                                              child: Text('Read'),
+                                            ),
+                                            DropdownMenuItem(
+                                              value: false,
+                                              child: Text('Unread'),
+                                            ),
+                                          ],
+                                          onChanged: (v) {
+                                            setState(() {
+                                              filterRead = v;
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Expanded(
+                                      child: Container(
+                                        color:
+                                            Theme.of(context).brightness ==
+                                                Brightness.dark
+                                            ? Colors.grey.shade900.withValues(
+                                                alpha: 0.4,
+                                              )
+                                            : Colors.white.withValues(
+                                                alpha: 0.4,
+                                              ),
+                                        child: DropdownButtonFormField<bool?>(
+                                          value: filterOwned,
+                                          decoration: const InputDecoration(
+                                            labelText: 'Owned',
+                                            border: OutlineInputBorder(),
+                                          ),
+                                          items: const [
+                                            DropdownMenuItem(
+                                              value: null,
+                                              child: Text('All'),
+                                            ),
+                                            DropdownMenuItem(
+                                              value: true,
+                                              child: Text('Owned'),
+                                            ),
+                                            DropdownMenuItem(
+                                              value: false,
+                                              child: Text('Not Owned'),
+                                            ),
+                                          ],
+                                          onChanged: (v) {
+                                            setState(() {
+                                              filterOwned = v;
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ],
-                              onChanged: (v) {
+                            ),
+                          ),
+                        Expanded(
+                          child: Builder(
+                            builder: (context) {
+                              var filtered = sortedBooks;
+
+                              if (selectedTypes.isNotEmpty) {
+                                filtered = filtered
+                                    .where(
+                                      (b) => selectedTypes.contains(b.type),
+                                    )
+                                    .toList();
+                              }
+                              if (filterRead != null) {
+                                filtered = filtered
+                                    .where((b) => b.read == filterRead)
+                                    .toList();
+                              }
+                              if (filterOwned != null) {
+                                filtered = filtered
+                                    .where((b) => b.owned == filterOwned)
+                                    .toList();
+                              }
+                              if (librarySearchQuery.isNotEmpty) {
+                                filtered = filtered
+                                    .where(
+                                      (b) => b.title.toLowerCase().contains(
+                                        librarySearchQuery.toLowerCase(),
+                                      ),
+                                    )
+                                    .toList();
+                              }
+
+                              return ListView(
+                                padding: const EdgeInsets.only(top: 8),
+                                children: filtered.map((book) {
+                                  return Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 8,
+                                      vertical: 4,
+                                    ),
+                                    child: MouseRegion(
+                                      cursor: SystemMouseCursors.click,
+                                      child: InkWell(
+                                        onTap: () async {
+                                          await Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (_) => BookDetailScreen(
+                                                book: book,
+                                                allBooks: books,
+                                                onChanged: _saveBook,
+                                              ),
+                                            ),
+                                          );
+                                          setState(() {});
+                                        },
+                                        child: Container(
+                                          padding: const EdgeInsets.all(12),
+                                          decoration: BoxDecoration(
+                                            color:
+                                                Theme.of(context).brightness ==
+                                                    Brightness.dark
+                                                ? Colors.grey.shade900
+                                                      .withValues(alpha: 0.4)
+                                                : Colors.white.withValues(
+                                                    alpha: 0.4,
+                                                  ),
+                                            borderRadius: BorderRadius.circular(
+                                              8,
+                                            ),
+                                          ),
+                                          child: Row(
+                                            children: [
+                                              Tooltip(
+                                                message: book.type,
+                                                child: Icon(
+                                                  iconForBookType(book.type),
+                                                  color: colorForBookType(
+                                                    book.type,
+                                                  ),
+                                                  size: 24,
+                                                ),
+                                              ),
+                                              const SizedBox(width: 12),
+                                              Expanded(
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      book.title,
+                                                      style: const TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 14,
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      '${book.yearPublished} • ${formatBookType(book.type, coAuthor: book.coAuthor)}',
+                                                      style: TextStyle(
+                                                        fontSize: 12,
+                                                        color:
+                                                            Theme.of(
+                                                                  context,
+                                                                ).brightness ==
+                                                                Brightness.dark
+                                                            ? Colors
+                                                                  .grey
+                                                                  .shade400
+                                                            : Colors
+                                                                  .grey
+                                                                  .shade700,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              if (book.rating > 0) ...[
+                                                const Icon(
+                                                  Icons.star,
+                                                  color: Colors.amber,
+                                                  size: 18,
+                                                ),
+                                                Text(
+                                                  ' ${book.rating.toStringAsFixed(1)}',
+                                                ),
+                                                const SizedBox(width: 8),
+                                              ],
+                                              if (book
+                                                  .connections
+                                                  .isNotEmpty) ...[
+                                                Row(
+                                                  children: [
+                                                    ...book.connections.map((
+                                                      conn,
+                                                    ) {
+                                                      return Padding(
+                                                        padding:
+                                                            const EdgeInsets.only(
+                                                              right: 4.0,
+                                                            ),
+                                                        child: Tooltip(
+                                                          message: conn.type,
+                                                          child:
+                                                              buildConnectionIcon(
+                                                                conn,
+                                                              ),
+                                                        ),
+                                                      );
+                                                    }),
+                                                    const SizedBox(width: 4),
+                                                    Text(
+                                                      book.connections
+                                                          .fold<int>(
+                                                            0,
+                                                            (sum, c) =>
+                                                                sum +
+                                                                c
+                                                                    .withIds
+                                                                    .length,
+                                                          )
+                                                          .toString(),
+                                                      style: TextStyle(
+                                                        fontSize: 12,
+                                                        color:
+                                                            Theme.of(
+                                                                  context,
+                                                                ).brightness ==
+                                                                Brightness.dark
+                                                            ? Colors
+                                                                  .grey
+                                                                  .shade400
+                                                            : Colors
+                                                                  .grey
+                                                                  .shade700,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                const SizedBox(width: 8),
+                                              ],
+                                              IconButton(
+                                                icon: Icon(
+                                                  book.wished
+                                                      ? Icons.favorite
+                                                      : Icons.favorite_border,
+                                                  color: book.wished
+                                                      ? Colors.red
+                                                      : Colors.grey,
+                                                ),
+                                                onPressed: () {
+                                                  setState(() {
+                                                    book.wished = !book.wished;
+                                                  });
+                                                  _saveBook(book);
+                                                },
+                                              ),
+                                              _buildOwnedIconButtonForBook(
+                                                book,
+                                              ),
+                                              IconButton(
+                                                icon: Icon(
+                                                  book.read
+                                                      ? Icons.menu_book
+                                                      : Icons
+                                                            .menu_book_outlined,
+                                                  color: book.read
+                                                      ? Colors.green
+                                                      : Colors.grey,
+                                                ),
+                                                onPressed: () {
+                                                  setState(() {
+                                                    book.read = !book.read;
+                                                  });
+                                                  _saveBook(book);
+                                                },
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                }).toList(),
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    /* ---------------- FILM & TV TAB ---------------- */
+                    Column(
+                      children: [
+                        if (showSearch)
+                          Padding(
+                            padding: const EdgeInsets.only(
+                              left: 12,
+                              right: 12,
+                              top: 8,
+                            ),
+                            child: Column(
+                              children: [
+                                TextField(
+                                  controller: searchController,
+                                  decoration: InputDecoration(
+                                    labelText: 'Search adaptations...',
+                                    prefixIcon: const Icon(Icons.search),
+                                    border: const OutlineInputBorder(),
+                                    fillColor:
+                                        Theme.of(context).brightness ==
+                                            Brightness.dark
+                                        ? Colors.grey.shade900.withValues(
+                                            alpha: 0.4,
+                                          )
+                                        : Colors.white.withValues(alpha: 0.4),
+                                    filled: true,
+                                  ),
+                                  onChanged: (value) {
+                                    setState(() {
+                                      adaptationSearchQuery = value
+                                          .toLowerCase();
+                                    });
+                                  },
+                                ),
+                                const SizedBox(height: 8),
+                                Container(
+                                  color:
+                                      Theme.of(context).brightness ==
+                                          Brightness.dark
+                                      ? Colors.grey.shade900.withValues(
+                                          alpha: 0.4,
+                                        )
+                                      : Colors.white.withValues(alpha: 0.4),
+                                  child: DropdownButtonFormField<SortMode>(
+                                    value: adaptationSortMode,
+                                    decoration: const InputDecoration(
+                                      labelText: 'Sort order',
+                                      border: OutlineInputBorder(),
+                                    ),
+                                    items: const [
+                                      DropdownMenuItem(
+                                        value: SortMode.yearPublished,
+                                        child: Text('Released'),
+                                      ),
+                                      DropdownMenuItem(
+                                        value: SortMode.alphabetic,
+                                        child: Text('Alphabetic'),
+                                      ),
+                                    ],
+                                    onChanged: (v) {
+                                      setState(() {
+                                        adaptationSortMode = v!;
+                                      });
+                                    },
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: Container(
+                                        color:
+                                            Theme.of(context).brightness ==
+                                                Brightness.dark
+                                            ? Colors.grey.shade900.withValues(
+                                                alpha: 0.4,
+                                              )
+                                            : Colors.white.withValues(
+                                                alpha: 0.4,
+                                              ),
+                                        child: DropdownButtonFormField<String>(
+                                          value: selectedAdaptationTypes.isEmpty
+                                              ? null
+                                              : selectedAdaptationTypes.first,
+                                          decoration: const InputDecoration(
+                                            labelText: 'Type',
+                                            border: OutlineInputBorder(),
+                                          ),
+                                          items: const [
+                                            DropdownMenuItem(
+                                              value: null,
+                                              child: Text('All'),
+                                            ),
+                                            DropdownMenuItem(
+                                              value: 'Movie',
+                                              child: Text('Movies'),
+                                            ),
+                                            DropdownMenuItem(
+                                              value: 'TV Series',
+                                              child: Text('TV Series'),
+                                            ),
+                                            DropdownMenuItem(
+                                              value: 'Miniseries',
+                                              child: Text('Miniseries'),
+                                            ),
+                                          ],
+                                          onChanged: (v) {
+                                            setState(() {
+                                              selectedAdaptationTypes.clear();
+                                              if (v != null) {
+                                                selectedAdaptationTypes.add(v);
+                                              }
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Expanded(
+                                      child: Container(
+                                        color:
+                                            Theme.of(context).brightness ==
+                                                Brightness.dark
+                                            ? Colors.grey.shade900.withValues(
+                                                alpha: 0.4,
+                                              )
+                                            : Colors.white.withValues(
+                                                alpha: 0.4,
+                                              ),
+                                        child: DropdownButtonFormField<bool?>(
+                                          value: filterWatched,
+                                          decoration: const InputDecoration(
+                                            labelText: 'Watched',
+                                            border: OutlineInputBorder(),
+                                          ),
+                                          items: const [
+                                            DropdownMenuItem(
+                                              value: null,
+                                              child: Text('All'),
+                                            ),
+                                            DropdownMenuItem(
+                                              value: true,
+                                              child: Text('Watched'),
+                                            ),
+                                            DropdownMenuItem(
+                                              value: false,
+                                              child: Text('Unwatched'),
+                                            ),
+                                          ],
+                                          onChanged: (v) {
+                                            setState(() {
+                                              filterWatched = v;
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Expanded(
+                                      child: Container(
+                                        color:
+                                            Theme.of(context).brightness ==
+                                                Brightness.dark
+                                            ? Colors.grey.shade900.withValues(
+                                                alpha: 0.4,
+                                              )
+                                            : Colors.white.withValues(
+                                                alpha: 0.4,
+                                              ),
+                                        child: DropdownButtonFormField<bool?>(
+                                          value: filterAdaptationOwned,
+                                          decoration: const InputDecoration(
+                                            labelText: 'Owned',
+                                            border: OutlineInputBorder(),
+                                          ),
+                                          items: const [
+                                            DropdownMenuItem(
+                                              value: null,
+                                              child: Text('All'),
+                                            ),
+                                            DropdownMenuItem(
+                                              value: true,
+                                              child: Text('Owned'),
+                                            ),
+                                            DropdownMenuItem(
+                                              value: false,
+                                              child: Text('Not Owned'),
+                                            ),
+                                          ],
+                                          onChanged: (v) {
+                                            setState(() {
+                                              filterAdaptationOwned = v;
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        Expanded(
+                          child: Builder(
+                            builder: (context) {
+                              var filtered = List<Adaptation>.from(adaptations);
+
+                              // Apply sorting
+                              switch (adaptationSortMode) {
+                                case SortMode.yearPublished:
+                                  filtered.sort(
+                                    (a, b) => a.year.compareTo(b.year),
+                                  );
+                                  break;
+                                case SortMode.alphabetic:
+                                  filtered.sort(
+                                    (a, b) => a.title.compareTo(b.title),
+                                  );
+                                  break;
+                              }
+
+                              // Apply filters
+                              if (selectedAdaptationTypes.isNotEmpty) {
+                                filtered = filtered
+                                    .where(
+                                      (a) => selectedAdaptationTypes.contains(
+                                        a.type,
+                                      ),
+                                    )
+                                    .toList();
+                              }
+                              if (filterWatched != null) {
+                                filtered = filtered
+                                    .where((a) => a.watched == filterWatched)
+                                    .toList();
+                              }
+                              if (filterAdaptationOwned != null) {
+                                filtered = filtered
+                                    .where(
+                                      (a) => a.owned == filterAdaptationOwned,
+                                    )
+                                    .toList();
+                              }
+                              if (adaptationSearchQuery.isNotEmpty) {
+                                filtered = filtered
+                                    .where(
+                                      (a) =>
+                                          a.title.toLowerCase().contains(
+                                            adaptationSearchQuery,
+                                          ) ||
+                                          (a.basedOn != null &&
+                                              books.any(
+                                                (b) =>
+                                                    b.id == a.basedOn &&
+                                                    b.title
+                                                        .toLowerCase()
+                                                        .contains(
+                                                          adaptationSearchQuery,
+                                                        ),
+                                              )),
+                                    )
+                                    .toList();
+                              }
+
+                              return ListView(
+                                padding: const EdgeInsets.only(top: 8),
+                                children: filtered.map((adaptation) {
+                                  final basedOnBook = adaptation.basedOn != null
+                                      ? books.firstWhere(
+                                          (b) => b.id == adaptation.basedOn,
+                                          orElse: () => books.first,
+                                        )
+                                      : null;
+
+                                  return Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 8,
+                                      vertical: 4,
+                                    ),
+                                    child: MouseRegion(
+                                      cursor: SystemMouseCursors.click,
+                                      child: InkWell(
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (_) =>
+                                                  AdaptationDetailScreen(
+                                                    adaptation: adaptation,
+                                                    books: books,
+                                                    onChanged: _saveAdaptation,
+                                                  ),
+                                            ),
+                                          );
+                                          setState(() {});
+                                        },
+                                        child: Container(
+                                          padding: const EdgeInsets.all(12),
+                                          decoration: BoxDecoration(
+                                            color:
+                                                Theme.of(context).brightness ==
+                                                    Brightness.dark
+                                                ? Colors.grey.shade900
+                                                      .withValues(alpha: 0.4)
+                                                : Colors.white.withValues(
+                                                    alpha: 0.4,
+                                                  ),
+                                            borderRadius: BorderRadius.circular(
+                                              8,
+                                            ),
+                                          ),
+                                          child: Row(
+                                            children: [
+                                              Icon(
+                                                adaptation.type.contains(
+                                                          'Movie',
+                                                        ) ||
+                                                        adaptation.type ==
+                                                            'Movie'
+                                                    ? Icons.movie
+                                                    : Icons.tv,
+                                                color: Colors.blue,
+                                                size: 24,
+                                              ),
+                                              const SizedBox(width: 12),
+                                              Expanded(
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      '${adaptation.title} (${adaptation.year})',
+                                                      style: const TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 14,
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      adaptation.type,
+                                                      style: TextStyle(
+                                                        fontSize: 12,
+                                                        color:
+                                                            Theme.of(
+                                                                  context,
+                                                                ).brightness ==
+                                                                Brightness.dark
+                                                            ? Colors
+                                                                  .grey
+                                                                  .shade400
+                                                            : Colors
+                                                                  .grey
+                                                                  .shade700,
+                                                      ),
+                                                    ),
+                                                    if (basedOnBook != null)
+                                                      Text(
+                                                        'Based on: ${basedOnBook.title}',
+                                                        style: TextStyle(
+                                                          fontSize: 12,
+                                                          color:
+                                                              Theme.of(
+                                                                    context,
+                                                                  ).brightness ==
+                                                                  Brightness
+                                                                      .dark
+                                                              ? Colors
+                                                                    .grey
+                                                                    .shade400
+                                                              : Colors
+                                                                    .grey
+                                                                    .shade700,
+                                                        ),
+                                                      ),
+                                                  ],
+                                                ),
+                                              ),
+                                              if (adaptation.rating > 0) ...[
+                                                const Icon(
+                                                  Icons.star,
+                                                  color: Colors.amber,
+                                                  size: 18,
+                                                ),
+                                                Text(
+                                                  ' ${adaptation.rating.toStringAsFixed(1)}',
+                                                ),
+                                                const SizedBox(width: 8),
+                                              ],
+                                              IconButton(
+                                                icon: Icon(
+                                                  adaptation.wished
+                                                      ? Icons.favorite
+                                                      : Icons.favorite_border,
+                                                  color: adaptation.wished
+                                                      ? Colors.red
+                                                      : Colors.grey,
+                                                ),
+                                                onPressed: () {
+                                                  setState(() {
+                                                    adaptation.wished =
+                                                        !adaptation.wished;
+                                                  });
+                                                  _saveAdaptation(adaptation);
+                                                },
+                                              ),
+                                              _buildOwnedIconButtonForAdaptation(
+                                                adaptation,
+                                              ),
+                                              IconButton(
+                                                icon: Icon(
+                                                  adaptation.watched
+                                                      ? Icons.visibility
+                                                      : Icons
+                                                            .visibility_outlined,
+                                                  color: adaptation.watched
+                                                      ? Colors.green
+                                                      : Colors.grey,
+                                                ),
+                                                onPressed: () {
+                                                  setState(() {
+                                                    adaptation.watched =
+                                                        !adaptation.watched;
+                                                  });
+                                                  _saveAdaptation(adaptation);
+                                                },
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                }).toList(),
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    /* ---------------- WISH LIST TAB ---------------- */
+                    Column(
+                      children: [
+                        if (showSearch)
+                          Padding(
+                            padding: const EdgeInsets.only(
+                              left: 12,
+                              right: 12,
+                              top: 8,
+                            ),
+                            child: TextField(
+                              controller: searchController,
+                              decoration: InputDecoration(
+                                labelText: 'Search wish list...',
+                                prefixIcon: const Icon(Icons.search),
+                                border: const OutlineInputBorder(),
+                                fillColor:
+                                    Theme.of(context).brightness ==
+                                        Brightness.dark
+                                    ? Colors.grey.shade900.withValues(
+                                        alpha: 0.4,
+                                      )
+                                    : Colors.white.withValues(alpha: 0.4),
+                                filled: true,
+                              ),
+                              onChanged: (value) {
                                 setState(() {
-                                  sortMode = v!;
+                                  librarySearchQuery = value;
                                 });
                               },
                             ),
                           ),
-                          const SizedBox(height: 8),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: Container(
-                                  color: Colors.grey.shade900.withValues(alpha: 0.7),
-                                  child: DropdownButtonFormField<String>(
-                                    value: selectedTypes.isEmpty ? null : selectedTypes.first,
-                                    decoration: const InputDecoration(
-                                      labelText: 'Type',
-                                      border: OutlineInputBorder(),
+                        Expanded(
+                          child: Builder(
+                            builder: (context) {
+                              final wishedBooks = books
+                                  .where((b) => b.wished)
+                                  .toList();
+                              final wishedAdaptations = adaptations
+                                  .where((a) => a.wished)
+                                  .toList();
+
+                              final filteredBooks = wishedBooks
+                                  .where(
+                                    (b) => b.title.toLowerCase().contains(
+                                      librarySearchQuery.toLowerCase(),
                                     ),
-                                    items: const [
-                                      DropdownMenuItem(value: null, child: Text('All')),
-                                      DropdownMenuItem(value: 'Novel', child: Text('Novels')),
-                                      DropdownMenuItem(value: 'Short Story Collection', child: Text('Short Stories')),
-                                    ],
-                                    onChanged: (v) {
-                                      setState(() {
-                                        selectedTypes.clear();
-                                        if (v != null) selectedTypes.add(v);
-                                      });
-                                    },
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(width: 8),
-                              Expanded(
-                                child: Container(
-                                  color: Colors.grey.shade900.withValues(alpha: 0.7),
-                                  child: DropdownButtonFormField<bool?>(
-                                    value: filterRead,
-                                    decoration: const InputDecoration(
-                                      labelText: 'Read',
-                                      border: OutlineInputBorder(),
+                                  )
+                                  .toList();
+                              final filteredAdaptations = wishedAdaptations
+                                  .where(
+                                    (a) => a.title.toLowerCase().contains(
+                                      librarySearchQuery.toLowerCase(),
                                     ),
-                                    items: const [
-                                      DropdownMenuItem(value: null, child: Text('All')),
-                                      DropdownMenuItem(value: true, child: Text('Read')),
-                                      DropdownMenuItem(value: false, child: Text('Unread')),
-                                    ],
-                                    onChanged: (v) {
-                                      setState(() {
-                                        filterRead = v;
-                                      });
-                                    },
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(width: 8),
-                              Expanded(
-                                child: Container(
-                                  color: Colors.grey.shade900.withValues(alpha: 0.7),
-                                  child: DropdownButtonFormField<bool?>(
-                                    value: filterOwned,
-                                    decoration: const InputDecoration(
-                                      labelText: 'Owned',
-                                      border: OutlineInputBorder(),
-                                    ),
-                                    items: const [
-                                      DropdownMenuItem(value: null, child: Text('All')),
-                                      DropdownMenuItem(value: true, child: Text('Owned')),
-                                      DropdownMenuItem(value: false, child: Text('Not Owned')),
-                                    ],
-                                    onChanged: (v) {
-                                      setState(() {
-                                        filterOwned = v;
-                                      });
-                                    },
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  Expanded(
-                  child: Builder(
-                    builder: (context) {
-                      var filtered = sortedBooks;
-                      
-                      if (selectedTypes.isNotEmpty) {
-                        filtered = filtered.where((b) => selectedTypes.contains(b.type)).toList();
-                      }
-                      if (filterRead != null) {
-                        filtered = filtered.where((b) => b.read == filterRead).toList();
-                      }
-                      if (filterOwned != null) {
-                        filtered = filtered.where((b) => b.owned == filterOwned).toList();
-                      }
-                      if (librarySearchQuery.isNotEmpty) {
-                        filtered = filtered.where((b) => 
-                          b.title.toLowerCase().contains(librarySearchQuery.toLowerCase())
-                        ).toList();
-                      }
-                      
-                      return ListView(
-                        padding: const EdgeInsets.only(top: 8),
-                        children: filtered.map((book) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                        child: MouseRegion(
-                          cursor: SystemMouseCursors.click,
-                          child: InkWell(
-                            onTap: () async {
-                              await Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) => BookDetailScreen(
-                                    book: book,
-                                    allBooks: books,
-                                    onChanged: _saveBook,
-                                  ),
-                                ),
+                                  )
+                                  .toList();
+
+                              filteredBooks.sort(
+                                (a, b) =>
+                                    a.yearPublished.compareTo(b.yearPublished),
                               );
-                              setState(() {});
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.all(12),
-                              decoration: BoxDecoration(
-                                color: Colors.black.withValues(alpha: 0.3),
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: Row(
+                              filteredAdaptations.sort(
+                                (a, b) => a.year.compareTo(b.year),
+                              );
+
+                              if (filteredBooks.isEmpty &&
+                                  filteredAdaptations.isEmpty) {
+                                return const Center(
+                                  child: Text(
+                                    'No items in your wish list yet\n\nLike books or adaptations to add them',
+                                  ),
+                                );
+                              }
+
+                              return ListView(
+                                padding: const EdgeInsets.only(top: 8),
                                 children: [
-                                  Tooltip(
-                                    message: book.type,
-                                    child: Icon(
-                                      iconForBookType(book.type),
-                                      color: colorForBookType(book.type),
-                                      size: 24,
-                                    ),
-                                  ),
-                                  const SizedBox(width: 12),
-                                  if (darkTowerOrder(book.id) != null) ...[
-                                    buildDarkTowerBadge(darkTowerOrder(book.id)!),
-                                    const SizedBox(width: 12),
-                                  ],
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          book.title,
-                                          style: const TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 14,
-                                          ),
+                                  if (filteredBooks.isNotEmpty) ...[
+                                    Padding(
+                                      padding: const EdgeInsets.all(12),
+                                      child: Text(
+                                        'Books (${filteredBooks.length})',
+                                        style: const TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
                                         ),
-                                        Text(
-                                          '${book.yearPublished} • ${formatBookType(book.type, coAuthor: book.coAuthor)}',
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            color: Colors.grey.shade400,
-                                          ),
-                                        ),
-                                      ],
+                                      ),
                                     ),
-                                  ),
-                                  if (book.rating > 0) ...[
-                                    const Icon(Icons.star, color: Colors.amber, size: 18),
-                                    Text(' ${book.rating.toStringAsFixed(1)}'),
-                                    const SizedBox(width: 8),
-                                  ],
-                                  if (book.connections.isNotEmpty) ...[
-                                    Row(
-                                      children: [
-                                        ...book.connections.map((conn) {
-                                          return Padding(
-                                            padding: const EdgeInsets.only(right: 4.0),
-                                            child: Tooltip(
-                                              message: conn.type,
-                                              child: buildConnectionIcon(conn),
+                                    ...filteredBooks.map((book) {
+                                      return MouseRegion(
+                                        cursor: SystemMouseCursors.click,
+                                        child: Card(
+                                          margin: const EdgeInsets.symmetric(
+                                            horizontal: 8,
+                                            vertical: 4,
+                                          ),
+                                          color:
+                                              Theme.of(context).brightness ==
+                                                  Brightness.dark
+                                              ? Colors.grey.shade900.withValues(
+                                                  alpha: 0.4,
+                                                )
+                                              : Colors.white.withValues(
+                                                  alpha: 0.4,
+                                                ),
+                                          elevation: 4,
+                                          child: ListTile(
+                                            title: Text(book.title),
+                                            subtitle: Text(
+                                              '${book.yearPublished} • ${book.type}',
                                             ),
-                                          );
-                                        }).toList(),
-                                        const SizedBox(width: 4),
+                                            trailing: IconButton(
+                                              icon: const Icon(
+                                                Icons.favorite,
+                                                color: Colors.red,
+                                              ),
+                                              onPressed: () {
+                                                setState(() {
+                                                  book.wished = false;
+                                                });
+                                                _saveBook(book);
+                                              },
+                                            ),
+                                            onTap: () async {
+                                              await Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (_) =>
+                                                      BookDetailScreen(
+                                                        book: book,
+                                                        allBooks: books,
+                                                        onChanged: _saveBook,
+                                                      ),
+                                                ),
+                                              );
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ),
+                                      );
+                                    }),
+                                  ],
+                                  if (filteredAdaptations.isNotEmpty) ...[
+                                    Padding(
+                                      padding: const EdgeInsets.all(12),
+                                      child: Text(
+                                        'Film & TV (${filteredAdaptations.length})',
+                                        style: const TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                    ...filteredAdaptations.map((adaptation) {
+                                      return MouseRegion(
+                                        cursor: SystemMouseCursors.click,
+                                        child: Card(
+                                          margin: const EdgeInsets.symmetric(
+                                            horizontal: 8,
+                                            vertical: 4,
+                                          ),
+                                          color:
+                                              Theme.of(context).brightness ==
+                                                  Brightness.dark
+                                              ? Colors.grey.shade900.withValues(
+                                                  alpha: 0.4,
+                                                )
+                                              : Colors.white.withValues(
+                                                  alpha: 0.4,
+                                                ),
+                                          elevation: 4,
+                                          child: ListTile(
+                                            title: Text(adaptation.title),
+                                            subtitle: Text(
+                                              '${adaptation.year} • ${adaptation.type}',
+                                            ),
+                                            trailing: IconButton(
+                                              icon: const Icon(
+                                                Icons.favorite,
+                                                color: Colors.red,
+                                              ),
+                                              onPressed: () {
+                                                setState(() {
+                                                  adaptation.wished = false;
+                                                });
+                                                _saveAdaptation(adaptation);
+                                              },
+                                            ),
+                                            onTap: () async {
+                                              await Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (_) =>
+                                                      AdaptationDetailScreen(
+                                                        adaptation: adaptation,
+                                                        books: books,
+                                                        onChanged:
+                                                            _saveAdaptation,
+                                                      ),
+                                                ),
+                                              );
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ),
+                                      );
+                                    }),
+                                  ],
+                                ],
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    /* ---------------- TDT TAB ---------------- */
+                    Builder(
+                      builder: (context) {
+                        if (tdtexBooks.isEmpty) {
+                          return const Center(
+                            child: Text('No Dark Tower extended books found'),
+                          );
+                        }
+
+                        // Separate main Dark Tower books from extended reading list
+                        final mainTowerBooks = tdtexBooks
+                            .where((book) => darkTowerOrder(book.id) != null)
+                            .toList();
+                        final extendedBooks = books
+                            .where(
+                              (book) => darkTowerExtendedOrder(book.id) != null,
+                            )
+                            .toList();
+
+                        // Sort main tower books by order
+                        mainTowerBooks.sort((a, b) {
+                          final orderA = darkTowerOrder(a.id) ?? '';
+                          final orderB = darkTowerOrder(b.id) ?? '';
+                          return orderA.compareTo(orderB);
+                        });
+
+                        // Sort extended books by extended order (numeric sort)
+                        extendedBooks.sort((a, b) {
+                          final orderA = darkTowerExtendedOrder(a.id) ?? '';
+                          final orderB = darkTowerExtendedOrder(b.id) ?? '';
+
+                          // Extract numbers for proper sorting (TDTex 1, TDTex 2, ..., TDTex 20)
+                          final numA =
+                              int.tryParse(
+                                orderA
+                                    .replaceAll(RegExp(r'[^0-9.]'), '')
+                                    .split('.')
+                                    .first,
+                              ) ??
+                              999;
+                          final numB =
+                              int.tryParse(
+                                orderB
+                                    .replaceAll(RegExp(r'[^0-9.]'), '')
+                                    .split('.')
+                                    .first,
+                              ) ??
+                              999;
+
+                          return numA.compareTo(numB);
+                        });
+
+                        return ListView(
+                          padding: const EdgeInsets.only(top: 10),
+                          children: [
+                            // Main Dark Tower Series
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 8,
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
+                                  Container(
+                                    width: double.infinity,
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 12,
+                                      vertical: 10,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color:
+                                          Theme.of(context).brightness ==
+                                              Brightness.dark
+                                          ? Colors.grey.shade900.withValues(
+                                              alpha: 0.5,
+                                            )
+                                          : Colors.white.withValues(
+                                              alpha: 0.5,
+                                            ),
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        Icon(
+                                          Icons.castle,
+                                          color: Colors.amber,
+                                          size: 28,
+                                        ),
+                                        const SizedBox(width: 12),
                                         Text(
-                                          book.connections
-                                              .fold<int>(0, (sum, c) => sum + c.withIds.length)
-                                              .toString(),
+                                          'The Dark Tower Series',
                                           style: TextStyle(
-                                            fontSize: 12,
-                                            color: Colors.grey.shade400,
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold,
+                                            color:
+                                                Theme.of(context)
+                                                            .brightness ==
+                                                        Brightness.light
+                                                    ? Color(0xFF333333)
+                                                    : Colors.white,
                                           ),
                                         ),
                                       ],
                                     ),
-                                    const SizedBox(width: 8),
-                                  ],
-                                  IconButton(
-                                    icon: Icon(
-                                      book.wished ? Icons.favorite : Icons.favorite_border,
-                                      color: book.wished ? Colors.red : Colors.grey,
-                                    ),
-                                    onPressed: () {
-                                      setState(() {
-                                        book.wished = !book.wished;
-                                      });
-                                      _saveBook(book);
-                                    },
                                   ),
-                                  IconButton(
-                                    icon: Icon(
-                                      book.owned ? Icons.collections_bookmark : Icons.collections_bookmark_outlined,
-                                      color: book.owned ? Colors.blue : Colors.grey,
+                                  const SizedBox(height: 16),
+                                  ...mainTowerBooks.map((book) {
+                                      return Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 0,
+                                          vertical: 4,
+                                        ),
+                                        child: MouseRegion(
+                                          cursor: SystemMouseCursors.click,
+                                          child: InkWell(
+                                            onTap: () async {
+                                              await Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (_) =>
+                                                      BookDetailScreen(
+                                                        book: book,
+                                                        allBooks: books,
+                                                        onChanged: _saveBook,
+                                                      ),
+                                                ),
+                                              );
+                                              setState(() {});
+                                            },
+                                            child: Container(
+                                              padding: const EdgeInsets.all(12),
+                                              decoration: BoxDecoration(
+                                                color:
+                                                    Theme.of(
+                                                          context,
+                                                        ).brightness ==
+                                                        Brightness.dark
+                                                    ? Colors.grey.shade900
+                                                          .withValues(
+                                                            alpha: 0.4,
+                                                          )
+                                                    : Colors.white.withValues(
+                                                        alpha: 0.4,
+                                                      ),
+                                                borderRadius:
+                                                    BorderRadius.circular(8),
+                                              ),
+                                              child: Row(
+                                                children: [
+                                                  buildDarkTowerBadge(
+                                                    darkTowerOrder(book.id)!,
+                                                  ),
+                                                  const SizedBox(width: 12),
+                                                  Expanded(
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Text(
+                                                          book.title,
+                                                          style:
+                                                              const TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                fontSize: 14,
+                                                              ),
+                                                        ),
+                                                        Text(
+                                                          '${book.yearPublished}',
+                                                          style: TextStyle(
+                                                            fontSize: 12,
+                                                            color:
+                                                                Theme.of(
+                                                                      context,
+                                                                    ).brightness ==
+                                                                    Brightness
+                                                                        .dark
+                                                                ? Colors
+                                                                      .grey
+                                                                      .shade400
+                                                                : Colors
+                                                                      .grey
+                                                                      .shade700,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  IconButton(
+                                                    icon: Icon(
+                                                      book.wished
+                                                          ? Icons.favorite
+                                                          : Icons
+                                                                .favorite_border,
+                                                      color: book.wished
+                                                          ? Colors.red
+                                                          : Colors.grey,
+                                                    ),
+                                                    onPressed: () {
+                                                      setState(() {
+                                                        book.wished =
+                                                            !book.wished;
+                                                      });
+                                                      _saveBook(book);
+                                                    },
+                                                  ),
+                                                  _buildOwnedIconButtonForBook(
+                                                    book,
+                                                  ),
+                                                  IconButton(
+                                                    icon: Icon(
+                                                      book.read
+                                                          ? Icons.menu_book
+                                                          : Icons
+                                                                .menu_book_outlined,
+                                                      color: book.read
+                                                          ? Colors.green
+                                                          : Colors.grey,
+                                                    ),
+                                                    onPressed: () {
+                                                      setState(() {
+                                                        book.read = !book.read;
+                                                      });
+                                                      _saveBook(book);
+                                                    },
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                  }),
+                                ],
+                              ),
+                            ),
+
+                            // Extended Reading List Info
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 8,
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
+                                  Container(
+                                    width: double.infinity,
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 12,
+                                      vertical: 10,
                                     ),
-                                    onPressed: () {
-                                      setState(() {
-                                        book.owned = !book.owned;
-                                      });
-                                      _saveBook(book);
-                                    },
-                                  ),
-                                  IconButton(
-                                    icon: Icon(
-                                      book.read ? Icons.menu_book : Icons.menu_book_outlined,
-                                      color: book.read ? Colors.green : Colors.grey,
+                                    decoration: BoxDecoration(
+                                      color:
+                                          Theme.of(context).brightness ==
+                                              Brightness.dark
+                                          ? Colors.grey.shade900.withValues(
+                                              alpha: 0.5,
+                                            )
+                                          : Colors.white.withValues(
+                                              alpha: 0.5,
+                                            ),
+                                      borderRadius: BorderRadius.circular(8),
                                     ),
-                                    onPressed: () {
-                                      setState(() {
-                                        book.read = !book.read;
-                                      });
-                                      _saveBook(book);
-                                    },
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Icon(
+                                              Icons.auto_stories,
+                                              color: Colors.purple.shade200,
+                                              size: 24,
+                                            ),
+                                            const SizedBox(width: 12),
+                                            Text(
+                                              'Extended Reading List',
+                                              style: TextStyle(
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.bold,
+                                                color:
+                                                    Theme.of(context)
+                                                                .brightness ==
+                                                            Brightness.light
+                                                        ? Color(0xFF333333)
+                                                        : Colors.white,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        const SizedBox(height: 8),
+                                        Text(
+                                          'The list below is a suggested reading list for the extended experience to The Dark Tower Universe, found in The Wind Through the Keyhole.',
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            color:
+                                                Theme.of(context).brightness ==
+                                                        Brightness.dark
+                                                    ? Colors.grey.shade300
+                                                    : Colors.grey.shade800,
+                                            height: 1.4,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ],
                               ),
                             ),
-                          ),
-                        ),
-                      );
-            }).toList(),
-          );
-        },
-      ),
-    ),
-  ],
-),
 
-    /* ---------------- FILM & TV TAB ---------------- */
-    Column(
-      children: [
-        if (showSearch)
-          Padding(
-            padding: const EdgeInsets.only(left: 12, right: 12, top: 8),
-            child: Column(
-              children: [
-                TextField(
-                  controller: searchController,
-                  decoration: InputDecoration(
-                    labelText: 'Search adaptations...',
-                    prefixIcon: const Icon(Icons.search),
-                    border: const OutlineInputBorder(),
-                    fillColor: Colors.grey.shade900.withValues(alpha: 0.7),
-                    filled: true,
-                  ),
-                  onChanged: (value) {
-                    setState(() {
-                      adaptationSearchQuery = value.toLowerCase();
-                    });
-                  },
-                ),
-                const SizedBox(height: 8),
-                Container(
-                  color: Colors.grey.shade900.withValues(alpha: 0.7),
-                  child: DropdownButtonFormField<SortMode>(
-                    value: adaptationSortMode,
-                    decoration: const InputDecoration(
-                      labelText: 'Sort order',
-                      border: OutlineInputBorder(),
-                    ),
-                    items: const [
-                      DropdownMenuItem(
-                        value: SortMode.yearPublished,
-                        child: Text('Released'),
-                      ),
-                      DropdownMenuItem(
-                        value: SortMode.alphabetic,
-                        child: Text('Alphabetic'),
-                      ),
-                    ],
-                    onChanged: (v) {
-                      setState(() {
-                        adaptationSortMode = v!;
-                      });
-                    },
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Row(
-                  children: [
-                    Expanded(
-                      child: Container(
-                        color: Colors.grey.shade900.withValues(alpha: 0.7),
-                        child: DropdownButtonFormField<String>(
-                          value: selectedAdaptationTypes.isEmpty ? null : selectedAdaptationTypes.first,
-                          decoration: const InputDecoration(
-                            labelText: 'Type',
-                            border: OutlineInputBorder(),
-                          ),
-                          items: const [
-                            DropdownMenuItem(value: null, child: Text('All')),
-                            DropdownMenuItem(value: 'Movie', child: Text('Movies')),
-                            DropdownMenuItem(value: 'TV Series', child: Text('TV Series')),
-                            DropdownMenuItem(value: 'Miniseries', child: Text('Miniseries')),
-                          ],
-                          onChanged: (v) {
-                            setState(() {
-                              selectedAdaptationTypes.clear();
-                              if (v != null) selectedAdaptationTypes.add(v);
-                            });
-                          },
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Container(
-                        color: Colors.grey.shade900.withValues(alpha: 0.7),
-                        child: DropdownButtonFormField<bool?>(
-                          value: filterWatched,
-                          decoration: const InputDecoration(
-                            labelText: 'Watched',
-                            border: OutlineInputBorder(),
-                          ),
-                          items: const [
-                            DropdownMenuItem(value: null, child: Text('All')),
-                            DropdownMenuItem(value: true, child: Text('Watched')),
-                            DropdownMenuItem(value: false, child: Text('Unwatched')),
-                          ],
-                          onChanged: (v) {
-                            setState(() {
-                              filterWatched = v;
-                            });
-                          },
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Container(
-                        color: Colors.grey.shade900.withValues(alpha: 0.7),
-                        child: DropdownButtonFormField<bool?>(
-                          value: filterAdaptationOwned,
-                          decoration: const InputDecoration(
-                            labelText: 'Owned',
-                            border: OutlineInputBorder(),
-                          ),
-                          items: const [
-                            DropdownMenuItem(value: null, child: Text('All')),
-                            DropdownMenuItem(value: true, child: Text('Owned')),
-                            DropdownMenuItem(value: false, child: Text('Not Owned')),
-                          ],
-                          onChanged: (v) {
-                            setState(() {
-                              filterAdaptationOwned = v;
-                            });
-                          },
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        Expanded(
-                  child: Builder(
-                    builder: (context) {
-                      var filtered = List<Adaptation>.from(adaptations);
-                      
-                      // Apply sorting
-                      switch (adaptationSortMode) {
-                        case SortMode.yearPublished:
-                          filtered.sort((a, b) => a.year.compareTo(b.year));
-                          break;
-                        case SortMode.alphabetic:
-                          filtered.sort((a, b) => a.title.compareTo(b.title));
-                          break;
-                      }
-                      
-                      // Apply filters
-                      if (selectedAdaptationTypes.isNotEmpty) {
-                        filtered = filtered.where((a) => selectedAdaptationTypes.contains(a.type)).toList();
-                      }
-                      if (filterWatched != null) {
-                        filtered = filtered.where((a) => a.watched == filterWatched).toList();
-                      }
-                      if (filterAdaptationOwned != null) {
-                        filtered = filtered.where((a) => a.owned == filterAdaptationOwned).toList();
-                      }
-                      if (adaptationSearchQuery.isNotEmpty) {
-                        filtered = filtered.where((a) =>
-                            a.title.toLowerCase().contains(adaptationSearchQuery) ||
-                            (a.basedOn != null &&
-                                books.any((b) =>
-                                    b.id == a.basedOn &&
-                                    b.title.toLowerCase().contains(adaptationSearchQuery)))
-                        ).toList();
-                      }
-
-                      return ListView(
-                        padding: const EdgeInsets.only(top: 8),
-                        children: filtered.map((adaptation) {
-                          final basedOnBook = adaptation.basedOn != null
-                              ? books.firstWhere((b) => b.id == adaptation.basedOn,
-                                  orElse: () => books.first)
-                              : null;
-
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                            child: MouseRegion(
-                              cursor: SystemMouseCursors.click,
-                              child: InkWell(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (_) => AdaptationDetailScreen(
-                                        adaptation: adaptation,
-                                        books: books,
-                                        onChanged: _saveAdaptation,
-                                      ),
-                                    ),
-                                  );
-                                  setState(() {});
-                                },
-                                child: Container(
-                                  padding: const EdgeInsets.all(12),
-                                  decoration: BoxDecoration(
-                                    color: Colors.black.withValues(alpha: 0.3),
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      Icon(
-                                        adaptation.type.contains('Movie') || adaptation.type == 'Movie'
-                                            ? Icons.movie
-                                            : Icons.tv,
-                                        color: Colors.blue,
-                                        size: 24,
-                                      ),
-                                      const SizedBox(width: 12),
-                                      Expanded(
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              '${adaptation.title} (${adaptation.year})',
-                                              style: const TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 14,
-                                              ),
-                                            ),
-                                            Text(
-                                              adaptation.type,
-                                              style: TextStyle(
-                                                fontSize: 12,
-                                                color: Colors.grey.shade400,
-                                              ),
-                                            ),
-                                            if (basedOnBook != null)
-                                              Text(
-                                                'Based on: ${basedOnBook.title}',
-                                                style: TextStyle(
-                                                  fontSize: 12,
-                                                  color: Colors.grey.shade400,
-                                                ),
-                                              ),
-                                          ],
-                                        ),
-                                      ),
-                                      if (adaptation.rating > 0) ...[
-                                        const Icon(Icons.star, color: Colors.amber, size: 18),
-                                        Text(' ${adaptation.rating.toStringAsFixed(1)}'),
-                                        const SizedBox(width: 8),
-                                      ],
-                                      IconButton(
-                                        icon: Icon(
-                                          adaptation.wished ? Icons.favorite : Icons.favorite_border,
-                                          color: adaptation.wished ? Colors.red : Colors.grey,
-                                        ),
-                                        onPressed: () {
-                                          setState(() {
-                                            adaptation.wished = !adaptation.wished;
-                                          });
-                                          _saveAdaptation(adaptation);
-                                        },
-                                      ),
-                                      IconButton(
-                                        icon: Icon(
-                                          adaptation.owned ? Icons.video_library : Icons.video_library_outlined,
-                                          color: adaptation.owned ? Colors.blue : Colors.grey,
-                                        ),
-                                        onPressed: () {
-                                          setState(() {
-                                            adaptation.owned = !adaptation.owned;
-                                          });
-                                          _saveAdaptation(adaptation);
-                                        },
-                                      ),
-                                      IconButton(
-                                        icon: Icon(
-                                          adaptation.watched ? Icons.visibility : Icons.visibility_outlined,
-                                          color: adaptation.watched ? Colors.green : Colors.grey,
-                                        ),
-                                        onPressed: () {
-                                          setState(() {
-                                            adaptation.watched = !adaptation.watched;
-                                          });
-                                          _saveAdaptation(adaptation);
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          );
-                        }).toList(),
-                      );
-                    },
-                  ),
-                ),
-              ],
-            ),
-
-            /* ---------------- WISH LIST TAB ---------------- */
-            Column(
-              children: [
-                if (showSearch)
-                  Padding(
-                    padding: const EdgeInsets.only(left: 12, right: 12, top: 8),
-                    child: TextField(
-                      controller: searchController,
-                      decoration: InputDecoration(
-                        labelText: 'Search wish list...',
-                        prefixIcon: const Icon(Icons.search),
-                        border: const OutlineInputBorder(),
-                        fillColor: Colors.grey.shade900.withValues(alpha: 0.7),
-                        filled: true,
-                      ),
-                      onChanged: (value) {
-                        setState(() {
-                          librarySearchQuery = value;
-                        });
-                      },
-                    ),
-                  ),
-                Expanded(
-                  child: Builder(
-                    builder: (context) {
-                      final wishedBooks = books.where((b) => b.wished).toList();
-                      final wishedAdaptations = adaptations.where((a) => a.wished).toList();
-                      
-                      final filteredBooks = wishedBooks
-                          .where((b) => b.title.toLowerCase().contains(librarySearchQuery.toLowerCase()))
-                          .toList();
-                      final filteredAdaptations = wishedAdaptations
-                          .where((a) => a.title.toLowerCase().contains(librarySearchQuery.toLowerCase()))
-                          .toList();
-                      
-                      filteredBooks.sort((a, b) => a.yearPublished.compareTo(b.yearPublished));
-                      filteredAdaptations.sort((a, b) => a.year.compareTo(b.year));
-                      
-                      if (filteredBooks.isEmpty && filteredAdaptations.isEmpty) {
-                        return const Center(
-                          child: Text('No items in your wish list yet\n\nLike books or adaptations to add them'),
-                        );
-                      }
-                      
-                      return ListView(
-                        padding: const EdgeInsets.only(top: 8),
-                        children: [
-                          if (filteredBooks.isNotEmpty) ...[
-                            Padding(
-                              padding: const EdgeInsets.all(12),
-                              child: Text(
-                                'Books (${filteredBooks.length})',
-                                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                            ...filteredBooks.map((book) {
-                              return MouseRegion(
-                                cursor: SystemMouseCursors.click,
-                                child: Card(
-                                  margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                                  color: Colors.grey.shade900.withValues(alpha: 0.7),
-                                  elevation: 4,
-                                  child: ListTile(
-                                    title: Text(book.title),
-                                    subtitle: Text('${book.yearPublished} • ${book.type}'),
-                                    trailing: IconButton(
-                                      icon: const Icon(Icons.favorite, color: Colors.red),
-                                      onPressed: () {
-                                        setState(() {
-                                          book.wished = false;
-                                        });
-                                        _saveBook(book);
-                                      },
-                                    ),
-                                    onTap: () async {
-                                      await Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (_) => BookDetailScreen(
-                                            book: book,
-                                            allBooks: books,
-                                            onChanged: _saveBook,
-                                          ),
-                                        ),
-                                      );
-                                      setState(() {});
-                                    },
-                                  ),
-                                ),
-                              );
-                            }).toList(),
-                          ],
-                          if (filteredAdaptations.isNotEmpty) ...[
-                            Padding(
-                              padding: const EdgeInsets.all(12),
-                              child: Text(
-                                'Film & TV (${filteredAdaptations.length})',
-                                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                            ...filteredAdaptations.map((adaptation) {
-                              return MouseRegion(
-                                cursor: SystemMouseCursors.click,
-                                child: Card(
-                                  margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                                  color: Colors.grey.shade900.withValues(alpha: 0.7),
-                                  elevation: 4,
-                                  child: ListTile(
-                                    title: Text(adaptation.title),
-                                    subtitle: Text('${adaptation.year} • ${adaptation.type}'),
-                                    trailing: IconButton(
-                                      icon: const Icon(Icons.favorite, color: Colors.red),
-                                      onPressed: () {
-                                        setState(() {
-                                          adaptation.wished = false;
-                                        });
-                                        _saveAdaptation(adaptation);
-                                      },
-                                    ),
-                                    onTap: () async {
-                                      await Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (_) => AdaptationDetailScreen(
-                                            adaptation: adaptation,
-                                            books: books,
-                                            onChanged: _saveAdaptation,
-                                          ),
-                                        ),
-                                      );
-                                      setState(() {});
-                                    },
-                                  ),
-                                ),
-                              );
-                            }).toList(),
-                          ],
-                        ],
-                      );
-                    },
-                  ),
-                ),
-              ],
-            ),
-
-            /* ---------------- TDT TAB ---------------- */
-            Builder(
-              builder: (context) {
-                if (tdtexBooks.isEmpty) {
-                  return const Center(child: Text('No Dark Tower extended books found'));
-                }
-                
-                // Separate main Dark Tower books from extended reading list
-                final mainTowerBooks = tdtexBooks.where((book) => darkTowerOrder(book.id) != null).toList();
-                final extendedBooks = books.where((book) => darkTowerExtendedOrder(book.id) != null).toList();
-                
-                // Sort main tower books by order
-                mainTowerBooks.sort((a, b) {
-                  final orderA = darkTowerOrder(a.id) ?? '';
-                  final orderB = darkTowerOrder(b.id) ?? '';
-                  return orderA.compareTo(orderB);
-                });
-                
-                // Sort extended books by extended order (numeric sort)
-                extendedBooks.sort((a, b) {
-                  final orderA = darkTowerExtendedOrder(a.id) ?? '';
-                  final orderB = darkTowerExtendedOrder(b.id) ?? '';
-                  
-                  // Extract numbers for proper sorting (TDTex 1, TDTex 2, ..., TDTex 20)
-                  final numA = int.tryParse(orderA.replaceAll(RegExp(r'[^0-9.]'), '').split('.').first) ?? 999;
-                  final numB = int.tryParse(orderB.replaceAll(RegExp(r'[^0-9.]'), '').split('.').first) ?? 999;
-                  
-                  return numA.compareTo(numB);
-                });
-                
-                return ListView(
-                  padding: const EdgeInsets.only(top: 10),
-                  children: [
-                    // Main Dark Tower Series Card
-                    Card(
-                      color: Colors.transparent,
-                      margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-                      elevation: 6,
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                Icon(Icons.castle, color: Colors.amber, size: 28),
-                                const SizedBox(width: 12),
-                                const Text(
-                                  'The Dark Tower Series',
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.amber,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 16),
-                            ...mainTowerBooks.map((book) {
+                            // Extended books list
+                            ...extendedBooks.map((book) {
                               return Padding(
-                                padding: const EdgeInsets.only(bottom: 8),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 4,
+                                ),
                                 child: MouseRegion(
                                   cursor: SystemMouseCursors.click,
                                   child: InkWell(
@@ -1623,20 +2417,28 @@ class _HomeScreenState extends State<HomeScreen> {
                                     child: Container(
                                       padding: const EdgeInsets.all(12),
                                       decoration: BoxDecoration(
-                                        color: Colors.black.withValues(alpha: 0.3),
+                                        color:
+                                            Theme.of(context).brightness ==
+                                                Brightness.dark
+                                            ? Colors.grey.shade900.withValues(
+                                                alpha: 0.4,
+                                              )
+                                            : Colors.white.withValues(
+                                                alpha: 0.4,
+                                              ),
                                         borderRadius: BorderRadius.circular(8),
-                                        border: Border.all(
-                                          color: Colors.amber.withValues(alpha: 0.3),
-                                          width: 1,
-                                        ),
                                       ),
                                       child: Row(
                                         children: [
-                                          buildDarkTowerBadge(darkTowerOrder(book.id)!),
+                                          buildDarkTowerBadge(
+                                            darkTowerExtendedOrder(book.id) ??
+                                                'TDTex',
+                                          ),
                                           const SizedBox(width: 12),
                                           Expanded(
                                             child: Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
                                               children: [
                                                 Text(
                                                   book.title,
@@ -1649,7 +2451,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   '${book.yearPublished}',
                                                   style: TextStyle(
                                                     fontSize: 12,
-                                                    color: Colors.grey.shade400,
+                                                    color:
+                                                        Theme.of(
+                                                              context,
+                                                            ).brightness ==
+                                                            Brightness.dark
+                                                        ? Colors.grey.shade400
+                                                        : Colors.grey.shade700,
                                                   ),
                                                 ),
                                               ],
@@ -1657,8 +2465,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                           ),
                                           IconButton(
                                             icon: Icon(
-                                              book.wished ? Icons.favorite : Icons.favorite_border,
-                                              color: book.wished ? Colors.red : Colors.grey,
+                                              book.wished
+                                                  ? Icons.favorite
+                                                  : Icons.favorite_border,
+                                              color: book.wished
+                                                  ? Colors.red
+                                                  : Colors.grey,
                                             ),
                                             onPressed: () {
                                               setState(() {
@@ -1667,22 +2479,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                               _saveBook(book);
                                             },
                                           ),
+                                          _buildOwnedIconButtonForBook(book),
                                           IconButton(
                                             icon: Icon(
-                                              book.owned ? Icons.collections_bookmark : Icons.collections_bookmark_outlined,
-                                              color: book.owned ? Colors.blue : Colors.grey,
-                                            ),
-                                            onPressed: () {
-                                              setState(() {
-                                                book.owned = !book.owned;
-                                              });
-                                              _saveBook(book);
-                                            },
-                                          ),
-                                          IconButton(
-                                            icon: Icon(
-                                              book.read ? Icons.menu_book : Icons.menu_book_outlined,
-                                              color: book.read ? Colors.green : Colors.grey,
+                                              book.read
+                                                  ? Icons.menu_book
+                                                  : Icons.menu_book_outlined,
+                                              color: book.read
+                                                  ? Colors.green
+                                                  : Colors.grey,
                                             ),
                                             onPressed: () {
                                               setState(() {
@@ -1697,296 +2502,402 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                 ),
                               );
-                            }).toList(),
-                          ],
-                        ),
-                      ),
-                    ),
-                    
-                    // Extended Reading List Info Card
-                    Card(
-                      color: Colors.grey.shade900.withValues(alpha: 0.4),
-                      margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-                      elevation: 4,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        side: BorderSide(
-                          color: Colors.purple.withValues(alpha: 0.5),
-                          width: 1,
-                        ),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                Icon(Icons.auto_stories, color: Colors.purple.shade200, size: 24),
-                                const SizedBox(width: 12),
-                                const Text(
-                                  'Extended Reading List',
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 12),
-                            Text(
-                              'The list below is a suggested reading list for the extended experience to The Dark Tower Universe, found in The Wind Through the Keyhole.',
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Colors.grey.shade300,
-                                height: 1.4,
+                            }),
+
+                            // Other Connected Works
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 8,
                               ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    
-                    // Extended books list
-                    ...extendedBooks.map((book) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                        child: MouseRegion(
-                          cursor: SystemMouseCursors.click,
-                          child: InkWell(
-                            onTap: () async {
-                              await Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) => BookDetailScreen(
-                                    book: book,
-                                    allBooks: books,
-                                    onChanged: _saveBook,
-                                  ),
-                                ),
-                              );
-                              setState(() {});
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.all(12),
-                              decoration: BoxDecoration(
-                                color: Colors.black.withValues(alpha: 0.3),
-                                borderRadius: BorderRadius.circular(8),
-                                border: Border.all(
-                                  color: Colors.purple.withValues(alpha: 0.5),
-                                  width: 1,
-                                ),
-                              ),
-                              child: Row(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
                                 children: [
-                                  buildDarkTowerBadge(darkTowerExtendedOrder(book.id) ?? 'TDTex'),
-                                  const SizedBox(width: 12),
-                                  Expanded(
+                                  Container(
+                                    width: double.infinity,
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 12,
+                                      vertical: 10,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color:
+                                          Theme.of(context).brightness ==
+                                              Brightness.dark
+                                          ? Colors.grey.shade900.withValues(
+                                              alpha: 0.5,
+                                            )
+                                          : Colors.white.withValues(
+                                              alpha: 0.5,
+                                            ),
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
-                                        Text(
-                                          book.title,
-                                          style: const TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 14,
-                                          ),
+                                        Row(
+                                          children: [
+                                            Icon(
+                                              Icons.book_outlined,
+                                              color: Colors.teal.shade200,
+                                              size: 24,
+                                            ),
+                                            const SizedBox(width: 12),
+                                            Text(
+                                              'Other Connected Works',
+                                              style: TextStyle(
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.bold,
+                                                color:
+                                                    Theme.of(context)
+                                                                .brightness ==
+                                                            Brightness.light
+                                                        ? Color(0xFF333333)
+                                                        : Colors.white,
+                                              ),
+                                            ),
+                                          ],
                                         ),
+                                        const SizedBox(height: 8),
                                         Text(
-                                          '${book.yearPublished}',
+                                          'Duologies, trilogies, and series connected to the Dark Tower universe.',
                                           style: TextStyle(
-                                            fontSize: 12,
-                                            color: Colors.grey.shade400,
+                                            fontSize: 14,
+                                            color:
+                                                Theme.of(context).brightness ==
+                                                        Brightness.dark
+                                                    ? Colors.grey.shade300
+                                                    : Colors.grey.shade800,
+                                            height: 1.4,
                                           ),
                                         ),
                                       ],
                                     ),
                                   ),
-                                  IconButton(
-                                    icon: Icon(
-                                      book.wished ? Icons.favorite : Icons.favorite_border,
-                                      color: book.wished ? Colors.red : Colors.grey,
+                                  const SizedBox(height: 16),
+                                  _buildSeriesButton(
+                                      context,
+                                      'The Shining Duology',
+                                      'the_shining',
+                                      Icons.hotel,
                                     ),
-                                    onPressed: () {
-                                      setState(() {
-                                        book.wished = !book.wished;
-                                      });
-                                      _saveBook(book);
-                                    },
-                                  ),
-                                  IconButton(
-                                    icon: Icon(
-                                      book.owned ? Icons.collections_bookmark : Icons.collections_bookmark_outlined,
-                                      color: book.owned ? Colors.blue : Colors.grey,
+                                    _buildSeriesButton(
+                                      context,
+                                      'The Jack Sawyer Duology',
+                                      'the_talisman',
+                                      Icons.explore,
                                     ),
-                                    onPressed: () {
-                                      setState(() {
-                                        book.owned = !book.owned;
-                                      });
-                                      _saveBook(book);
-                                    },
-                                  ),
-                                  IconButton(
-                                    icon: Icon(
-                                      book.read ? Icons.menu_book : Icons.menu_book_outlined,
-                                      color: book.read ? Colors.green : Colors.grey,
+                                    _buildSeriesButton(
+                                      context,
+                                      'The Tak Duology',
+                                      'desperation',
+                                      Icons.warning_amber,
                                     ),
-                                    onPressed: () {
-                                      setState(() {
-                                        book.read = !book.read;
-                                      });
-                                      _saveBook(book);
-                                    },
+                                    _buildSeriesButton(
+                                      context,
+                                      'The Eclipse Duology',
+                                      'geralds_game',
+                                      Icons.nightlight,
+                                    ),
+                                    _buildSeriesButton(
+                                      context,
+                                      'The Bill Hodges Trilogy',
+                                      'mr_mercedes',
+                                      Icons.local_police,
+                                    ),
+                                    _buildSeriesButton(
+                                      context,
+                                      'The Holly Chronicles',
+                                      'mr_mercedes',
+                                      Icons.person,
+                                    ),
+                                  _buildSeriesButton(
+                                    context,
+                                    'The Gwendy Trilogy',
+                                    'gwendys_button_box',
+                                    Icons.widgets,
                                   ),
                                 ],
                               ),
                             ),
-                          ),
-                        ),
-                      );
-                    }).toList(),
-                    
-                    // Other Connected Works Card
-                    Card(
-                      color: Colors.grey.shade900.withValues(alpha: 0.4),
-                      margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-                      elevation: 4,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        side: BorderSide(
-                          color: Colors.teal.withValues(alpha: 0.5),
-                          width: 1,
-                        ),
+                          ],
+                        );
+                      },
+                    ),
+
+                    /* ---------------- STATISTICS TAB ---------------- */
+                    ListView(
+                      padding: const EdgeInsets.only(
+                        top: 8,
+                        left: 16,
+                        right: 16,
+                        bottom: 16,
                       ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
+                      children: [
+                        Card(
+                          color: Theme.of(context).brightness == Brightness.dark
+                              ? Colors.grey.shade900.withValues(alpha: 0.4)
+                              : Colors.white.withValues(alpha: 0.4),
+                          child: Padding(
+                            padding: const EdgeInsets.all(16),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Icon(Icons.book_outlined, color: Colors.teal.shade200, size: 24),
-                                const SizedBox(width: 12),
                                 const Text(
-                                  'Other Connected Works',
+                                  'Books Statistics',
                                   style: TextStyle(
-                                    fontSize: 18,
+                                    fontSize: 20,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
+                                const Divider(),
+                                _buildStatRow(
+                                  'Total Books',
+                                  books.length.toString(),
+                                ),
+                                const SizedBox(height: 8),
+                                _buildProgressStatRow(
+                                  'Read',
+                                  books.where((b) => b.read).length,
+                                  books.length,
+                                  color: Colors.green,
+                                ),
+                                _buildProgressStatRow(
+                                  'Owned',
+                                  books.where((b) => b.owned).length,
+                                  books.length,
+                                  color: Colors.blue,
+                                ),
+                                _buildProgressStatRow(
+                                  'Wish List',
+                                  books.where((b) => b.wished).length,
+                                  books.length,
+                                  color: Colors.red,
+                                ),
+                                const Divider(),
+                                _buildStatRow(
+                                  'Novels',
+                                  books
+                                      .where((b) => b.type == 'Novel')
+                                      .length
+                                      .toString(),
+                                ),
+                                _buildStatRow(
+                                  'Short Story Collections',
+                                  books
+                                      .where(
+                                        (b) =>
+                                            b.type == 'Short Story Collection',
+                                      )
+                                      .length
+                                      .toString(),
+                                ),
+                                _buildStatRow(
+                                  'Novellas',
+                                  books
+                                      .where((b) => b.type == 'Novella')
+                                      .length
+                                      .toString(),
+                                ),
+                                _buildStatRow(
+                                  'Rated',
+                                  books
+                                      .where((b) => b.rating > 0)
+                                      .length
+                                      .toString(),
+                                ),
+                                _buildStatRow(
+                                  'Dark Tower Extended',
+                                  books
+                                      .where((b) => b.darkTowerExtended)
+                                      .length
+                                      .toString(),
+                                ),
                               ],
                             ),
-                            const SizedBox(height: 12),
-                            Text(
-                              'Duologies, trilogies, and series connected to the Dark Tower universe.',
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Colors.grey.shade300,
-                                height: 1.4,
-                              ),
-                            ),
-                            const SizedBox(height: 16),
-                            _buildSeriesButton(context, 'The Shining Duology', 'the_shining', Icons.hotel),
-                            _buildSeriesButton(context, 'The Jack Sawyer Duology', 'the_talisman', Icons.explore),
-                            _buildSeriesButton(context, 'The Tak Duology', 'desperation', Icons.warning_amber),
-                            _buildSeriesButton(context, 'The Eclipse Duology', 'geralds_game', Icons.nightlight),
-                            _buildSeriesButton(context, 'The Bill Hodges Trilogy', 'mr_mercedes', Icons.local_police),
-                            _buildSeriesButton(context, 'The Holly Chronicles', 'mr_mercedes', Icons.person),
-                            _buildSeriesButton(context, 'The Gwendy Trilogy', 'gwendys_button_box', Icons.widgets),
-                          ],
+                          ),
                         ),
-                      ),
+                        const SizedBox(height: 16),
+                        Card(
+                          color: Theme.of(context).brightness == Brightness.dark
+                              ? Colors.grey.shade900.withValues(alpha: 0.4)
+                              : Colors.white.withValues(alpha: 0.4),
+                          child: Padding(
+                            padding: const EdgeInsets.all(16),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'Film & TV Statistics',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const Divider(),
+                                _buildStatRow(
+                                  'Total Adaptations',
+                                  adaptations.length.toString(),
+                                ),
+                                const SizedBox(height: 8),
+                                _buildProgressStatRow(
+                                  'Watched',
+                                  adaptations.where((a) => a.watched).length,
+                                  adaptations.length,
+                                  color: Colors.green,
+                                ),
+                                _buildProgressStatRow(
+                                  'Owned',
+                                  adaptations.where((a) => a.owned).length,
+                                  adaptations.length,
+                                  color: Colors.blue,
+                                ),
+                                const Divider(),
+                                _buildStatRow(
+                                  'Movies',
+                                  adaptations
+                                      .where((a) => a.type == 'Movie')
+                                      .length
+                                      .toString(),
+                                ),
+                                _buildStatRow(
+                                  'TV Series',
+                                  adaptations
+                                      .where(
+                                        (a) =>
+                                            a.type == 'TV Series' ||
+                                            a.type == 'Miniseries',
+                                      )
+                                      .length
+                                      .toString(),
+                                ),
+                                _buildStatRow(
+                                  'Rated',
+                                  adaptations
+                                      .where((a) => a.rating > 0)
+                                      .length
+                                      .toString(),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        Card(
+                          color: Theme.of(context).brightness == Brightness.dark
+                              ? Colors.grey.shade900.withValues(alpha: 0.4)
+                              : Colors.white.withValues(alpha: 0.4),
+                          child: Padding(
+                            padding: const EdgeInsets.all(16),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'Share Your Progress',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const Divider(),
+                                const SizedBox(height: 8),
+                                Wrap(
+                                  spacing: 8,
+                                  runSpacing: 8,
+                                  children: [
+                                    ElevatedButton.icon(
+                                      icon: const Icon(
+                                        Icons.content_copy,
+                                        color: Colors.white,
+                                      ),
+                                      label: const Text('Copy Stats'),
+                                      style: ElevatedButton.styleFrom(
+                                        foregroundColor: Colors.white,
+                                      ),
+                                      onPressed: () => _shareStatistics('copy'),
+                                    ),
+                                    ElevatedButton.icon(
+                                      icon: const Icon(
+                                        Icons.facebook,
+                                        color: Colors.white,
+                                      ),
+                                      label: const Text('Facebook'),
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: const Color(
+                                          0xFF1877F2,
+                                        ),
+                                        foregroundColor: Colors.white,
+                                      ),
+                                      onPressed: () =>
+                                          _shareStatistics('facebook'),
+                                    ),
+                                    ElevatedButton.icon(
+                                      icon: const Icon(
+                                        Icons.tag,
+                                        color: Colors.white,
+                                      ),
+                                      label: const Text('Twitter/X'),
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.black,
+                                        foregroundColor: Colors.white,
+                                      ),
+                                      onPressed: () =>
+                                          _shareStatistics('twitter'),
+                                    ),
+                                    ElevatedButton.icon(
+                                      icon: const Icon(
+                                        Icons.reddit,
+                                        color: Colors.white,
+                                      ),
+                                      label: const Text('Reddit'),
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: const Color(
+                                          0xFFFF4500,
+                                        ),
+                                        foregroundColor: Colors.white,
+                                      ),
+                                      onPressed: () =>
+                                          _shareStatistics('reddit'),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
-                );
+                ),
+              ),
+            ),
+            floatingActionButton: AnimatedBuilder(
+              animation: tabController,
+              builder: (context, child) {
+                return tabController.index < 2
+                    ? FloatingActionButton(
+                        onPressed: () {
+                          setState(() {
+                            showSearch = !showSearch;
+                            if (!showSearch) {
+                              searchController.clear();
+                              librarySearchQuery = '';
+                              adaptationSearchQuery = '';
+                              tdtexSearchQuery = '';
+                              selectedAdaptationTypes.clear();
+                              filterWatched = null;
+                              filterAdaptationOwned = null;
+                            }
+                          });
+                        },
+                        child: Icon(showSearch ? Icons.close : Icons.search),
+                      )
+                    : const SizedBox.shrink();
               },
             ),
-
-            /* ---------------- STATISTICS TAB ---------------- */
-            ListView(
-              padding: const EdgeInsets.only(top: 8, left: 16, right: 16, bottom: 16),
-              children: [
-                Card(
-                  color: Colors.grey.shade900.withValues(alpha: 0.4),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          'Books Statistics',
-                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                        ),
-                        const Divider(),
-                        _buildStatRow('Total Books', books.length.toString()),
-                        const SizedBox(height: 8),
-                        _buildProgressStatRow('Read', books.where((b) => b.read).length, books.length, color: Colors.green),
-                        _buildProgressStatRow('Owned', books.where((b) => b.owned).length, books.length, color: Colors.blue),
-                        _buildProgressStatRow('Wish List', books.where((b) => b.wished).length, books.length, color: Colors.red),
-                        const Divider(),
-                        _buildStatRow('Novels', books.where((b) => b.type == 'Novel').length.toString()),
-                        _buildStatRow('Short Story Collections', books.where((b) => b.type == 'Short Story Collection').length.toString()),
-                        _buildStatRow('Novellas', books.where((b) => b.type == 'Novella').length.toString()),
-                        _buildStatRow('Rated', books.where((b) => b.rating > 0).length.toString()),
-                        _buildStatRow('Dark Tower Extended', books.where((b) => b.darkTowerExtended).length.toString()),
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                Card(
-                  color: Colors.grey.shade900.withValues(alpha: 0.4),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          'Film & TV Statistics',
-                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                        ),
-                        const Divider(),
-                        _buildStatRow('Total Adaptations', adaptations.length.toString()),
-                        const SizedBox(height: 8),
-                        _buildProgressStatRow('Watched', adaptations.where((a) => a.watched).length, adaptations.length, color: Colors.green),
-                        _buildProgressStatRow('Owned', adaptations.where((a) => a.owned).length, adaptations.length, color: Colors.blue),
-                        const Divider(),
-                        _buildStatRow('Movies', adaptations.where((a) => a.type == 'Movie').length.toString()),
-                        _buildStatRow('TV Series', adaptations.where((a) => a.type == 'TV Series' || a.type == 'Miniseries').length.toString()),
-                        _buildStatRow('Rated', adaptations.where((a) => a.rating > 0).length.toString()),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-        ),
-        floatingActionButton: AnimatedBuilder(
-          animation: tabController,
-          builder: (context, child) {
-            return tabController.index < 2 ? FloatingActionButton(
-              onPressed: () {
-                setState(() {
-                  showSearch = !showSearch;
-                  if (!showSearch) {
-                    searchController.clear();
-                    librarySearchQuery = '';
-                    adaptationSearchQuery = '';
-                    tdtexSearchQuery = '';
-                    selectedAdaptationTypes.clear();
-                    filterWatched = null;
-                    filterAdaptationOwned = null;
-                  }
-                });
-              },
-              child: Icon(showSearch ? Icons.close : Icons.search),
-            ) : const SizedBox.shrink();
-          },
-        ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      );
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerFloat,
+          );
         },
       ),
     );
@@ -1999,16 +2910,26 @@ class _HomeScreenState extends State<HomeScreen> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(label, style: const TextStyle(fontSize: 16)),
-          Text(value, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+          Text(
+            value,
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildProgressStatRow(String label, int current, int total, {Color color = Colors.blue}) {
-    final percentage = total > 0 ? (current / total * 100).toStringAsFixed(1) : '0.0';
+  Widget _buildProgressStatRow(
+    String label,
+    int current,
+    int total, {
+    Color color = Colors.blue,
+  }) {
+    final percentage = total > 0
+        ? (current / total * 100).toStringAsFixed(1)
+        : '0.0';
     final progress = total > 0 ? current / total : 0.0;
-    
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Column(
@@ -2018,8 +2939,13 @@ class _HomeScreenState extends State<HomeScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(label, style: const TextStyle(fontSize: 16)),
-              Text('$current/$total ($percentage%)', 
-                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              Text(
+                '$current/$total ($percentage%)',
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ],
           ),
           const SizedBox(height: 6),
@@ -2037,6 +2963,43 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  void _shareStatistics(String platform) {
+    final booksRead = books.where((b) => b.read).length;
+    final booksOwned = books.where((b) => b.owned).length;
+    final adaptationsWatched = adaptations.where((a) => a.watched).length;
+
+    final statsText =
+        '''📚 My Stephen King Collection Stats
+
+Books: ${books.length}
+✅ Read: $booksRead/${books.length} (${((booksRead / books.length) * 100).toStringAsFixed(1)}%)
+📖 Owned: $booksOwned/${books.length} (${((booksOwned / books.length) * 100).toStringAsFixed(1)}%)
+
+Film & TV: ${adaptations.length} adaptations
+👁️ Watched: $adaptationsWatched/${adaptations.length} (${((adaptationsWatched / adaptations.length) * 100).toStringAsFixed(1)}%)
+
+Track your Stephen King collection! #StephenKing #KingTracker''';
+
+    if (platform == 'copy') {
+      html.window.navigator.clipboard?.writeText(statsText);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Statistics copied to clipboard!')),
+      );
+    } else if (platform == 'facebook') {
+      final url =
+          'https://www.facebook.com/sharer/sharer.php?u=${Uri.encodeComponent('https://stephenking.com')}&quote=${Uri.encodeComponent(statsText)}';
+      html.window.open(url, '_blank');
+    } else if (platform == 'twitter') {
+      final url =
+          'https://twitter.com/intent/tweet?text=${Uri.encodeComponent(statsText)}';
+      html.window.open(url, '_blank');
+    } else if (platform == 'reddit') {
+      final url =
+          'https://www.reddit.com/submit?title=${Uri.encodeComponent('My Stephen King Collection Stats')}&text=${Uri.encodeComponent(statsText)}';
+      html.window.open(url, '_blank');
+    }
+  }
+
   Future<void> _exportWishlistToPdf() async {
     final pdf = pw.Document();
     final wishedBooks = books.where((b) => b.wished).toList()
@@ -2050,47 +3013,69 @@ class _HomeScreenState extends State<HomeScreen> {
         build: (context) => [
           pw.Header(
             level: 0,
-            child: pw.Text('Stephen King - Wish List', 
-              style: pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.bold)),
+            child: pw.Text(
+              'Stephen King - Wish List',
+              style: pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.bold),
+            ),
           ),
           pw.SizedBox(height: 20),
-          pw.Text('Total items: ${wishedBooks.length + wishedAdaptations.length}', 
-            style: pw.TextStyle(fontSize: 14, fontWeight: pw.FontWeight.bold)),
+          pw.Text(
+            'Total items: ${wishedBooks.length + wishedAdaptations.length}',
+            style: pw.TextStyle(fontSize: 14, fontWeight: pw.FontWeight.bold),
+          ),
           pw.SizedBox(height: 20),
           if (wishedBooks.isNotEmpty) ...[
-            pw.Text('Books (${wishedBooks.length})', 
-              style: pw.TextStyle(fontSize: 16, fontWeight: pw.FontWeight.bold)),
+            pw.Text(
+              'Books (${wishedBooks.length})',
+              style: pw.TextStyle(fontSize: 16, fontWeight: pw.FontWeight.bold),
+            ),
             pw.SizedBox(height: 10),
-            pw.Table.fromTextArray(
+            pw.TableHelper.fromTextArray(
               headers: ['Title', 'Year', 'Type', 'Owned', 'Read'],
-              data: wishedBooks.map((book) => [
-                book.title,
-                book.yearPublished.toString(),
-                book.type,
-                book.owned ? 'Yes' : 'No',
-                book.read ? 'Yes' : 'No',
-              ]).toList(),
+              data: wishedBooks
+                  .map(
+                    (book) => [
+                      book.title,
+                      book.yearPublished.toString(),
+                      book.type,
+                      book.owned ? 'Yes' : 'No',
+                      book.read ? 'Yes' : 'No',
+                    ],
+                  )
+                  .toList(),
               cellStyle: const pw.TextStyle(fontSize: 10),
-              headerStyle: pw.TextStyle(fontSize: 10, fontWeight: pw.FontWeight.bold),
+              headerStyle: pw.TextStyle(
+                fontSize: 10,
+                fontWeight: pw.FontWeight.bold,
+              ),
               cellAlignment: pw.Alignment.centerLeft,
             ),
             pw.SizedBox(height: 20),
           ],
           if (wishedAdaptations.isNotEmpty) ...[
-            pw.Text('Film & TV (${wishedAdaptations.length})', 
-              style: pw.TextStyle(fontSize: 16, fontWeight: pw.FontWeight.bold)),
+            pw.Text(
+              'Film & TV (${wishedAdaptations.length})',
+              style: pw.TextStyle(fontSize: 16, fontWeight: pw.FontWeight.bold),
+            ),
             pw.SizedBox(height: 10),
-            pw.Table.fromTextArray(
+            pw.TableHelper.fromTextArray(
               headers: ['Title', 'Year', 'Type', 'Owned', 'Watched'],
-              data: wishedAdaptations.map((adaptation) => [
-                adaptation.title,
-                adaptation.year.toString(),
-                adaptation.type,
-                adaptation.owned ? 'Yes' : 'No',
-                adaptation.watched ? 'Yes' : 'No',
-              ]).toList(),
+              data: wishedAdaptations
+                  .map(
+                    (adaptation) => [
+                      adaptation.title,
+                      adaptation.year.toString(),
+                      adaptation.type,
+                      adaptation.owned ? 'Yes' : 'No',
+                      adaptation.watched ? 'Yes' : 'No',
+                    ],
+                  )
+                  .toList(),
               cellStyle: const pw.TextStyle(fontSize: 10),
-              headerStyle: pw.TextStyle(fontSize: 10, fontWeight: pw.FontWeight.bold),
+              headerStyle: pw.TextStyle(
+                fontSize: 10,
+                fontWeight: pw.FontWeight.bold,
+              ),
               cellAlignment: pw.Alignment.centerLeft,
             ),
           ],
@@ -2110,188 +3095,94 @@ class _HomeScreenState extends State<HomeScreen> {
         build: (context) => [
           pw.Header(
             level: 0,
-            child: pw.Text('Stephen King - Statistics', 
-              style: pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.bold)),
+            child: pw.Text(
+              'Stephen King - Statistics',
+              style: pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.bold),
+            ),
           ),
           pw.SizedBox(height: 20),
-          pw.Text('Books Statistics', 
-            style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold)),
+          pw.Text(
+            'Books Statistics',
+            style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold),
+          ),
           pw.SizedBox(height: 10),
-          pw.Table.fromTextArray(
+          pw.TableHelper.fromTextArray(
             headers: ['Category', 'Count'],
             data: [
               ['Total Books', books.length.toString()],
               ['Read', books.where((b) => b.read).length.toString()],
               ['Owned', books.where((b) => b.owned).length.toString()],
               ['Wish List', books.where((b) => b.wished).length.toString()],
-              ['Novels', books.where((b) => b.type == 'Novel').length.toString()],
-              ['Short Story Collections', books.where((b) => b.type == 'Short Story Collection').length.toString()],
-              ['Novellas', books.where((b) => b.type == 'Novella').length.toString()],
-              ['Dark Tower Extended', books.where((b) => b.darkTowerExtended).length.toString()],
+              [
+                'Novels',
+                books.where((b) => b.type == 'Novel').length.toString(),
+              ],
+              [
+                'Short Story Collections',
+                books
+                    .where((b) => b.type == 'Short Story Collection')
+                    .length
+                    .toString(),
+              ],
+              [
+                'Novellas',
+                books.where((b) => b.type == 'Novella').length.toString(),
+              ],
+              [
+                'Dark Tower Extended',
+                books.where((b) => b.darkTowerExtended).length.toString(),
+              ],
             ],
             cellStyle: const pw.TextStyle(fontSize: 11),
-            headerStyle: pw.TextStyle(fontSize: 11, fontWeight: pw.FontWeight.bold),
+            headerStyle: pw.TextStyle(
+              fontSize: 11,
+              fontWeight: pw.FontWeight.bold,
+            ),
           ),
           pw.SizedBox(height: 20),
-          pw.Text('Film & TV Statistics', 
-            style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold)),
+          pw.Text(
+            'Film & TV Statistics',
+            style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold),
+          ),
           pw.SizedBox(height: 10),
-          pw.Table.fromTextArray(
+          pw.TableHelper.fromTextArray(
             headers: ['Category', 'Count'],
             data: [
               ['Total Adaptations', adaptations.length.toString()],
-              ['Movies', adaptations.where((a) => a.type == 'Movie').length.toString()],
-              ['TV Series', adaptations.where((a) => a.type == 'TV Series' || a.type == 'Miniseries').length.toString()],
-              ['Watched', adaptations.where((a) => a.watched).length.toString()],
+              [
+                'Movies',
+                adaptations.where((a) => a.type == 'Movie').length.toString(),
+              ],
+              [
+                'TV Series',
+                adaptations
+                    .where(
+                      (a) => a.type == 'TV Series' || a.type == 'Miniseries',
+                    )
+                    .length
+                    .toString(),
+              ],
+              [
+                'Watched',
+                adaptations.where((a) => a.watched).length.toString(),
+              ],
               ['Owned', adaptations.where((a) => a.owned).length.toString()],
-              ['Rated', adaptations.where((a) => a.rating > 0).length.toString()],
+              [
+                'Rated',
+                adaptations.where((a) => a.rating > 0).length.toString(),
+              ],
             ],
             cellStyle: const pw.TextStyle(fontSize: 11),
-            headerStyle: pw.TextStyle(fontSize: 11, fontWeight: pw.FontWeight.bold),
+            headerStyle: pw.TextStyle(
+              fontSize: 11,
+              fontWeight: pw.FontWeight.bold,
+            ),
           ),
         ],
       ),
     );
 
     await Printing.layoutPdf(onLayout: (format) async => pdf.save());
-  }
-
-  Future<void> _exportAllData() async {
-    // Samle all data
-    final exportData = {
-      'version': '1.1',
-      'exportDate': DateTime.now().toIso8601String(),
-      'books': books.map((book) => {
-        'id': book.id,
-        'owned': book.owned,
-        'read': book.read,
-        'wished': book.wished,
-        'rating': book.rating,
-        'notes': book.notes,
-        'storiesRead': book.storiesRead.toList(),
-      }).toList(),
-      'adaptations': adaptations.map((adaptation) => {
-        'id': adaptation.id,
-        'owned': adaptation.owned,
-        'watched': adaptation.watched,
-        'wished': adaptation.wished,
-        'rating': adaptation.rating,
-        'notes': adaptation.notes,
-      }).toList(),
-    };
-    
-    // Konverter til JSON
-    final jsonString = const JsonEncoder.withIndent('  ').convert(exportData);
-    final bytes = utf8.encode(jsonString);
-    final blob = html.Blob([bytes]);
-    final url = html.Url.createObjectUrlFromBlob(blob);
-    html.AnchorElement(href: url)
-      ..setAttribute('download', 'king_tracker_data_${DateTime.now().millisecondsSinceEpoch}.json')
-      ..click();
-    html.Url.revokeObjectUrl(url);
-    
-    if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Data exported successfully!')),
-      );
-    }
-  }
-
-  Future<void> _importData() async {
-    final uploadInput = html.FileUploadInputElement()..accept = '.json';
-    uploadInput.click();
-    
-    uploadInput.onChange.listen((e) async {
-      final files = uploadInput.files;
-      if (files != null && files.isNotEmpty) {
-        final file = files[0];
-        final reader = html.FileReader();
-        
-        reader.onLoadEnd.listen((e) async {
-          try {
-            final jsonString = reader.result as String;
-            final data = json.decode(jsonString) as Map<String, dynamic>;
-            
-            // Valider data
-            if (data['version'] == null || data['books'] == null || data['adaptations'] == null) {
-              throw Exception('Invalid data format');
-            }
-            
-            final prefs = await SharedPreferences.getInstance();
-            
-            // Importer book data
-            for (final bookData in data['books'] as List) {
-              final bookId = bookData['id'] as String;
-              final book = books.firstWhere((b) => b.id == bookId, orElse: () => books.first);
-              
-              if (book.id == bookId) {
-                book.owned = bookData['owned'] as bool? ?? false;
-                book.read = bookData['read'] as bool? ?? false;
-                book.wished = bookData['wished'] as bool? ?? false;
-                book.rating = (bookData['rating'] as num?)?.toDouble() ?? 0.0;
-                book.notes = bookData['notes'] as String? ?? '';
-                
-                if (bookData['storiesRead'] != null) {
-                  book.storiesRead = Set<int>.from(bookData['storiesRead'] as List);
-                }
-                
-                // Lagre til SharedPreferences
-                await prefs.setBool('${book.id}_owned', book.owned);
-                await prefs.setBool('${book.id}_read', book.read);
-                await prefs.setBool('${book.id}_wished', book.wished);
-                await prefs.setDouble('${book.id}_rating', book.rating);
-                if (book.notes.isNotEmpty) {
-                  await prefs.setString('${book.id}_notes', book.notes);
-                }
-                if (book.storiesRead.isNotEmpty) {
-                  await prefs.setStringList('${book.id}_stories', 
-                    book.storiesRead.map((i) => i.toString()).toList());
-                }
-              }
-            }
-            
-            // Importer adaptation data
-            for (final adaptData in data['adaptations'] as List) {
-              final adaptId = adaptData['id'] as String;
-              final adaptation = adaptations.firstWhere((a) => a.id == adaptId, orElse: () => adaptations.first);
-              
-              if (adaptation.id == adaptId) {
-                adaptation.owned = adaptData['owned'] as bool? ?? false;
-                adaptation.watched = adaptData['watched'] as bool? ?? false;
-                adaptation.wished = adaptData['wished'] as bool? ?? false;
-                adaptation.rating = (adaptData['rating'] as num?)?.toDouble() ?? 0.0;
-                adaptation.notes = adaptData['notes'] as String? ?? '';
-                
-                // Lagre til SharedPreferences
-                await prefs.setBool('${adaptation.id}_owned', adaptation.owned);
-                await prefs.setBool('${adaptation.id}_watched', adaptation.watched);
-                await prefs.setBool('${adaptation.id}_wished', adaptation.wished);
-                await prefs.setDouble('${adaptation.id}_rating', adaptation.rating);
-                if (adaptation.notes.isNotEmpty) {
-                  await prefs.setString('${adaptation.id}_notes', adaptation.notes);
-                }
-              }
-            }
-            
-            setState(() {});
-            
-            if (mounted) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Data imported successfully! ${(data['books'] as List).length} books and ${(data['adaptations'] as List).length} adaptations updated.')),
-              );
-            }
-          } catch (e) {
-            if (mounted) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Error importing data: $e')),
-              );
-            }
-          }
-        });
-        
-        reader.readAsText(file);
-      }
-    });
   }
 }
 
@@ -2326,9 +3217,11 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
   Future<void> _initSynopsis() async {
     prefs = await SharedPreferences.getInstance();
     final book = widget.book;
-    
+
     // Først sjekk om synopsis finnes i JSON-dataen
-    if (book.synopsis != null && book.synopsis!.isNotEmpty && book.notes.isEmpty) {
+    if (book.synopsis != null &&
+        book.synopsis!.isNotEmpty &&
+        book.notes.isEmpty) {
       setState(() {
         book.notes = book.synopsis!;
         book.synopsisFetched = true;
@@ -2336,7 +3229,7 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
       await prefs.setString('${book.id}_synopsis', book.synopsis!);
       return;
     }
-    
+
     // Deretter sjekk SharedPreferences
     final savedSynopsis = prefs.getString('${book.id}_synopsis');
     if (savedSynopsis != null && savedSynopsis.isNotEmpty) {
@@ -2351,13 +3244,16 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
 
   Future<void> _fetchAndSaveSynopsis() async {
     if (synopsisLoading) return;
-    
+
     setState(() {
       synopsisLoading = true;
     });
 
-    final synopsis = await fetchSynopsisFromOpenLibrary(widget.book.title, widget.book.yearPublished);
-    
+    final synopsis = await fetchSynopsisFromOpenLibrary(
+      widget.book.title,
+      widget.book.yearPublished,
+    );
+
     if (synopsis != null && synopsis.isNotEmpty) {
       setState(() {
         widget.book.notes = synopsis;
@@ -2366,10 +3262,34 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
       await prefs.setString('${widget.book.id}_synopsis', synopsis);
       widget.onChanged(widget.book);
     }
-    
+
     setState(() {
       synopsisLoading = false;
     });
+  }
+
+  Future<void> _showOwnedFormatMenu(Offset position) async {
+    final selected = await showMenu<String>(
+      context: context,
+      position: RelativeRect.fromLTRB(
+        position.dx,
+        position.dy,
+        position.dx,
+        position.dy,
+      ),
+      items: const [
+        PopupMenuItem(value: 'Hardback', child: Text('Hardback')),
+        PopupMenuItem(value: 'Pocket', child: Text('Pocket')),
+      ],
+    );
+
+    if (selected == null) return;
+
+    setState(() {
+      widget.book.owned = true;
+      widget.book.ownedFormat = selected;
+    });
+    widget.onChanged(widget.book);
   }
 
   @override
@@ -2389,346 +3309,409 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
         height: double.infinity,
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: const AssetImage('assets/images/App_background_2.png'),
+            image: AssetImage(
+              Theme.of(context).brightness == Brightness.dark
+                  ? 'assets/images/App_background_2.png'
+                  : 'assets/images/app_background_light_4.png',
+            ),
             fit: BoxFit.cover,
           ),
         ),
         child: SingleChildScrollView(
-          padding: const EdgeInsets.only(top: 100, left: 16, right: 16, bottom: 16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              book.title,
-              style: const TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text('Published: ${book.yearPublished}'),
-            Text('Type: ${book.type}'),
-            if (darkTowerOrder(book.id) != null) ...[
-              const SizedBox(height: 8),
-              buildDarkTowerBadge(darkTowerOrder(book.id)!),
-            ],
-            
-            const SizedBox(height: 16),
-            Card(
-              color: Colors.grey.shade900.withValues(alpha: 0.4),
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Column(
-                          children: [
-                            IconButton(
-                              icon: Icon(
-                                book.wished ? Icons.favorite : Icons.favorite_border,
-                                color: book.wished ? Colors.red : Colors.grey,
-                                size: 32,
-                              ),
-                              onPressed: () {
-                                setState(() {
-                                  book.wished = !book.wished;
-                                  widget.onChanged(book);
-                                });
-                              },
-                            ),
-                            const Text('Wishlist', style: TextStyle(fontSize: 12)),
-                          ],
-                        ),
-                        Column(
-                          children: [
-                            IconButton(
-                              icon: Icon(
-                                book.owned ? Icons.collections_bookmark : Icons.collections_bookmark_outlined,
-                                color: book.owned ? Colors.blue : Colors.grey,
-                                size: 32,
-                              ),
-                              onPressed: () {
-                                setState(() {
-                                  book.owned = !book.owned;
-                                  widget.onChanged(book);
-                                });
-                              },
-                            ),
-                            const Text('Owned', style: TextStyle(fontSize: 12)),
-                          ],
-                        ),
-                        Column(
-                          children: [
-                            IconButton(
-                              icon: Icon(
-                                book.read ? Icons.menu_book : Icons.menu_book_outlined,
-                                color: book.read ? Colors.green : Colors.grey,
-                                size: 32,
-                              ),
-                              onPressed: () {
-                                setState(() {
-                                  book.read = !book.read;
-                                  // If book has stories, mark all as read/unread
-                                  if (book.stories != null && book.stories!.isNotEmpty) {
-                                    if (book.read) {
-                                      // Mark all stories as read
-                                      book.storiesRead = Set<int>.from(
-                                        List.generate(book.stories!.length, (index) => index)
-                                      );
-                                    } else {
-                                      // Mark all stories as unread
-                                      book.storiesRead.clear();
-                                    }
-                                  }
-                                  widget.onChanged(book);
-                                });
-                              },
-                            ),
-                            const Text('Read', style: TextStyle(fontSize: 12)),
-                          ],
-                        ),
-                      ],
-                    ),
-                    const Divider(),
-                    const Text('Rating:', style: TextStyle(fontSize: 16)),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: List.generate(5, (index) {
-                        return IconButton(
-                          icon: Icon(
-                            index < book.rating
-                                ? Icons.star
-                                : Icons.star_border,
-                            color: Colors.amber,
-                            size: 32,
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              book.rating = (index + 1).toDouble();
-                              widget.onChanged(book);
-                            });
-                          },
-                        );
-                      }),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-
-            if (book.connections.isNotEmpty) ...[
-              const SizedBox(height: 32),
-              const Text(
-                'Connections',
-                style: TextStyle(
-                  fontSize: 18,
+          padding: const EdgeInsets.only(
+            top: 100,
+            left: 16,
+            right: 16,
+            bottom: 16,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                book.title,
+                style: const TextStyle(
+                  fontSize: 22,
                   fontWeight: FontWeight.bold,
                 ),
               ),
               const SizedBox(height: 8),
-              ...book.connections.map((connection) {
-                final connectedBooks = widget.allBooks
-                    .where((b) => connection.withIds.contains(b.id))
-                    .toList();
+              Text('Published: ${book.yearPublished}'),
+              Text('Type: ${book.type}'),
+              if (darkTowerOrder(book.id) != null) ...[
+                const SizedBox(height: 8),
+                buildDarkTowerBadge(darkTowerOrder(book.id)!),
+              ],
 
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      connection.type.toUpperCase(),
-                      style: const TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(height: 4),
-                    ...connectedBooks.map((b) {
-                      return ListTile(
-                        title: Text(b.title),
-                        trailing: const Icon(Icons.chevron_right),
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => BookDetailScreen(
-                                book: b,
-                                allBooks: widget.allBooks,
-                                onChanged: widget.onChanged,
-                              ),
-                            ),
-                          );
-                        },
-                      );
-                    }),
-                  ],
-                );
-              }),
-            ],
-
-            if (book.stories != null && book.stories!.isNotEmpty) ...[
-              const SizedBox(height: 32),
-              Stack(
-                children: [
-                  Positioned(
-                    right: 0,
-                    top: 0,
-                    child: Text(
-                      'READ',
-                      style: TextStyle(
-                        fontSize: 48,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.grey.withOpacity(0.1),
-                        letterSpacing: 2,
-                      ),
-                    ),
-                  ),
-                  const Text(
-                    'Stories',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              ...List.generate(book.stories!.length, (index) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 4),
-                  child: Row(
+              const SizedBox(height: 16),
+              Card(
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? Colors.grey.shade900.withValues(alpha: 0.4)
+                    : Colors.white.withValues(alpha: 0.4),
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Read/Unread icon outside the card
-                      GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            if (book.storiesRead.contains(index)) {
-                              book.storiesRead.remove(index);
-                            } else {
-                              book.storiesRead.add(index);
-                            }
-                          });
-                          widget.onChanged(book);
-                        },
-                        child: Icon(
-                          book.storiesRead.contains(index)
-                              ? Icons.menu_book
-                              : Icons.menu_book_outlined,
-                          color: book.storiesRead.contains(index)
-                              ? Colors.green
-                              : Colors.grey,
-                          size: 24,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Column(
+                            children: [
+                              IconButton(
+                                icon: Icon(
+                                  book.wished
+                                      ? Icons.favorite
+                                      : Icons.favorite_border,
+                                  color: book.wished
+                                      ? Colors.red
+                                      : (Theme.of(context).brightness ==
+                                                Brightness.dark
+                                            ? Colors.grey
+                                            : Colors.white),
+                                  size: 32,
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    book.wished = !book.wished;
+                                    widget.onChanged(book);
+                                  });
+                                },
+                              ),
+                              const Text(
+                                'Wishlist',
+                                style: TextStyle(fontSize: 12),
+                              ),
+                            ],
+                          ),
+                          Column(
+                            children: [
+                              GestureDetector(
+                                onLongPressStart: (details) {
+                                  _showOwnedFormatMenu(
+                                    details.globalPosition,
+                                  );
+                                },
+                                child: IconButton(
+                                  icon: Icon(
+                                    book.owned
+                                        ? Icons.collections_bookmark
+                                        : Icons.collections_bookmark_outlined,
+                                    color: book.owned
+                                        ? ownedColorForBook(book)
+                                        : (Theme.of(context).brightness ==
+                                                  Brightness.dark
+                                              ? Colors.grey
+                                              : Colors.white),
+                                    size: 32,
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      book.owned = !book.owned;
+                                      if (!book.owned) {
+                                        book.ownedFormat = null;
+                                      }
+                                      widget.onChanged(book);
+                                    });
+                                  },
+                                ),
+                              ),
+                              const Text(
+                                'Owned',
+                                style: TextStyle(fontSize: 12),
+                              ),
+                            ],
+                          ),
+                          Column(
+                            children: [
+                              IconButton(
+                                icon: Icon(
+                                  book.read
+                                      ? Icons.menu_book
+                                      : Icons.menu_book_outlined,
+                                  color: book.read
+                                      ? Colors.green
+                                      : (Theme.of(context).brightness ==
+                                                Brightness.dark
+                                            ? Colors.grey
+                                            : Colors.white),
+                                  size: 32,
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    book.read = !book.read;
+                                    // If book has stories, mark all as read/unread
+                                    if (book.stories != null &&
+                                        book.stories!.isNotEmpty) {
+                                      if (book.read) {
+                                        // Mark all stories as read
+                                        book.storiesRead = Set<int>.from(
+                                          List.generate(
+                                            book.stories!.length,
+                                            (index) => index,
+                                          ),
+                                        );
+                                      } else {
+                                        // Mark all stories as unread
+                                        book.storiesRead.clear();
+                                      }
+                                    }
+                                    widget.onChanged(book);
+                                  });
+                                },
+                              ),
+                              const Text(
+                                'Read',
+                                style: TextStyle(fontSize: 12),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      const Divider(),
+                      const Text('Rating:', style: TextStyle(fontSize: 16)),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: List.generate(5, (index) {
+                          return IconButton(
+                            icon: Icon(
+                              index < book.rating
+                                  ? Icons.star
+                                  : Icons.star_border,
+                              color: Colors.amber,
+                              size: 32,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                book.rating = (index + 1).toDouble();
+                                widget.onChanged(book);
+                              });
+                            },
+                          );
+                        }),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+
+              if (book.connections.isNotEmpty) ...[
+                const SizedBox(height: 32),
+                const Text(
+                  'Connections',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 8),
+                ...book.connections.map((connection) {
+                  final connectedBooks = widget.allBooks
+                      .where((b) => connection.withIds.contains(b.id))
+                      .toList();
+
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        connection.type.toUpperCase(),
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(height: 4),
+                      ...connectedBooks.map((b) {
+                        return ListTile(
+                          title: Text(b.title),
+                          trailing: const Icon(Icons.chevron_right),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => BookDetailScreen(
+                                  book: b,
+                                  allBooks: widget.allBooks,
+                                  onChanged: widget.onChanged,
+                                ),
+                              ),
+                            );
+                          },
+                        );
+                      }),
+                    ],
+                  );
+                }),
+              ],
+
+              if (book.stories != null && book.stories!.isNotEmpty) ...[
+                const SizedBox(height: 32),
+                Stack(
+                  children: [
+                    Positioned(
+                      right: 0,
+                      top: 0,
+                      child: Text(
+                        'READ',
+                        style: TextStyle(
+                          fontSize: 48,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.grey.withOpacity(0.1),
+                          letterSpacing: 2,
                         ),
                       ),
-                      const SizedBox(width: 12),
-                      // Clickable card for story details
-                      Expanded(
-                        child: Material(
-                          color: Colors.transparent,
-                          child: InkWell(
-                            borderRadius: BorderRadius.circular(6),
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => StoryDetailScreen(
-                                    storyTitle: book.stories![index],
-                                    storyIndex: index,
-                                    synopsis: book.storySynopses?[index],
-                                    collectionTitle: book.title,
-                                    isRead: book.storiesRead.contains(index),
-                                    onReadChanged: (isRead) {
-                                      setState(() {
-                                        if (isRead) {
-                                          book.storiesRead.add(index);
-                                        } else {
-                                          book.storiesRead.remove(index);
-                                        }
-                                      });
-                                      widget.onChanged(book);
-                                    },
-                                  ),
-                                ),
-                              );
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                              decoration: BoxDecoration(
-                                color: Colors.grey.withValues(alpha: 0.1),
-                                borderRadius: BorderRadius.circular(6),
-                                border: Border.all(
-                                  color: Colors.grey.withValues(alpha: 0.3),
-                                  width: 1,
-                                ),
-                              ),
-                              child: Row(
-                                children: [
-                                  Text(
-                                    '${index + 1}. ',
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.grey,
+                    ),
+                    const Text(
+                      'Stories',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                ...List.generate(book.stories!.length, (index) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 4),
+                    child: Row(
+                      children: [
+                        // Read/Unread icon outside the card
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              if (book.storiesRead.contains(index)) {
+                                book.storiesRead.remove(index);
+                              } else {
+                                book.storiesRead.add(index);
+                              }
+                            });
+                            widget.onChanged(book);
+                          },
+                          child: Icon(
+                            book.storiesRead.contains(index)
+                                ? Icons.menu_book
+                                : Icons.menu_book_outlined,
+                            color: book.storiesRead.contains(index)
+                                ? Colors.green
+                                : Colors.grey,
+                            size: 24,
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        // Clickable card for story details
+                        Expanded(
+                          child: Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                              borderRadius: BorderRadius.circular(6),
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => StoryDetailScreen(
+                                      storyTitle: book.stories![index],
+                                      storyIndex: index,
+                                      synopsis: book.storySynopses?[index],
+                                      collectionTitle: book.title,
+                                      isRead: book.storiesRead.contains(index),
+                                      onReadChanged: (isRead) {
+                                        setState(() {
+                                          if (isRead) {
+                                            book.storiesRead.add(index);
+                                          } else {
+                                            book.storiesRead.remove(index);
+                                          }
+                                        });
+                                        widget.onChanged(book);
+                                      },
                                     ),
                                   ),
-                                  Expanded(
-                                    child: Text(book.stories![index]),
+                                );
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 12,
+                                  vertical: 8,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.grey.withValues(alpha: 0.1),
+                                  borderRadius: BorderRadius.circular(6),
+                                  border: Border.all(
+                                    color: Colors.grey.withValues(alpha: 0.3),
+                                    width: 1,
                                   ),
-                                  Icon(Icons.chevron_right, color: Colors.grey.shade400, size: 20),
-                                ],
+                                ),
+                                child: Row(
+                                  children: [
+                                    Text(
+                                      '${index + 1}. ',
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                    Expanded(child: Text(book.stories![index])),
+                                    Icon(
+                                      Icons.chevron_right,
+                                      color:
+                                          Theme.of(context).brightness ==
+                                              Brightness.dark
+                                          ? Colors.grey.shade400
+                                          : Colors.grey.shade700,
+                                      size: 20,
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                );
-              }),
-            ],
-
-            const SizedBox(height: 24),
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(
-                  'Synopsis',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                if (synopsisLoading)
-                  const SizedBox(
-                    width: 20,
-                    height: 20,
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  )
-                else if (!book.synopsisFetched && book.notes.isEmpty)
-                  TextButton.icon(
-                    icon: const Icon(Icons.cloud_download, size: 18),
-                    label: const Text('Fetch'),
-                    onPressed: _fetchAndSaveSynopsis,
-                  ),
+                      ],
+                    ),
+                  );
+                }),
               ],
-            ),
-            const SizedBox(height: 8),
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.grey.shade900.withValues(alpha: 0.7),
-                borderRadius: BorderRadius.circular(4),
+
+              const SizedBox(height: 24),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Synopsis',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  if (synopsisLoading)
+                    const SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                  else if (!book.synopsisFetched && book.notes.isEmpty)
+                    TextButton.icon(
+                      icon: const Icon(Icons.cloud_download, size: 18),
+                      label: const Text('Fetch'),
+                      onPressed: _fetchAndSaveSynopsis,
+                    ),
+                ],
               ),
-              child: TextField(
-                controller: TextEditingController(text: book.notes),
-                maxLines: null,
-                decoration: const InputDecoration(
-                  hintText: 'Book synopsis or description...',
-                  border: OutlineInputBorder(),
+              const SizedBox(height: 8),
+              Container(
+                decoration: BoxDecoration(
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? Colors.grey.shade900.withValues(alpha: 0.4)
+                      : Colors.white.withValues(alpha: 0.4),
+                  borderRadius: BorderRadius.circular(4),
                 ),
-                onChanged: (value) {
-                  book.notes = value;
-                  widget.onChanged(book);
-                },
+                child: TextField(
+                  controller: TextEditingController(text: book.notes),
+                  maxLines: null,
+                  decoration: const InputDecoration(
+                    hintText: 'Book synopsis or description...',
+                    border: OutlineInputBorder(),
+                  ),
+                  onChanged: (value) {
+                    book.notes = value;
+                    widget.onChanged(book);
+                  },
+                ),
               ),
-            ),
-          ],
-        ),
+            ],
+          ),
         ),
       ),
     );
@@ -2753,12 +3736,39 @@ class AdaptationDetailScreen extends StatefulWidget {
 }
 
 class _AdaptationDetailScreenState extends State<AdaptationDetailScreen> {
+  Future<void> _showOwnedFormatMenu(Offset position) async {
+    final selected = await showMenu<String>(
+      context: context,
+      position: RelativeRect.fromLTRB(
+        position.dx,
+        position.dy,
+        position.dx,
+        position.dy,
+      ),
+      items: const [
+        PopupMenuItem(value: 'DVD', child: Text('DVD')),
+        PopupMenuItem(value: 'Blu-ray', child: Text('Blu-ray')),
+        PopupMenuItem(value: '4K', child: Text('4K')),
+      ],
+    );
+
+    if (selected == null) return;
+
+    setState(() {
+      widget.adaptation.owned = true;
+      widget.adaptation.ownedFormat = selected;
+    });
+    widget.onChanged(widget.adaptation);
+  }
+
   @override
   Widget build(BuildContext context) {
     final adaptation = widget.adaptation;
     final basedOnBook = adaptation.basedOn != null
-        ? widget.books.firstWhere((b) => b.id == adaptation.basedOn,
-            orElse: () => widget.books.first)
+        ? widget.books.firstWhere(
+            (b) => b.id == adaptation.basedOn,
+            orElse: () => widget.books.first,
+          )
         : null;
 
     return Scaffold(
@@ -2772,15 +3782,26 @@ class _AdaptationDetailScreenState extends State<AdaptationDetailScreen> {
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: const AssetImage('assets/images/App_background_2.png'),
+            image: AssetImage(
+              Theme.of(context).brightness == Brightness.dark
+                  ? 'assets/images/App_background_2.png'
+                  : 'assets/images/app_background_light_4.png',
+            ),
             fit: BoxFit.cover,
           ),
         ),
         child: ListView(
-          padding: const EdgeInsets.only(top: 100, left: 16, right: 16, bottom: 16),
+          padding: const EdgeInsets.only(
+            top: 100,
+            left: 16,
+            right: 16,
+            bottom: 16,
+          ),
           children: [
             Card(
-              color: Colors.grey.shade900.withValues(alpha: 0.4),
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? Colors.grey.shade900.withValues(alpha: 0.4)
+                  : Colors.white.withValues(alpha: 0.4),
               child: Padding(
                 padding: const EdgeInsets.all(16),
                 child: Column(
@@ -2789,7 +3810,8 @@ class _AdaptationDetailScreenState extends State<AdaptationDetailScreen> {
                     Row(
                       children: [
                         Icon(
-                          adaptation.type.contains('Movie') || adaptation.type == 'Movie'
+                          adaptation.type.contains('Movie') ||
+                                  adaptation.type == 'Movie'
                               ? Icons.movie
                               : Icons.tv,
                           size: 40,
@@ -2811,7 +3833,9 @@ class _AdaptationDetailScreenState extends State<AdaptationDetailScreen> {
                               if (basedOnBook != null)
                                 Text(
                                   'Based on: ${basedOnBook.title}',
-                                  style: const TextStyle(fontStyle: FontStyle.italic),
+                                  style: const TextStyle(
+                                    fontStyle: FontStyle.italic,
+                                  ),
                                 ),
                             ],
                           ),
@@ -2824,7 +3848,9 @@ class _AdaptationDetailScreenState extends State<AdaptationDetailScreen> {
             ),
             const SizedBox(height: 16),
             Card(
-              color: Colors.grey.shade900.withValues(alpha: 0.4),
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? Colors.grey.shade900.withValues(alpha: 0.4)
+                  : Colors.white.withValues(alpha: 0.4),
               child: Padding(
                 padding: const EdgeInsets.all(16),
                 child: Column(
@@ -2837,8 +3863,12 @@ class _AdaptationDetailScreenState extends State<AdaptationDetailScreen> {
                           children: [
                             IconButton(
                               icon: Icon(
-                                adaptation.wished ? Icons.favorite : Icons.favorite_border,
-                                color: adaptation.wished ? Colors.red : Colors.grey,
+                                adaptation.wished
+                                    ? Icons.favorite
+                                    : Icons.favorite_border,
+                                color: adaptation.wished
+                                    ? Colors.red
+                                    : Colors.grey,
                                 size: 32,
                               ),
                               onPressed: () {
@@ -2848,23 +3878,36 @@ class _AdaptationDetailScreenState extends State<AdaptationDetailScreen> {
                                 });
                               },
                             ),
-                            const Text('Wishlist', style: TextStyle(fontSize: 12)),
+                            const Text(
+                              'Wishlist',
+                              style: TextStyle(fontSize: 12),
+                            ),
                           ],
                         ),
                         Column(
                           children: [
-                            IconButton(
-                              icon: Icon(
-                                adaptation.owned ? Icons.video_library : Icons.video_library_outlined,
-                                color: adaptation.owned ? Colors.blue : Colors.grey,
-                                size: 32,
-                              ),
-                              onPressed: () {
-                                setState(() {
-                                  adaptation.owned = !adaptation.owned;
-                                  widget.onChanged(adaptation);
-                                });
+                            GestureDetector(
+                              onLongPressStart: (details) {
+                                _showOwnedFormatMenu(details.globalPosition);
                               },
+                              child: IconButton(
+                                icon: Icon(
+                                  adaptation.owned
+                                      ? Icons.video_library
+                                      : Icons.video_library_outlined,
+                                  color: ownedColorForAdaptation(adaptation),
+                                  size: 32,
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    adaptation.owned = !adaptation.owned;
+                                    if (!adaptation.owned) {
+                                      adaptation.ownedFormat = null;
+                                    }
+                                    widget.onChanged(adaptation);
+                                  });
+                                },
+                              ),
                             ),
                             const Text('Owned', style: TextStyle(fontSize: 12)),
                           ],
@@ -2873,8 +3916,12 @@ class _AdaptationDetailScreenState extends State<AdaptationDetailScreen> {
                           children: [
                             IconButton(
                               icon: Icon(
-                                adaptation.watched ? Icons.visibility : Icons.visibility_outlined,
-                                color: adaptation.watched ? Colors.green : Colors.grey,
+                                adaptation.watched
+                                    ? Icons.visibility
+                                    : Icons.visibility_outlined,
+                                color: adaptation.watched
+                                    ? Colors.green
+                                    : Colors.grey,
                                 size: 32,
                               ),
                               onPressed: () {
@@ -2884,7 +3931,10 @@ class _AdaptationDetailScreenState extends State<AdaptationDetailScreen> {
                                 });
                               },
                             ),
-                            const Text('Watched', style: TextStyle(fontSize: 12)),
+                            const Text(
+                              'Watched',
+                              style: TextStyle(fontSize: 12),
+                            ),
                           ],
                         ),
                       ],
@@ -2941,113 +3991,131 @@ class _AdaptationDetailScreenState extends State<AdaptationDetailScreen> {
    SETTINGS SCREEN
    ============================================ */
 
-class SettingsScreen extends StatelessWidget {
+class SettingsScreen extends StatefulWidget {
   final List<Book> books;
   final List<Adaptation> adaptations;
-  
+  final Function(AppThemeMode) onThemeChanged;
+  final AppThemeMode currentThemeMode;
+
   const SettingsScreen({
     super.key,
     required this.books,
     required this.adaptations,
+    required this.onThemeChanged,
+    required this.currentThemeMode,
   });
 
+  @override
+  State<SettingsScreen> createState() => _SettingsScreenState();
+}
+
+class _SettingsScreenState extends State<SettingsScreen> {
   Future<void> _exportData() async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      
+
       // Get all saved books
       final savedBooks = <String, dynamic>{};
-      for (var book in books) {
+      for (var book in widget.books) {
         final key = 'book_${book.id}';
         final json = prefs.getString(key);
         if (json != null) {
           savedBooks[key] = jsonDecode(json);
         }
       }
-      
+
       // Get all saved adaptations
       final savedAdaptations = <String, dynamic>{};
-      for (var adaptation in adaptations) {
+      for (var adaptation in widget.adaptations) {
         final key = 'adaptation_${adaptation.id}';
         final json = prefs.getString(key);
         if (json != null) {
           savedAdaptations[key] = jsonDecode(json);
         }
       }
-      
+
       final exportData = {
         'books': savedBooks,
         'adaptations': savedAdaptations,
         'exportDate': DateTime.now().toIso8601String(),
       };
-      
+
       final jsonString = jsonEncode(exportData);
       final bytes = utf8.encode(jsonString);
       final blob = html.Blob([bytes]);
-      
+
       final url = html.Url.createObjectUrlFromBlob(blob);
       html.AnchorElement(href: url)
-        ..setAttribute('download', 'king_tracker_backup_${DateTime.now().millisecondsSinceEpoch}.json')
+        ..setAttribute(
+          'download',
+          'king_tracker_backup_${DateTime.now().millisecondsSinceEpoch}.json',
+        )
         ..click();
-      
+
       html.Url.revokeObjectUrl(url);
     } catch (e) {
-      print('Export error: $e');
+      debugPrint('Export error: $e');
     }
   }
-  
+
   Future<void> _importData(BuildContext context) async {
     try {
       final uploadInput = html.FileUploadInputElement();
       uploadInput.accept = '.json';
       uploadInput.click();
-      
+
       await uploadInput.onChange.first;
       final file = uploadInput.files?.first;
       if (file == null) return;
-      
+
       final reader = html.FileReader();
       reader.readAsText(file);
       await reader.onLoad.first;
-      
+
       final jsonString = reader.result as String;
       final importData = jsonDecode(jsonString) as Map<String, dynamic>;
-      
+
       final prefs = await SharedPreferences.getInstance();
-      
+
       // Import books
       final booksMap = importData['books'] as Map<String, dynamic>;
       for (var entry in booksMap.entries) {
         await prefs.setString(entry.key, jsonEncode(entry.value));
       }
-      
+
       // Import adaptations
       final adaptationsMap = importData['adaptations'] as Map<String, dynamic>;
       for (var entry in adaptationsMap.entries) {
         await prefs.setString(entry.key, jsonEncode(entry.value));
       }
-      
+
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Data imported successfully! Please restart the app.')),
+          const SnackBar(
+            content: Text(
+              'Data imported successfully! Please restart the app.',
+            ),
+          ),
         );
       }
     } catch (e) {
-      print('Import error: $e');
+      debugPrint('Import error: $e');
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Import failed: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Import failed: $e')));
       }
     }
   }
-  
+
   Future<void> _clearData(BuildContext context) async {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Clear All Data'),
-        content: const Text('Are you sure you want to clear all your saved data? This cannot be undone.'),
+        content: const Text(
+          'Are you sure you want to clear all your saved data? This cannot be undone.',
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
@@ -3060,21 +4128,25 @@ class SettingsScreen extends StatelessWidget {
         ],
       ),
     );
-    
+
     if (confirmed == true) {
       final prefs = await SharedPreferences.getInstance();
       await prefs.clear();
-      
+
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('All data cleared. Please restart the app.')),
+          const SnackBar(
+            content: Text('All data cleared. Please restart the app.'),
+          ),
         );
       }
     }
   }
-  
+
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
       extendBodyBehindAppBar: true,
       backgroundColor: Colors.transparent,
@@ -3084,9 +4156,13 @@ class SettingsScreen extends StatelessWidget {
         elevation: 0,
       ),
       body: Container(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/images/App_background_2.png'),
+            image: AssetImage(
+              isDark
+                  ? 'assets/images/App_background_2.png'
+                  : 'assets/images/app_background_light_4.png',
+            ),
             fit: BoxFit.cover,
           ),
         ),
@@ -3096,121 +4172,26 @@ class SettingsScreen extends StatelessWidget {
             const Padding(
               padding: EdgeInsets.all(16),
               child: Text(
-                'Data Management',
+                'Appearance',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
             ),
             Card(
               margin: const EdgeInsets.all(8),
-              color: Colors.grey.shade900.withValues(alpha: 0.4),
-              child: ListTile(
-                leading: const Icon(Icons.download),
-                title: const Text('Export Data'),
-                subtitle: const Text('Download your data as JSON'),
-                onTap: _exportData,
-              ),
-            ),
-            Card(
-              margin: const EdgeInsets.all(8),
-              color: Colors.grey.shade900.withValues(alpha: 0.4),
-              child: ListTile(
-                leading: const Icon(Icons.upload),
-                title: const Text('Import Data'),
-                subtitle: const Text('Restore data from JSON file'),
-                onTap: () => _importData(context),
-              ),
-            ),
-            Card(
-              margin: const EdgeInsets.all(8),
-              color: Colors.grey.shade900.withValues(alpha: 0.4),
-              child: ListTile(
-                leading: const Icon(Icons.delete_forever, color: Colors.red),
-                title: const Text('Clear All Data'),
-                subtitle: const Text('Reset all books and adaptations'),
-                onTap: () => _clearData(context),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-/* ============================================
-   ABOUT SCREEN
-   ============================================ */
-
-class AboutScreen extends StatefulWidget {
-  final Function(AppThemeMode) onThemeChanged;
-  final AppThemeMode currentThemeMode;
-  
-  const AboutScreen({
-    super.key,
-    required this.onThemeChanged,
-    required this.currentThemeMode,
-  });
-
-  @override
-  State<AboutScreen> createState() => _AboutScreenState();
-}
-
-class _AboutScreenState extends State<AboutScreen> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      extendBodyBehindAppBar: true,
-      backgroundColor: Colors.transparent,
-      appBar: AppBar(
-        title: const Text('About'),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
-      body: Container(
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('assets/images/App_background_2.png'),
-            fit: BoxFit.cover,
-          ),
-        ),
-        child: ListView(
-          padding: const EdgeInsets.only(top: 100, left: 16, right: 16, bottom: 16),
-          children: [
-            Card(
-              color: Colors.grey.shade900.withValues(alpha: 0.4),
+              color: isDark
+                  ? Colors.grey.shade900.withValues(alpha: 0.4)
+                  : Colors.white.withValues(alpha: 0.4),
               child: Padding(
                 padding: const EdgeInsets.all(16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
-                      'King Tracker',
-                      style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(height: 8),
-                    const Text('Version 1.4.0'),
-                    const SizedBox(height: 16),
-                    const Text(
-                      'A comprehensive tracker for Stephen King\'s bibliography and adaptations.',
-                      style: TextStyle(fontSize: 16),
-                    ),
-                    const SizedBox(height: 16),
-                    const Text(
-                      'Features:',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(height: 8),
-                    const Text('• Track 80+ Stephen King books'),
-                    const Text('• Follow 83+ film and TV adaptations'),
-                    const Text('• Multiple sorting modes including Dark Tower Extended reading order'),
-                    const Text('• Connection tracking between books'),
-                    const Text('• Statistics and analytics'),
-                    const Text('• Wish list and favorites'),
-                    const Text('• Data export and import'),
-                    const SizedBox(height: 16),
-                    const Text(
-                      'Theme:',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      'Theme',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     const SizedBox(height: 12),
                     SegmentedButton<AppThemeMode>(
@@ -3236,10 +4217,146 @@ class _AboutScreenState extends State<AboutScreen> {
                         widget.onThemeChanged(newSelection.first);
                       },
                     ),
+                  ],
+                ),
+              ),
+            ),
+            const Padding(
+              padding: EdgeInsets.all(16),
+              child: Text(
+                'Data Management',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+            ),
+            Card(
+              margin: const EdgeInsets.all(8),
+              color: isDark
+                  ? Colors.grey.shade900.withValues(alpha: 0.4)
+                  : Colors.white.withValues(alpha: 0.4),
+              child: ListTile(
+                leading: const Icon(Icons.download),
+                title: const Text('Export Data'),
+                subtitle: const Text('Download your data as JSON'),
+                onTap: _exportData,
+              ),
+            ),
+            Card(
+              margin: const EdgeInsets.all(8),
+              color: isDark
+                  ? Colors.grey.shade900.withValues(alpha: 0.4)
+                  : Colors.white.withValues(alpha: 0.4),
+              child: ListTile(
+                leading: const Icon(Icons.upload),
+                title: const Text('Import Data'),
+                subtitle: const Text('Restore data from JSON file'),
+                onTap: () => _importData(context),
+              ),
+            ),
+            Card(
+              margin: const EdgeInsets.all(8),
+              color: isDark
+                  ? Colors.grey.shade900.withValues(alpha: 0.4)
+                  : Colors.white.withValues(alpha: 0.4),
+              child: ListTile(
+                leading: const Icon(Icons.delete_forever, color: Colors.red),
+                title: const Text('Clear All Data'),
+                subtitle: const Text('Reset all books and adaptations'),
+                onTap: () => _clearData(context),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/* ============================================
+   ABOUT SCREEN
+   ============================================ */
+
+class AboutScreen extends StatefulWidget {
+  final Function(AppThemeMode) onThemeChanged;
+  final AppThemeMode currentThemeMode;
+
+  const AboutScreen({
+    super.key,
+    required this.onThemeChanged,
+    required this.currentThemeMode,
+  });
+
+  @override
+  State<AboutScreen> createState() => _AboutScreenState();
+}
+
+class _AboutScreenState extends State<AboutScreen> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      extendBodyBehindAppBar: true,
+      backgroundColor: Colors.transparent,
+      appBar: AppBar(
+        title: const Text('About'),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+      ),
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage(
+              Theme.of(context).brightness == Brightness.dark
+                  ? 'assets/images/App_background_2.png'
+                  : 'assets/images/app_background_light_4.png',
+            ),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: ListView(
+          padding: const EdgeInsets.only(
+            top: 100,
+            left: 16,
+            right: 16,
+            bottom: 16,
+          ),
+          children: [
+            Card(
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? Colors.grey.shade900.withValues(alpha: 0.4)
+                  : Colors.white.withValues(alpha: 0.4),
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'King Tracker',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    const Text('Version 1.5.0'),
                     const SizedBox(height: 16),
                     const Text(
+                      'A comprehensive tracker for Stephen King\'s bibliography and adaptations.',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                    const SizedBox(height: 16),
+                    const Text(
+                      'Features:',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    const Text(
                       'About Stephen King:',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     const SizedBox(height: 8),
                     const Text(
@@ -3269,7 +4386,7 @@ class _AboutScreenState extends State<AboutScreen> {
 
 class IconologyScreen extends StatelessWidget {
   const IconologyScreen({super.key});
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -3281,87 +4398,197 @@ class IconologyScreen extends StatelessWidget {
         elevation: 0,
       ),
       body: Container(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/images/App_background_2.png'),
+            image: AssetImage(
+              Theme.of(context).brightness == Brightness.dark
+                  ? 'assets/images/App_background_2.png'
+                  : 'assets/images/app_background_light_4.png',
+            ),
             fit: BoxFit.cover,
           ),
         ),
         child: ListView(
-          padding: const EdgeInsets.only(top: 100, left: 16, right: 16, bottom: 16),
+          padding: const EdgeInsets.only(
+            top: 100,
+            left: 16,
+            right: 16,
+            bottom: 16,
+          ),
           children: [
-            _buildIconSection(
-              'Book Types',
-              [
-                _IconExplanation(Icons.auto_stories, 'Novel', 'Regular Stephen King novel'),
-                _IconExplanation(Icons.castle, 'Dark Tower', 'Part of The Dark Tower series'),
-                _IconExplanation(Icons.auto_stories, 'Bachman', 'Published under Richard Bachman pseudonym', color: Colors.orange),
-                _IconExplanation(Icons.library_books, 'Short Story Collection', 'Collection of short stories'),
-                _IconExplanation(Icons.people, 'Co-Authored', 'Written with another author'),
-                _IconExplanation(Icons.article, 'Non-Fiction', 'Non-fiction work'),
-              ],
-            ),
+            _buildIconSection('Book Types', [
+              _IconExplanation(
+                Icons.auto_stories,
+                'Novel',
+                'Regular Stephen King novel',
+              ),
+              _IconExplanation(
+                Icons.castle,
+                'Dark Tower',
+                'Part of The Dark Tower series',
+              ),
+              _IconExplanation(
+                Icons.auto_stories,
+                'Bachman',
+                'Published under Richard Bachman pseudonym',
+                color: Colors.orange,
+              ),
+              _IconExplanation(
+                Icons.library_books,
+                'Short Story Collection',
+                'Collection of short stories',
+              ),
+              _IconExplanation(
+                Icons.people,
+                'Co-Authored',
+                'Written with another author',
+              ),
+              _IconExplanation(
+                Icons.article,
+                'Non-Fiction',
+                'Non-fiction work',
+              ),
+            ]),
             const SizedBox(height: 16),
-            _buildIconSection(
-              'Badges',
-              [
-                _IconExplanation(null, 'TDT 1-8', 'Main Dark Tower series book', badge: buildDarkTowerBadge('TDT 1')),
-                _IconExplanation(null, 'TDTex', 'Extended Dark Tower reading list', 
-                  badge: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: Colors.deepPurple.shade700,
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: Colors.purple, width: 1),
-                    ),
-                    child: const Text(
-                      'TDTex',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                        fontSize: 11,
-                        letterSpacing: 0.5,
-                      ),
+            _buildIconSection('Badges', [
+              _IconExplanation(
+                null,
+                'TDT 1-8',
+                'Main Dark Tower series book',
+                badge: buildDarkTowerBadge('TDT 1'),
+              ),
+              _IconExplanation(
+                null,
+                'TDTex',
+                'Extended Dark Tower reading list',
+                badge: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 4,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.deepPurple.shade700,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: Colors.purple, width: 1),
+                  ),
+                  child: const Text(
+                    'TDTex',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      fontSize: 11,
+                      letterSpacing: 0.5,
                     ),
                   ),
                 ),
-              ],
-            ),
+              ),
+            ]),
             const SizedBox(height: 16),
-            _buildIconSection(
-              'Connection Icons',
-              [
-                _IconExplanation(null, 'Duology/Trilogy', 'Book is part of a series', 
-                  badge: buildConnectionIcon(Connection(type: 'duology', withIds: ['test']))),
-                _IconExplanation(null, 'Dark Tower', 'Connected to Dark Tower universe', 
-                  badge: buildConnectionIcon(Connection(type: 'dark tower', withIds: ['test']))),
-              ],
-            ),
+            _buildIconSection('Connection Icons', [
+              _IconExplanation(
+                null,
+                'Duology/Trilogy',
+                'Book is part of a series',
+                badge: buildConnectionIcon(
+                  Connection(type: 'duology', withIds: ['test']),
+                ),
+              ),
+              _IconExplanation(
+                null,
+                'Dark Tower',
+                'Connected to Dark Tower universe',
+                badge: buildConnectionIcon(
+                  Connection(type: 'dark tower', withIds: ['test']),
+                ),
+              ),
+            ]),
             const SizedBox(height: 16),
-            _buildIconSection(
-              'Action Icons',
-              [
-                _IconExplanation(Icons.favorite, 'Wishlist', 'Book/adaptation on your wishlist', color: Colors.red),
-                _IconExplanation(Icons.favorite_border, 'Not Wished', 'Add to wishlist', color: Colors.grey),
-                _IconExplanation(Icons.star, 'Rating', 'Your rating (0-5 stars)', color: Colors.amber),
-                _IconExplanation(Icons.collections_bookmark, 'Owned (Books)', 'You own this book', color: Colors.blue),
-                _IconExplanation(Icons.collections_bookmark_outlined, 'Not Owned', 'You don\'t own this book', color: Colors.grey),
-                _IconExplanation(Icons.menu_book, 'Read', 'You have read this book', color: Colors.green),
-                _IconExplanation(Icons.menu_book_outlined, 'Not Read', 'You haven\'t read this book', color: Colors.grey),
-                _IconExplanation(Icons.video_library, 'Owned (Film/TV)', 'You own this adaptation', color: Colors.blue),
-                _IconExplanation(Icons.visibility, 'Watched', 'You have watched this adaptation', color: Colors.green),
-                _IconExplanation(Icons.visibility_outlined, 'Not Watched', 'You haven\'t watched this adaptation', color: Colors.grey),
-              ],
-            ),
+            _buildIconSection('Action Icons', [
+              _IconExplanation(
+                Icons.favorite,
+                'Wishlist',
+                'Book/adaptation on your wishlist',
+                color: Colors.red,
+              ),
+              _IconExplanation(
+                Icons.favorite_border,
+                'Not Wished',
+                'Add to wishlist',
+                color: Colors.grey,
+              ),
+              _IconExplanation(
+                Icons.star,
+                'Rating',
+                'Your rating (0-5 stars)',
+                color: Colors.amber,
+              ),
+              _IconExplanation(
+                Icons.collections_bookmark,
+                'Owned (Books - Hardback)',
+                'You own this book in hardback',
+                color: Colors.blue,
+              ),
+              _IconExplanation(
+                Icons.collections_bookmark_outlined,
+                'Not Owned',
+                'You don\'t own this book',
+                color: Colors.grey,
+              ),
+              _IconExplanation(
+                Icons.collections_bookmark,
+                'Owned (Books - Pocket)',
+                'You own this book in pocket',
+                color: Colors.teal,
+              ),
+              _IconExplanation(
+                Icons.menu_book,
+                'Read',
+                'You have read this book',
+                color: Colors.green,
+              ),
+              _IconExplanation(
+                Icons.menu_book_outlined,
+                'Not Read',
+                'You haven\'t read this book',
+                color: Colors.grey,
+              ),
+              _IconExplanation(
+                Icons.video_library,
+                'Owned (Film/TV - DVD)',
+                'You own this adaptation on DVD',
+                color: Colors.deepPurple,
+              ),
+              _IconExplanation(
+                Icons.video_library,
+                'Owned (Film/TV - Blu-ray)',
+                'You own this adaptation on Blu-ray',
+                color: Colors.blue,
+              ),
+              _IconExplanation(
+                Icons.video_library,
+                'Owned (Film/TV - 4K)',
+                'You own this adaptation on 4K',
+                color: Colors.amber,
+              ),
+              _IconExplanation(
+                Icons.visibility,
+                'Watched',
+                'You have watched this adaptation',
+                color: Colors.green,
+              ),
+              _IconExplanation(
+                Icons.visibility_outlined,
+                'Not Watched',
+                'You haven\'t watched this adaptation',
+                color: Colors.grey,
+              ),
+            ]),
             const SizedBox(height: 16),
-            _buildIconSection(
-              'Adaptation Types',
-              [
-                _IconExplanation(Icons.movie, 'Movie', 'Film adaptation'),
-                _IconExplanation(Icons.tv, 'TV Series', 'Television series'),
-                _IconExplanation(Icons.live_tv, 'Miniseries', 'TV miniseries'),
-              ],
-            ),
+            _buildIconSection('Adaptation Types', [
+              _IconExplanation(Icons.movie, 'Movie', 'Film adaptation'),
+              _IconExplanation(Icons.tv, 'TV Series', 'Television series'),
+              _IconExplanation(Icons.live_tv, 'Miniseries', 'TV miniseries'),
+            ]),
           ],
         ),
       ),
@@ -3369,46 +4596,71 @@ class IconologyScreen extends StatelessWidget {
   }
 
   Widget _buildIconSection(String title, List<_IconExplanation> items) {
-    return Card(
-      color: Colors.grey.shade900.withValues(alpha: 0.4),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              title,
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 12),
-            ...items.map((item) => Padding(
-              padding: const EdgeInsets.only(bottom: 12),
-              child: Row(
-                children: [
-                  if (item.icon != null)
-                    Icon(item.icon, color: item.color ?? Colors.blue, size: 24)
-                  else if (item.badge != null)
-                    item.badge!,
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          item.title,
-                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                        ),
-                        Text(
-                          item.description,
-                          style: TextStyle(fontSize: 14, color: Colors.grey.shade400),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+    return Builder(
+      builder: (context) => Card(
+        color: Theme.of(context).brightness == Brightness.dark
+            ? Colors.grey.shade900.withValues(alpha: 0.4)
+            : Colors.white.withValues(alpha: 0.4),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            )).toList(),
-          ],
+              const SizedBox(height: 12),
+              ...items
+                  .map(
+                    (item) => Padding(
+                      padding: const EdgeInsets.only(bottom: 12),
+                      child: Row(
+                        children: [
+                          if (item.icon != null)
+                            Icon(
+                              item.icon,
+                              color: item.color ?? Colors.blue,
+                              size: 24,
+                            )
+                          else if (item.badge != null)
+                            item.badge!,
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  item.title,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                Text(
+                                  item.description,
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color:
+                                        Theme.of(context).brightness ==
+                                            Brightness.dark
+                                        ? Colors.grey.shade400
+                                        : Colors.grey.shade700,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                  ,
+            ],
+          ),
         ),
       ),
     );
@@ -3422,7 +4674,13 @@ class _IconExplanation {
   final Color? color;
   final Widget? badge;
 
-  _IconExplanation(this.icon, this.title, this.description, {this.color, this.badge});
+  _IconExplanation(
+    this.icon,
+    this.title,
+    this.description, {
+    this.color,
+    this.badge,
+  });
 }
 
 class StoryDetailScreen extends StatefulWidget {
@@ -3470,22 +4728,21 @@ class _StoryDetailScreenState extends State<StoryDetailScreen> {
           children: [
             Text(
               widget.storyTitle,
-              style: const TextStyle(
-                fontSize: 28,
-                fontWeight: FontWeight.bold,
-              ),
+              style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
             Text(
               'from ${widget.collectionTitle}',
               style: TextStyle(
                 fontSize: 16,
-                color: Colors.grey.shade400,
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? Colors.grey.shade400
+                    : Colors.grey.shade700,
                 fontStyle: FontStyle.italic,
               ),
             ),
             const SizedBox(height: 24),
-            
+
             // Read Status
             Row(
               children: [
@@ -3512,23 +4769,25 @@ class _StoryDetailScreenState extends State<StoryDetailScreen> {
                 ),
               ],
             ),
-            
+
             const SizedBox(height: 32),
-            
+
             // Synopsis Section
             const Text(
               'Synopsis',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 12),
-            
+
             if (widget.synopsis != null && widget.synopsis!.isNotEmpty)
               Text(
                 widget.synopsis!,
                 style: TextStyle(
                   fontSize: 16,
                   height: 1.5,
-                  color: Colors.grey.shade300,
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? Colors.grey.shade300
+                      : Colors.grey.shade800,
                 ),
               )
             else
